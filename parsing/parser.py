@@ -1,5 +1,6 @@
 import csv
 import json
+from collections import Iterator
 from typing import List, Dict, TextIO
 from enum import Enum
 
@@ -47,6 +48,37 @@ class Headline:
     def __str__(self) -> str:
         return json.dumps(self.ToDict(), indent=4)
 
+class HeadlineCollection:
+    def __init__(
+        self,
+        iterable : List[Headline] = None
+    ):
+        self.collection = iterable if iterable else []
+
+    def append(self, H : Headline) -> None:
+        self.collection.append(H)
+
+    def __iter__(self) -> None:
+        return HeadlineIterator(self)
+
+    def __str__(self) -> str:
+        return json.dumps(
+            [e.ToDict() for e in self.collection],
+            indent=4
+        )
+
+class HeadlineIterator:
+    def __init__(self, HC : HeadlineCollection):
+        self._HC = HC
+        self._index = 0
+
+    def __next__(self) -> Headline:
+        if self._index >= len(self._HC.collection):
+            raise StopIteration()
+        self._index += 1
+        return self._HC.collection[self._index-1]
+
+
 class Candidates:
     def __init__(
         self,
@@ -67,6 +99,37 @@ class Candidates:
 
     def __str__(self) -> str:
         return json.dumps(self.ToDict(), indent=4)
+
+class CandidateCollection:
+    def __init__(
+        self,
+        iterable : List[Candidates] = None
+    ):
+        self.collection = iterable if iterable else []
+
+    def append(self, H : Candidates) -> None:
+        self.collection.append(H)
+
+    def __iter__(self) -> None:
+        return CandidateIterator(self)
+
+    def __str__(self) -> str:
+        return json.dumps(
+            [e.ToDict() for e in self.collection],
+            indent=4
+        )
+
+class CandidateIterator:
+    def __init__(self, HC : CandidateCollection):
+        self._HC = HC
+        self._index = 0
+
+    def __next__(self) -> Candidates:
+        if self._index >= len(self._HC.collection):
+            raise StopIteration()
+        self._index += 1
+        return self._HC.collection[self._index-1]
+
 
 def build_headline(l : List, grades = True) -> Headline:
     s = l[1].split(" ")
@@ -101,7 +164,7 @@ def build_candidates(l : List, grades = True) -> Candidates:
     )
 
 def read_task1(fd : TextIO, grades = True) -> List[Headline]:
-    res = []
+    res = HeadlineCollection()
     csv_reader = csv.reader(fd, delimiter=',', quotechar='"', )
     next(csv_reader)
     for row in csv_reader:
@@ -110,7 +173,7 @@ def read_task1(fd : TextIO, grades = True) -> List[Headline]:
     return res
 
 def read_task2(fd : TextIO, grades = True) -> List[Headline]:
-    res = []
+    res = CandidateCollection()
     csv_reader = csv.reader(fd, delimiter=',', quotechar='"', )
     next(csv_reader)
     for row in csv_reader:
