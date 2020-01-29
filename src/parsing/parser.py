@@ -58,7 +58,7 @@ class Headline:
         HL.word_index = self.word_index
         HL.edit = self.edit
         HL.grades.extend(self.grades)
-        HL.avg_grade = self.avg_grade
+        HL.avg_grade = self.avg_grade if self.avg_grade else -1
 
     def ToDict(self) -> Dict:
         return {
@@ -221,7 +221,7 @@ def build_headline_pb(pb : Headline_pb2.HeadlineCollection.Headline) -> Headline
         pb.word_index,
         pb.edit,
         [g for g in pb.grades],
-        pb.avg_grade
+        pb.avg_grade if pb.avg_grade!=-1 else None
     )
 
 def build_candidates(l : List, grades = True) -> Candidates:
