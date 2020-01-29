@@ -1,14 +1,31 @@
 import csv
 import json
 from collections import Iterator
-from typing import List, Dict, TextIO
+from typing import List, Dict, TextIO, BinaryIO
 from enum import Enum
+
+import parsing.Headline_pb2 as Headline_pb2
+import parsing.Candidates_pb2 as Candidates_pb2
 
 class Label(Enum):
     NA = -1
     EQUAL = 0
     H1 = 1
     H2 = 2
+
+def LabelToPB(l : Label) -> Candidates_pb2.CandidateCollection.Candidates.Label:
+    if l == Label.NA: return Candidates_pb2.CandidateCollection.Candidates.Label.NA
+    if l == Label.EQUAL: return Candidates_pb2.CandidateCollection.Candidates.Label.EQUAL
+    if l == Label.H1: return Candidates_pb2.CandidateCollection.Candidates.Label.H1
+    if l == Label.H2: return Candidates_pb2.CandidateCollection.Candidates.Label.H2
+    raise ValueError()
+
+def PBToLabel(l : Candidates_pb2.CandidateCollection.Candidates.Label) -> Label:
+    if l == Candidates_pb2.CandidateCollection.Candidates.Label.NA: return Label.NA
+    if l == Candidates_pb2.CandidateCollection.Candidates.Label.EQUAL: return Label.EQUAL
+    if l == Candidates_pb2.CandidateCollection.Candidates.Label.H1: return Label.H1
+    if l == Candidates_pb2.CandidateCollection.Candidates.Label.H2: return Label.H2
+    raise ValueError()
 
 class Headline:
     def __init__(
@@ -35,6 +52,14 @@ class Headline:
         l[self.word_index] = self.edit
         return l
 
+    def ToPB(self, HL : Headline_pb2.HeadlineCollection.Headline) -> None:
+        HL.id = self.id
+        HL.sentence.extend(self.sentence)
+        HL.word_index = self.word_index
+        HL.edit = self.edit
+        HL.grades.extend(self.grades)
+        HL.avg_grade = self.avg_grade
+
     def ToDict(self) -> Dict:
         return {
             "id": self.id,
@@ -57,6 +82,23 @@ class HeadlineCollection:
 
     def append(self, H : Headline) -> None:
         self.collection.append(H)
+
+    def ToPB(self) -> Headline_pb2.HeadlineCollection:
+        col_pb = Headline_pb2.HeadlineCollection()
+        for HL in self.collection:
+            HL_pb = col_pb.HL.add()
+            HL.ToPB(HL_pb)
+        return col_pb
+
+    def FromPB(self, pb : Headline_pb2.HeadlineCollection) -> None:
+        self.collection = []
+        for HL in pb.HL:
+            self.collection.append(
+                build_headline_pb(HL)
+            )
+
+    def Write_PB(self, fd : BinaryIO) -> None:
+        fd.write(self.ToPB().SerializeToString())
 
     def __iter__(self) -> None:
         return HeadlineIterator(self)
@@ -86,14 +128,19 @@ class Candidates:
         headline2 : Headline,
         label : Label
     ):
-        self.H1 = headline1
-        self.H2 = headline2
+        self.HL1 = headline1
+        self.HL2 = headline2
         self.label = label
+
+    def ToPB(self, C : Candidates_pb2.CandidateCollection.Candidates) -> None:
+        self.HL1.ToPB(C.HL1)
+        self.HL2.ToPB(C.HL2)
+        C.label = LabelToPB(self.label)
 
     def ToDict(self) -> Dict:
         return {
-            "H1": self.H1.ToDict(),
-            "H2": self.H2.ToDict(),
+            "HL1": self.HL1.ToDict(),
+            "HL2": self.HL2.ToDict(),
             "label": self.label.name,
         }
 
@@ -109,6 +156,23 @@ class CandidateCollection:
 
     def append(self, H : Candidates) -> None:
         self.collection.append(H)
+
+    def ToPB(self) -> Candidates_pb2.CandidateCollection:
+        col_pb = Candidates_pb2.CandidateCollection()
+        for cand in self.collection:
+            cand_pb = col_pb.candidates.add()
+            cand.ToPB(cand_pb)
+        return col_pb
+
+    def FromPB(self, pb : Candidates_pb2.CandidateCollection) -> None:
+        self.collection = []
+        for cand in pb.candidates:
+            self.collection.append(
+                build_candidates_pb(cand)
+            )
+
+    def Write_PB(self, fd : BinaryIO) -> None:
+        fd.write(self.ToPB().SerializeToString())
 
     def __iter__(self) -> None:
         return CandidateIterator(self)
@@ -150,6 +214,16 @@ def build_headline(l : List, grades = True) -> Headline:
         float(l[4]) if grades else None
     )
 
+def build_headline_pb(pb : Headline_pb2.HeadlineCollection.Headline) -> Headline:
+    return Headline(
+        pb.id,
+        [w for w in pb.sentence],
+        pb.word_index,
+        pb.edit,
+        [g for g in pb.grades],
+        pb.avg_grade
+    )
+
 def build_candidates(l : List, grades = True) -> Candidates:
     ids = [int(e) for e in l[0].split("-")]
     ls = [
@@ -163,7 +237,14 @@ def build_candidates(l : List, grades = True) -> Candidates:
         Label(int(l[-1])) if grades else Label.NA
     )
 
-def read_task1(fd : TextIO, grades = True) -> List[Headline]:
+def build_candidates_pb(pb : Candidates_pb2.CandidateCollection.Candidates) -> Candidates:
+    return Candidates(
+        build_headline_pb(pb.HL1),
+        build_headline_pb(pb.HL2),
+        PBToLabel(pb.label)
+    )
+
+def read_task1_csv(fd : TextIO, grades = True) -> HeadlineCollection:
     res = HeadlineCollection()
     csv_reader = csv.reader(fd, delimiter=',', quotechar='"', )
     next(csv_reader)
@@ -172,11 +253,27 @@ def read_task1(fd : TextIO, grades = True) -> List[Headline]:
 
     return res
 
-def read_task2(fd : TextIO, grades = True) -> List[Headline]:
+def read_task2_csv(fd : TextIO, grades = True) -> CandidateCollection:
     res = CandidateCollection()
     csv_reader = csv.reader(fd, delimiter=',', quotechar='"', )
     next(csv_reader)
     for row in csv_reader:
         res.append(build_candidates(row, grades))
 
+    return res
+
+def read_task1_pb(fd : TextIO, grades = True) -> HeadlineCollection:
+    res = HeadlineCollection()
+    hlc_pb = Headline_pb2.HeadlineCollection()
+    hlc_pb.ParseFromString(fd.read())
+    res.FromPB(hlc_pb)
+    del hlc_pb
+    return res
+
+def read_task2_pb(fd : TextIO, grades = True) -> CandidateCollection:
+    res = CandidateCollection()
+    clc_pb = Candidates_pb2.CandidateCollection()
+    clc_pb.ParseFromString(fd.read())
+    res.FromPB(clc_pb)
+    del clc_pb
     return res
