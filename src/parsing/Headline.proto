@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package Headline;
+
+message HeadlineCollection {
+    message Headline {
+        uint32 id = 1;
+        repeated string sentence = 2;
+        uint32 word_index = 3;
+        string edit = 4;
+        repeated uint32 grades = 5;
+        float avg_grade = 6;
+    }
+
+    repeated Headline HL = 1;
+}

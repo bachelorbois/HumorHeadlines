@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package Candidates;
+
+message CandidateCollection {
+    message Candidates {
+        enum Label {
+            EQUAL = 0;
+            H1 = 1;
+            H2 = 2;
+            NA = 3;
+        }
+
+        message Headline {
+            uint32 id = 1;
+            repeated string sentence = 2;
+            uint32 word_index = 3;
+            string edit = 4;
+            repeated uint32 grades = 5;
+            float avg_grade = 6;
+        }
+
+        Headline HL1 = 1;
+        Headline HL2 = 2;
+        Label label = 3;
+    }
+
+    repeated Candidates candidates = 1;
+}
