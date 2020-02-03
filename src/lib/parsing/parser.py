@@ -89,6 +89,9 @@ class Headline:
             "avg_grade": self.avg_grade
         }
 
+    def __len__(self) -> int:
+        return len(self.sentence)
+
     def __str__(self) -> str:
         return json.dumps(self.ToDict(), indent=4)
 
