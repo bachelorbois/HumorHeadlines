@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..")
-import parsing
+import lib.parsing
 
 ins = [
     "../../data/task-1/preproc/1_original_train.bin",

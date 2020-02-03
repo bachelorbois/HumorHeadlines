@@ -4,8 +4,11 @@ from collections import Iterator
 from typing import List, Dict, TextIO, BinaryIO
 from enum import Enum
 
-import parsing.Headline_pb2 as Headline_pb2
-import parsing.Candidates_pb2 as Candidates_pb2
+import numpy as np
+
+import lib.parsing.Headline_pb2 as Headline_pb2
+import lib.parsing.Candidates_pb2 as Candidates_pb2
+
 
 class Label(Enum):
     NA = -1
@@ -43,6 +46,22 @@ class Headline:
         self.edit = edit
         self.grades = grades
         self.avg_grade = avg_grade
+        self.features = []
+
+    def AddFeature(self, feature) -> None:
+        self.features.append(feature)
+
+    def AddFeatures(self, features : List) -> None:
+        self.features.extend(features)
+
+    def GetFeatureVector(self) -> np.ndarray:
+        res = []
+        for feature in self.features:
+            res.extend(
+                feature.compute_feature(self)
+            )
+
+        return np.array(res)
 
     def GetTokenized(self) -> List[str]:
         return self.sentence
@@ -70,6 +89,9 @@ class Headline:
             "avg_grade": self.avg_grade
         }
 
+    def __len__(self) -> int:
+        return len(self.sentence)
+
     def __str__(self) -> str:
         return json.dumps(self.ToDict(), indent=4)
 
@@ -82,6 +104,14 @@ class HeadlineCollection:
 
     def append(self, H : Headline) -> None:
         self.collection.append(H)
+
+    def AddFeature(self, feature) -> None:
+        for e in self.collection:
+            e.AddFeature(feature)
+
+    def AddFeatures(self, features : List) -> None:
+        for e in self.collection:
+            e.AddFeatures(features)
 
     def ToPB(self) -> Headline_pb2.HeadlineCollection:
         col_pb = Headline_pb2.HeadlineCollection()
@@ -101,7 +131,8 @@ class HeadlineCollection:
         fd.write(self.ToPB().SerializeToString())
 
     def __iter__(self) -> None:
-        return HeadlineIterator(self)
+        for e in self.collection:
+            yield e
 
     def __getitem__(self, index : int):
         return self.collection[index]
@@ -115,17 +146,6 @@ class HeadlineCollection:
             indent=4
         )
 
-class HeadlineIterator:
-    def __init__(self, HC : HeadlineCollection):
-        self._HC = HC
-        self._index = 0
-
-    def __next__(self) -> Headline:
-        if self._index >= len(self._HC.collection):
-            raise StopIteration()
-        self._index += 1
-        return self._HC.collection[self._index-1]
-
 
 class Candidates:
     def __init__(
@@ -137,6 +157,14 @@ class Candidates:
         self.HL1 = headline1
         self.HL2 = headline2
         self.label = label
+
+    def AddFeature(self, feature) -> None:
+        self.HL1.AddFeature(feature)
+        self.HL2.AddFeature(feature)
+
+    def AddFeatures(self, features : List) -> None:
+        self.HL1.AddFeatures(features)
+        self.HL2.AddFeatures(features)
 
     def ToPB(self, C : Candidates_pb2.CandidateCollection.Candidates) -> None:
         self.HL1.ToPB(C.HL1)
@@ -163,6 +191,14 @@ class CandidateCollection:
     def append(self, H : Candidates) -> None:
         self.collection.append(H)
 
+    def AddFeature(self, feature) -> None:
+        for e in self.collection:
+            e.AddFeature(feature)
+
+    def AddFeatures(self, features : List) -> None:
+        for e in self.collection:
+            e.AddFeatures(feature)
+
     def ToPB(self) -> Candidates_pb2.CandidateCollection:
         col_pb = Candidates_pb2.CandidateCollection()
         for cand in self.collection:
@@ -181,7 +217,8 @@ class CandidateCollection:
         fd.write(self.ToPB().SerializeToString())
 
     def __iter__(self) -> None:
-        return CandidateIterator(self)
+        for e in self.collection:
+            yield e
 
     def __getitem__(self, index : int):
         return self.collection[index]
@@ -194,18 +231,6 @@ class CandidateCollection:
             [e.ToDict() for e in self.collection],
             indent=4
         )
-
-class CandidateIterator:
-    def __init__(self, HC : CandidateCollection):
-        self._HC = HC
-        self._index = 0
-
-    def __next__(self) -> Candidates:
-        if self._index >= len(self._HC.collection):
-            raise StopIteration()
-        self._index += 1
-        return self._HC.collection[self._index-1]
-
 
 def build_headline(l : List, grades = True) -> Headline:
     st = l[1]

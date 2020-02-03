@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..")
-import parsing
+import lib.parsing
 
 ins = [
     "../../data/task-1/train.csv",
