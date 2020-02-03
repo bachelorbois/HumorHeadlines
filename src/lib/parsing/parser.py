@@ -102,6 +102,14 @@ class HeadlineCollection:
     def append(self, H : Headline) -> None:
         self.collection.append(H)
 
+    def AddFeature(self, feature) -> None:
+        for e in self.collection:
+            e.AddFeature(feature)
+
+    def AddFeatures(self, features : List) -> None:
+        for e in self.collection:
+            e.AddFeatures(features)
+
     def ToPB(self) -> Headline_pb2.HeadlineCollection:
         col_pb = Headline_pb2.HeadlineCollection()
         for HL in self.collection:
@@ -147,6 +155,14 @@ class Candidates:
         self.HL2 = headline2
         self.label = label
 
+    def AddFeature(self, feature) -> None:
+        self.HL1.AddFeature(feature)
+        self.HL2.AddFeature(feature)
+
+    def AddFeatures(self, features : List) -> None:
+        self.HL1.AddFeatures(features)
+        self.HL2.AddFeatures(features)
+
     def ToPB(self, C : Candidates_pb2.CandidateCollection.Candidates) -> None:
         self.HL1.ToPB(C.HL1)
         self.HL2.ToPB(C.HL2)
@@ -171,6 +187,14 @@ class CandidateCollection:
 
     def append(self, H : Candidates) -> None:
         self.collection.append(H)
+
+    def AddFeature(self, feature) -> None:
+        for e in self.collection:
+            e.AddFeature(feature)
+
+    def AddFeatures(self, features : List) -> None:
+        for e in self.collection:
+            e.AddFeatures(feature)
 
     def ToPB(self) -> Candidates_pb2.CandidateCollection:
         col_pb = Candidates_pb2.CandidateCollection()
