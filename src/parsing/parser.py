@@ -208,10 +208,22 @@ class CandidateIterator:
 
 
 def build_headline(l : List, grades = True) -> Headline:
-    s = l[1].split(" ")
+    st = l[1]
+    try:
+        a = st.index("<")
+        b = st.index(">")
+
+        st = st[:a] + st[a:b+1].replace(" ", "¤^~") + st[b+1:]
+
+    except ValueError:
+        raise ValueError("Sentence did not contain a tagged word")
+
+    s = st.split(" ")
     ind = -1
+
     for i, e in enumerate(s):
         if "/>" in e:
+            s[i] = s[i].replace("¤^~", " ")
             ind = i
             break
 
