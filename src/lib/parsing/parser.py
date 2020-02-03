@@ -4,8 +4,11 @@ from collections import Iterator
 from typing import List, Dict, TextIO, BinaryIO
 from enum import Enum
 
-import parsing.Headline_pb2 as Headline_pb2
-import parsing.Candidates_pb2 as Candidates_pb2
+import numpy as np
+
+import lib.parsing.Headline_pb2 as Headline_pb2
+import lib.parsing.Candidates_pb2 as Candidates_pb2
+
 
 class Label(Enum):
     NA = -1
@@ -43,6 +46,22 @@ class Headline:
         self.edit = edit
         self.grades = grades
         self.avg_grade = avg_grade
+        self.features = []
+
+    def AddFeature(self, feature) -> None:
+        self.features.append(feature)
+
+    def AddFeatures(self, features : List) -> None:
+        self.features.extend(features)
+
+    def GetFeatureVector(self) -> np.ndarray:
+        res = []
+        for feature in self.features:
+            res.extend(
+                feature.compute_feature(self)
+            )
+
+        return np.array(res)
 
     def GetTokenized(self) -> List[str]:
         return self.sentence
@@ -101,7 +120,8 @@ class HeadlineCollection:
         fd.write(self.ToPB().SerializeToString())
 
     def __iter__(self) -> None:
-        return HeadlineIterator(self)
+        for e in self.collection:
+            yield e
 
     def __getitem__(self, index : int):
         return self.collection[index]
@@ -114,17 +134,6 @@ class HeadlineCollection:
             [e.ToDict() for e in self.collection],
             indent=4
         )
-
-class HeadlineIterator:
-    def __init__(self, HC : HeadlineCollection):
-        self._HC = HC
-        self._index = 0
-
-    def __next__(self) -> Headline:
-        if self._index >= len(self._HC.collection):
-            raise StopIteration()
-        self._index += 1
-        return self._HC.collection[self._index-1]
 
 
 class Candidates:
@@ -181,7 +190,8 @@ class CandidateCollection:
         fd.write(self.ToPB().SerializeToString())
 
     def __iter__(self) -> None:
-        return CandidateIterator(self)
+        for e in self.collection:
+            yield e
 
     def __getitem__(self, index : int):
         return self.collection[index]
@@ -194,18 +204,6 @@ class CandidateCollection:
             [e.ToDict() for e in self.collection],
             indent=4
         )
-
-class CandidateIterator:
-    def __init__(self, HC : CandidateCollection):
-        self._HC = HC
-        self._index = 0
-
-    def __next__(self) -> Candidates:
-        if self._index >= len(self._HC.collection):
-            raise StopIteration()
-        self._index += 1
-        return self._HC.collection[self._index-1]
-
 
 def build_headline(l : List, grades = True) -> Headline:
     st = l[1]
