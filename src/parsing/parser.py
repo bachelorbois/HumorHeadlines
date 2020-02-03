@@ -103,6 +103,12 @@ class HeadlineCollection:
     def __iter__(self) -> None:
         return HeadlineIterator(self)
 
+    def __getitem__(self, index : int):
+        return self.collection[index]
+
+    def __len__(self):
+        return len(self.collection)
+
     def __str__(self) -> str:
         return json.dumps(
             [e.ToDict() for e in self.collection],
@@ -176,6 +182,12 @@ class CandidateCollection:
 
     def __iter__(self) -> None:
         return CandidateIterator(self)
+
+    def __getitem__(self, index : int):
+        return self.collection[index]
+
+    def __len__(self):
+        return len(self.collection)
 
     def __str__(self) -> str:
         return json.dumps(
