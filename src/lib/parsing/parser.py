@@ -9,6 +9,17 @@ import numpy as np
 import lib.parsing.Headline_pb2 as Headline_pb2
 import lib.parsing.Candidates_pb2 as Candidates_pb2
 
+__all__ = [
+    "Label",
+    "Headline",
+    "HeadlineCollection",
+    "Candidates",
+    "CandidateCollection",
+    "read_task1_csv",
+    "read_task1_pb",
+    "read_task2_csv",
+    "read_task2_pb"
+]
 
 class Label(Enum):
     NA = -1
@@ -34,6 +45,7 @@ class Headline:
     BERT_VOCAB = None
     BERT_VECTOR_LENGTH = 27
 
+    UNKNOWN = 100
     CLS = 101
     SEP = 102
 
@@ -90,14 +102,14 @@ class Headline:
 
         self.bert_vector = [0]*self.BERT_VECTOR_LENGTH
 
-        if len(self.sentence) + 2 <= self.BERT_VECTOR_LENGTH:
+        if len(self.sentence) + 2 > self.BERT_VECTOR_LENGTH:
             raise ValueError(f"Headline.BERT_VECTOR_LENGTH is not high enough. A sentence of length {len(self.sentence)} did not fit.")
 
         for i, word in enumerate(self.GetTokenizedWEdit()):
             if word in self.BERT_VOCAB:
                 self.bert_vector[i+1] = self.BERT_VOCAB[word]
             else:
-                self.bert_vector[i+1] = 100
+                self.bert_vector[i+1] = self.UNKNOWN
 
         self.bert_vector[0] = self.CLS
         self.bert_vector[len(self.sentence)+1] = self.SEP
