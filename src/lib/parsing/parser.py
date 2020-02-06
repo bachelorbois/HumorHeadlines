@@ -32,7 +32,10 @@ def PBToLabel(l : Candidates_pb2.CandidateCollection.Candidates.Label) -> Label:
 
 class Headline:
     BERT_VOCAB = None
-    BERT_VECTOR_LENGTH = 20
+    BERT_VECTOR_LENGTH = 27
+
+    CLS = 101
+    SEP = 102
 
     def __init__(
         self,
@@ -79,7 +82,7 @@ class Headline:
     def SetBERTVocab(cls, vocab_fd : TextIO) -> None:
         cls.BERT_VOCAB = {}
         for i, t in enumerate(vocab_fd):
-            cls.BERT_VOCAB[t] = i
+            cls.BERT_VOCAB[t.strip("\n")] = i
 
     def GenerateBERT(self) -> None:
         if self.BERT_VOCAB is None:
@@ -87,11 +90,16 @@ class Headline:
 
         self.bert_vector = [0]*self.BERT_VECTOR_LENGTH
 
-        for i, word in enumerate(self.sentence):
+        assert len(self.sentence) + 2 <= self.BERT_VECTOR_LENGTH
+
+        for i, word in enumerate(self.GetTokenizedWEdit()):
             if word in self.BERT_VOCAB:
-                self.bert_vector[i] = self.BERT_VOCAB[word]
+                self.bert_vector[i+1] = self.BERT_VOCAB[word]
             else:
                 self.bert_vector[i] = 100
+
+        self.bert_vector[0] = self.CLS
+        self.bert_vector[len(self.sentence)+1] = self.SEP
 
     def GetBERT(self) -> np.ndarray:
         if self.bert_vector is None:
@@ -271,7 +279,7 @@ def build_headline(l : List, grades = True) -> Headline:
     except ValueError:
         raise ValueError("Sentence did not contain a tagged word")
 
-    s = st.split(" ")
+    s = st.strip().split(" ")
     ind = -1
 
     for i, e in enumerate(s):

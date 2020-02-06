@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..")
-import lib.parsing
+import lib
 
 ins = [
     "../../data/task-1/train.csv",
@@ -17,10 +17,10 @@ grades = [
 ]
 
 read_funcs = [
-    parsing.read_task1_csv,
-    parsing.read_task1_csv,
-    parsing.read_task2_csv,
-    parsing.read_task2_csv
+    lib.read_task1_csv,
+    lib.read_task1_csv,
+    lib.read_task2_csv,
+    lib.read_task2_csv
 ]
 
 outs = [

@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..")
-import lib.parsing
+import lib
 
 ins = [
     "../../data/task-1/preproc/1_original_train.bin",
@@ -10,10 +10,10 @@ ins = [
 ]
 
 read_funcs = [
-    parsing.read_task1_pb,
-    parsing.read_task1_pb,
-    parsing.read_task2_pb,
-    parsing.read_task2_pb
+    lib.read_task1_pb,
+    lib.read_task1_pb,
+    lib.read_task2_pb,
+    lib.read_task2_pb
 ]
 
 outs = [
@@ -48,7 +48,7 @@ def proc(i, o, f):
 
             hl.word_index -= before
 
-        if isinstance(a, parsing.CandidateCollection):
+        if isinstance(a, lib.CandidateCollection):
             for c in a:
                 prochl(c.HL1)
                 prochl(c.HL2)
