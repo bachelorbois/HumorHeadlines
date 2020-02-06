@@ -370,7 +370,7 @@ def read_task2_csv(fd : TextIO, grades = True) -> CandidateCollection:
 
     return res
 
-def read_task1_pb(fd : TextIO, grades = True) -> HeadlineCollection:
+def read_task1_pb(fd : TextIO) -> HeadlineCollection:
     res = HeadlineCollection()
     hlc_pb = Headline_pb2.HeadlineCollection()
     hlc_pb.ParseFromString(fd.read())
@@ -378,7 +378,7 @@ def read_task1_pb(fd : TextIO, grades = True) -> HeadlineCollection:
     del hlc_pb
     return res
 
-def read_task2_pb(fd : TextIO, grades = True) -> CandidateCollection:
+def read_task2_pb(fd : TextIO) -> CandidateCollection:
     res = CandidateCollection()
     clc_pb = Candidates_pb2.CandidateCollection()
     clc_pb.ParseFromString(fd.read())
