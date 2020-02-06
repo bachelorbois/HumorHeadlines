@@ -90,7 +90,8 @@ class Headline:
 
         self.bert_vector = [0]*self.BERT_VECTOR_LENGTH
 
-        assert len(self.sentence) + 2 <= self.BERT_VECTOR_LENGTH
+        if len(self.sentence) + 2 <= self.BERT_VECTOR_LENGTH:
+            raise ValueError(f"Headline.BERT_VECTOR_LENGTH is not high enough. A sentence of length {len(self.sentence)} did not fit.")
 
         for i, word in enumerate(self.GetTokenizedWEdit()):
             if word in self.BERT_VOCAB:
