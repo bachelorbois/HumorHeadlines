@@ -161,6 +161,16 @@ class HeadlineCollection:
         for e in self.collection:
             e.AddFeatures(features)
 
+    def GetBERT(self) -> np.ndarray:
+        return np.array(
+            [h.GetBERT() for h in self.collection]
+        )
+
+    def GetGrades(self) -> np.ndarray:
+        return np.array(
+            [h.avg_grade for h in self.collection]
+        )
+
     def ToPB(self) -> Headline_pb2.HeadlineCollection:
         col_pb = Headline_pb2.HeadlineCollection()
         for HL in self.collection:
