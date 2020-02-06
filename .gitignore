@@ -2,4 +2,4 @@
 **/.vscode/
 **/test.py
 data/embeddings/
-**/*.ckpt
+**/*.ckpt*
