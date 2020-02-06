@@ -1,1 +1,2 @@
 protobuf>=3.11.2
+wget
