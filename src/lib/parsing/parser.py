@@ -31,6 +31,9 @@ def PBToLabel(l : Candidates_pb2.CandidateCollection.Candidates.Label) -> Label:
     raise ValueError()
 
 class Headline:
+    BERT_VOCAB = None
+    BERT_VECTOR_LENGTH = 20
+
     def __init__(
         self,
         id : int,
@@ -47,6 +50,7 @@ class Headline:
         self.grades = grades
         self.avg_grade = avg_grade
         self.features = []
+        self.bert_vector = None
 
     def AddFeature(self, feature) -> None:
         self.features.append(feature)
@@ -70,6 +74,29 @@ class Headline:
         l = self.sentence
         l[self.word_index] = self.edit
         return l
+
+    @classmethod
+    def SetBERTVocab(cls, vocab_fd : TextIO) -> None:
+        cls.BERT_VOCAB = {}
+        for i, t in enumerate(vocab_fd):
+            cls.BERT_VOCAB[t] = i
+
+    def GenerateBERT(self) -> None:
+        if self.BERT_VOCAB is None:
+            raise ValueError("Bert Vocab is None: Set it with Headline.SetBERTVocab()")
+
+        self.bert_vector = [0]*self.BERT_VECTOR_LENGTH
+
+        for i, word in enumerate(self.sentence):
+            if word in self.BERT_VOCAB:
+                self.bert_vector[i] = self.BERT_VOCAB[word]
+            else:
+                self.bert_vector[i] = 100
+
+    def GetBERT(self) -> np.ndarray:
+        if self.bert_vector is None:
+            self.GenerateBERT()
+        return np.array(self.bert_vector)
 
     def ToPB(self, HL : Headline_pb2.HeadlineCollection.Headline) -> None:
         HL.id = self.id
