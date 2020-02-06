@@ -96,7 +96,7 @@ class Headline:
             if word in self.BERT_VOCAB:
                 self.bert_vector[i+1] = self.BERT_VOCAB[word]
             else:
-                self.bert_vector[i] = 100
+                self.bert_vector[i+1] = 100
 
         self.bert_vector[0] = self.CLS
         self.bert_vector[len(self.sentence)+1] = self.SEP
