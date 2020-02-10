@@ -21,4 +21,4 @@ def get_bert_layer(params, name="BERT"):
     Returns:
         BertModelLayer -- Layer to place in our model
     """
-    return BertModelLayer.from_params(params)
+    return BertModelLayer.from_params(params, name=name)
