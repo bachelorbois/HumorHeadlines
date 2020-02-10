@@ -2,4 +2,6 @@
 **/.vscode/
 **/test.py
 data/embeddings/
+data/KnowledgeBase/
+**/headline_regression/
 **/*.ckpt*
