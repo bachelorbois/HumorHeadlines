@@ -1,2 +1,5 @@
 protobuf>=3.11.2
 wget
+bert-for-tf2
+python-Levenshtein
+g2p_en

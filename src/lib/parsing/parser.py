@@ -117,7 +117,7 @@ class Headline:
     def GetBERT(self) -> np.ndarray:
         if self.bert_vector is None:
             self.GenerateBERT()
-        return np.array(self.bert_vector)
+        return np.asarray(self.bert_vector)
 
     def ToPB(self, HL : Headline_pb2.HeadlineCollection.Headline) -> None:
         HL.id = self.id
@@ -162,12 +162,12 @@ class HeadlineCollection:
             e.AddFeatures(features)
 
     def GetBERT(self) -> np.ndarray:
-        return np.array(
+        return np.asarray(
             [h.GetBERT() for h in self.collection]
         )
 
     def GetGrades(self) -> np.ndarray:
-        return np.array(
+        return np.asarray(
             [h.avg_grade for h in self.collection]
         )
 
