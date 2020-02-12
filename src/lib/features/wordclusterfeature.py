@@ -1,4 +1,4 @@
-import lib
+#import ..lib
 from lib.parsing import Headline
 from lib.features import Feature
 import numpy as np
@@ -6,15 +6,12 @@ from sklearn.cluster import KMeans
 from sklearn import cluster
 from sklearn import metrics
 from sklearn.metrics import silhouette_score
-from fcmeans import FCM
 import matplotlib.pyplot as plt
 import os
 import wget
 import linecache
 from zipfile import ZipFile
 import pickle
-
-DATA_FILE = "data/task-1/preproc/1_original_train.bin"
 
 
 class ClusterFeatures(Feature):
@@ -87,19 +84,4 @@ class ClusterFeatures(Feature):
             replacement_emb = np.zeros((300))
 
         return replaced_emb, replacement_emb
-    
 
-"""
-if __name__ == "__main__":
-    
-    c = ClusterFeatures
-
-    with open(DATA_FILE, "rb") as fd:
-        headlinecollection = lib.read_task1_pb(fd)
-
-        headlinecollection.AddFeature(lib.WordClustersFeature)
-        all_feats = []
-        for hl in headlinecollection:
-            feat = c.compute_feature(hl)
-            all_feats.append(feat)
-"""
