@@ -5,3 +5,4 @@ python-Levenshtein
 g2p_en
 sklearn
 matplotlib
+sentencepiece

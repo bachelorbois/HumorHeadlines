@@ -160,6 +160,12 @@ class HeadlineCollection:
     def AddFeatures(self, features : List) -> None:
         for e in self.collection:
             e.AddFeatures(features)
+    
+    def GetFeatureVectors(self) -> np.ndarray:
+        return np.array(
+            [e.GetFeatureVector() for e in self.collection]
+        )
+
 
     def GetBERT(self) -> np.ndarray:
         return np.asarray(

@@ -19,9 +19,9 @@ class ClusterFeatures(Feature):
     FT = None
 
     DATASET_URL = "https://dl.fbaipublicfiles.com/fasttext/vectors-english/wiki-news-300d-1M.vec.zip"
-    DATA_DIR = "data/embeddings/"
+    DATA_DIR = "../data/embeddings/"
     EMBED_FILE = os.path.join(DATA_DIR, "wiki-news-300d-1M.vec")
-    MODEL_PATH = "src/lib/models/kmeans/model.sav"
+    MODEL_PATH = "./lib/models/kmeans/model.sav"
 
     @classmethod
     def load_embeddings(cls):
