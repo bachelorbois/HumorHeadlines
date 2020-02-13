@@ -24,4 +24,6 @@ def create_HUMOR_model(phonetics_len : int, distance_len : int, position_len : i
                    loss="mean_squared_error",
                    metrics=[metrics.RootMeanSquaredError()])
 
+    HUMOR.summary()
+
     return HUMOR

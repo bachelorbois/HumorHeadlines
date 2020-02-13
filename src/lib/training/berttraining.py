@@ -9,7 +9,6 @@ np.set_printoptions(threshold=np.inf)
 
 # Custom libraries
 from lib.parsing import Headline, read_task1_pb
-from lib.models.bertmodel import create_model
 import os
 import math
 
@@ -65,12 +64,12 @@ class BertTraining:
         # Save the final weights
         self.bertie.save_weights(self.SAVE_DIR+'final.hdf5')
 
-    def test(self, save_file : str):
+    def test(self):
         # Test data
         x_test = self.test_data.GetBERT()
 
         # Predict on the data
-        preds = self.bertie.predict(x_test[:100])
+        preds = self.bertie.predict(x_test)
 
         # Save the predictions to file
         np.savetxt(self.PRED_FILE, preds)
