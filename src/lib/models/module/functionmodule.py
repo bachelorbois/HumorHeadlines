@@ -9,7 +9,7 @@ def sigmoid_3(inputs):
     Returns:
         float -- Scaled value between 0 - 3
     """
-    return tf.sigmoid(inputs)
+    return tf.multiply(tf.sigmoid(inputs), 3)
 
 def RMSE(y_true, y_pred):
     """Root Mean Squared Error

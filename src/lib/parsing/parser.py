@@ -125,7 +125,7 @@ class Headline:
         HL.word_index = self.word_index
         HL.edit = self.edit
         HL.grades.extend(self.grades)
-        HL.avg_grade = self.avg_grade if self.avg_grade else -1
+        HL.avg_grade = -1 if self.avg_grade is None else self.avg_grade
 
     def ToDict(self) -> Dict:
         return {
@@ -167,7 +167,7 @@ class HeadlineCollection:
         )
 
     def GetGrades(self) -> np.ndarray:
-        return np.asarray(
+        return np.array(
             [h.avg_grade for h in self.collection]
         )
 
@@ -255,7 +255,7 @@ class CandidateCollection:
 
     def AddFeatures(self, features : List) -> None:
         for e in self.collection:
-            e.AddFeatures(feature)
+            e.AddFeatures(features)
 
     def ToPB(self) -> Candidates_pb2.CandidateCollection:
         col_pb = Candidates_pb2.CandidateCollection()
