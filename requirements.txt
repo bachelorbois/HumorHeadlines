@@ -3,4 +3,6 @@ wget
 bert-for-tf2
 python-Levenshtein
 g2p_en
+sklearn
+matplotlib
 sentencepiece

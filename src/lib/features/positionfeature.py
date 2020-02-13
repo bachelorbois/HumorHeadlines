@@ -2,7 +2,7 @@ import numpy as np
 from lib.features import Feature
 from lib.parsing import Headline
 
-class Positionfeature(Feature):
+class PositionFeature(Feature):
     SCALING_FACTOR = 1
 
     @classmethod
