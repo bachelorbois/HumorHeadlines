@@ -167,7 +167,7 @@ class HeadlineCollection:
         )
 
     def GetGrades(self) -> np.ndarray:
-        return np.asarray(
+        return np.array(
             [h.avg_grade for h in self.collection]
         )
 
