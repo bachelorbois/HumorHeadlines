@@ -11,6 +11,8 @@ class SentLenFeature(Feature):
     stpwds = list(stpwds)
     #possessive nouns are separated into 2 tokens, which has an unintended effect on length.
     stpwds.append('’s')
+    stpwds.append("'s")
+    stpwds.append("'m")
     #limit defined in the original paper.
     max_len = 20
     @classmethod
