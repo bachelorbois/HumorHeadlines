@@ -3,7 +3,7 @@ from lib.features import Feature
 from lib.parsing import Headline
 from random import randint
 
-class Testfeature(Feature):
+class TestFeature(Feature):
     FROM = 1
     TO = 6
 
