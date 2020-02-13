@@ -1,17 +1,17 @@
+import numpy as np
+from Levenshtein import StringMatcher
+from g2p_en import G2p
 from lib.features import Feature
 from lib.parsing import Headline
-from Levenshtein import StringMatcher
-import numpy as np
-from g2p_en import G2p
 
 class PhoneticFeature(Feature):
-    # initialize grapheme to phoneme 
+    # initialize grapheme to phoneme
     g2p = G2p()
     # error counter
-    counter = 0
+    #counter = 0
 
     @classmethod
-    def compute_feature(cls, HL : Headline) -> np.ndarray:
+    def compute_feature(cls, HL: Headline) -> np.ndarray:
         # replaced word & replacement word.
         words = [HL.sentence[HL.word_index], HL.edit]
         # transcibe each token to arpabet.
@@ -32,5 +32,4 @@ class PhoneticFeature(Feature):
         # scale using the max difference in "word length"
         scale_factor = max([len(w) for w in phones])
         scaled_dist = levenshtein_dist/scale_factor
-
         return np.array([scaled_dist])
