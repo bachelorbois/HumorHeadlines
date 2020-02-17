@@ -31,6 +31,7 @@ class HumorTraining:
         features = [PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeatures, SentLenFeature]
 
         self.train_data.AddFeatures(features)
+        self.test_data.AddFeatures(features)
 
     def train(self, epoch, batch_size, validation_split=0.2):
         features, y_train = self.train_data.GetFeatureVectors(), self.train_data.GetGrades()
@@ -38,7 +39,7 @@ class HumorTraining:
 
         if (self.embeds):
             text = self.train_data.GetEditSentences()
-            ins = {"feature_input": features, "string_input": text}
+            ins["string_input"] = text
 
         # Create callbacks
         tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR)
@@ -54,16 +55,21 @@ class HumorTraining:
                         batch_size=batch_size,
                         epochs=epoch,
                         shuffle=True,
-                        callbacks=[lr_schedule])
+                        callbacks=[lr_schedule, tensorboard])
+
+        self.humor.save_weights(self.SAVE_DIR+'final.hdf5')
 
     def test(self):
         # Test data
         features = self.test_data.GetFeatureVectors()
         ins = {"feature_input": features}
 
+        print(ins)
+
         if (self.embeds):
             text = self.test_data.GetEditSentences()
-            ins = {"feature_input": features, "string_input": text}
+            ins["string_input"] = text
+
         # Predict on the data
         preds = self.humor.predict(ins)
 

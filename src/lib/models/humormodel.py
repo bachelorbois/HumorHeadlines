@@ -5,13 +5,13 @@ import tensorflow_hub as hub
 from lib.models.module.functionmodule import sigmoid_3
 from lib.models.layers.elmo import ElmoEmbeddingLayer
 
-def create_HUMOR_model(feature_len : int, ELMo : bool = False) -> Model:
+def create_HUMOR_model(feature_len : int, embeds : bool = False) -> Model:
     input_features = layers.Input(shape=(feature_len,), dtype='float32', name="feature_input")
     
-    if (ELMo):
+    if (embeds):
         input_text = layers.Input(shape=(), dtype=tf.string, name="string_input")
-        elmo_embed = hub.KerasLayer('https://tfhub.dev/google/tf2-preview/nnlm-en-dim128-with-normalization/1')(input_text)    # Expects a tf.string input tensor.
-        concat = layers.Concatenate()([input_features, elmo_embed])
+        embed = hub.KerasLayer('https://tfhub.dev/google/tf2-preview/nnlm-en-dim128-with-normalization/1')(input_text)    # Expects a tf.string input tensor.
+        concat = layers.Concatenate()([input_features, embed])
         dense1 = layers.Dense(128, activation='relu')(concat)
     else:
         dense1 = layers.Dense(128, activation='relu')(input_features)
@@ -23,7 +23,7 @@ def create_HUMOR_model(feature_len : int, ELMo : bool = False) -> Model:
     dense3_dropout = layers.Dropout(0.5)(dense3)
     output = layers.Dense(1, activation=sigmoid_3)(dense3_dropout)
 
-    if (ELMo):
+    if (embeds):
         HUMOR = Model(inputs=[input_features, input_text], outputs=output)
     else:
         HUMOR = Model(inputs=input_features, outputs=output)
