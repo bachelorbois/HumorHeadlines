@@ -40,7 +40,7 @@ def run_FFNN():
     with open("lib/models/pre-trained/sarcasm_model_config.json", "w") as json_file:
         json_file.write(model.to_json())
 
-    model.save_weights("lib/models/pre-trained/sarcasm_model.h5")
+    model.save("lib/models/pre-trained/sarcasm_model.h5")
 
     
 def process_sentences(tokenized_sentences, dictionary):
