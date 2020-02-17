@@ -119,6 +119,11 @@ class Headline:
             self.GenerateBERT()
         return np.asarray(self.bert_vector)
 
+    def GetEdited(self) -> str:
+        sent = self.sentence
+        sent[self.word_index] = self.edit
+        return " ".join(sent)
+
     def ToPB(self, HL : Headline_pb2.HeadlineCollection.Headline) -> None:
         HL.id = self.id
         HL.sentence.extend(self.sentence)
@@ -175,6 +180,11 @@ class HeadlineCollection:
     def GetGrades(self) -> np.ndarray:
         return np.array(
             [h.avg_grade for h in self.collection]
+        )
+
+    def GetEditSentences(self) -> np.ndarray:
+        return np.array(
+            [h.GetEdited() for h in self.collection]
         )
 
     def ToPB(self) -> Headline_pb2.HeadlineCollection:

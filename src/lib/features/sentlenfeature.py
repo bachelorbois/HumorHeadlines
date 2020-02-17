@@ -13,6 +13,7 @@ class SentLenFeature(Feature):
     stpwds.append('’s')
     #limit defined in the original paper.
     max_len = 20
+
     @classmethod
     def compute_feature(cls, HL: Headline) -> np.ndarray:
         s = HL.sentence

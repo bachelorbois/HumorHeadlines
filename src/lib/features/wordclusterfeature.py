@@ -25,7 +25,7 @@ class ClusterFeatures(Feature):
 
     @classmethod
     def load_embeddings(cls):
-        print("Building embedding index...")
+        print("Building embedding index for Clustering...")
         cls.FT = {}
         with open(cls.EMBED_FILE, "r") as fd:
             next(fd)
@@ -35,7 +35,6 @@ class ClusterFeatures(Feature):
         if not os.path.isfile(cls.MODEL_PATH):
             cls.all_embeddings = []
             for w in cls.FT.keys():
-                cls.key_emb = []
                 cls.key_emb = np.array([float(e) for e in linecache.getline(cls.EMBED_FILE, cls.FT[w]).replace("\n", "").split(" ")[1:]])
                 if cls.key_emb.shape[0] == 300:
                     cls.all_embeddings.append(cls.key_emb)
