@@ -6,7 +6,7 @@ from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 
 
-def run_logistic_regression():
+def run_FFNN():
     DATA_FILE = "../data/extra_data_sarcasm/Sarcasm_Headlines_Dataset.json"
     DATA_FILE_v2 = "../data/extra_data_sarcasm/Sarcasm_Headlines_Dataset_v2.json"
 
@@ -83,4 +83,4 @@ def merge_datasets(file1, file2):
     
 
 if __name__ == "__main__":
-    run_logistic_regression()
+    run_FFNN()
