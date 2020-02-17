@@ -171,7 +171,6 @@ class HeadlineCollection:
             [e.GetFeatureVector() for e in self.collection]
         )
 
-
     def GetBERT(self) -> np.ndarray:
         return np.asarray(
             [h.GetBERT() for h in self.collection]
@@ -185,6 +184,11 @@ class HeadlineCollection:
     def GetEditSentences(self) -> np.ndarray:
         return np.array(
             [h.GetEdited() for h in self.collection]
+        )
+
+    def GetTokenizedWEdit(self) -> np.ndarray:
+        return np.array(
+            [h.GetTokenizedWEdit() for h in self.collection]
         )
 
     def ToPB(self) -> Headline_pb2.HeadlineCollection:

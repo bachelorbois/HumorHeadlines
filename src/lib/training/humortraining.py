@@ -19,6 +19,7 @@ class HumorTraining:
     def __init__(self, Humor : Model, embeds : bool, train_path : str, test_path : str):
         self.humor = Humor
         self.embeds = embeds
+        self.fastTextEmbeds = self.load_embeddings()
 
         os.makedirs(self.LOG_DIR)
         os.makedirs(self.SAVE_DIR)
@@ -36,6 +37,10 @@ class HumorTraining:
     def train(self, epoch, batch_size, validation_split=0.2):
         features, y_train = self.train_data.GetFeatureVectors(), self.train_data.GetGrades()
         ins = {"feature_input": features}
+
+        token = self.train_data.GetTokenizedWEdit()
+        processedSents = self.process_sentences(token, self.fastTextEmbeds)
+        ins["token_input"] = processedSents
 
         if (self.embeds):
             text = self.train_data.GetEditSentences()
@@ -57,7 +62,7 @@ class HumorTraining:
                         shuffle=True,
                         callbacks=[lr_schedule, tensorboard])
 
-        self.humor.save_weights(self.SAVE_DIR+'final.hdf5')
+        self.humor.save(self.SAVE_DIR+'final.hdf5')
 
     def test(self):
         # Test data
@@ -75,6 +80,34 @@ class HumorTraining:
 
         # Save the predictions to file
         np.savetxt(self.PRED_FILE, preds)
+
+    @staticmethod
+    def process_sentences(tokenized_sentences, dictionary):
+        proc_sentences = [] 
+        for sentence in tokenized_sentences:
+            agg = np.zeros((300))
+            for token in sentence:
+                try:
+                    agg = np.add(agg, dictionary[token])
+                except KeyError:
+                    agg = np.add(agg, dictionary['UNK'])
+            proc_sentences.append(agg/len(sentence))
+
+        return np.array(proc_sentences)
+
+    @staticmethod
+    def load_embeddings():
+        dictionary = {}
+        with open("../data/embeddings/wiki-news-300d-1M.vec") as infile:
+            for line in infile:
+                line = line.split()
+                word = line[0]
+                emb = np.array(line[1:], dtype='float')
+                dictionary[word] = emb
+
+        dictionary['UNK'] = np.array(list(dictionary.values())).mean()
+        
+        return dictionary
 
     @staticmethod
     def create_learning_rate_scheduler(max_learn_rate=5e-5,
