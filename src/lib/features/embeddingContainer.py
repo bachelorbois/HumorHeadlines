@@ -43,6 +43,7 @@ class EmbeddingContainer():
 
     @classmethod
     def lookup(cls, replaced, replacement):
+        replaced_emb, replacement_emb = np.zeros((300)), np.zeros((300))
         try:
             replaced_emb = np.array([float(e) for e in linecache.getline(cls.EMBED_FILE, cls.FT[replaced]).replace("\n", "").split(" ")[1:]])
         except KeyError:
