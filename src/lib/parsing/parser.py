@@ -171,6 +171,11 @@ class HeadlineCollection:
             [e.GetFeatureVector() for e in self.collection]
         )
 
+    def GetIDs(self) -> np.ndarray:
+        return np.array(
+            [h.id for h in self.collection]
+        )
+
     def GetBERT(self) -> np.ndarray:
         return np.asarray(
             [h.GetBERT() for h in self.collection]

@@ -3,6 +3,7 @@ import wget
 import linecache
 from zipfile import ZipFile
 import numpy as np
+import pickle
 from lib.parsing import Headline
 from lib.features import Feature
 

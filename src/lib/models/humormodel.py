@@ -9,11 +9,12 @@ from lib.models.layers.elmo import ElmoEmbeddingLayer
 def create_HUMOR_model(feature_len : int, token_len : int, embeds : bool = False) -> Model:
     pretrained_dir = f'{os.getcwd()}/lib/models/pre-trained/'
     input_features = layers.Input(shape=(feature_len,), dtype='float32', name="feature_input")
-    input_tokens = layers.Input(shape=(token_len,), dtype=tf.string, name="token_input")
+    input_tokens = layers.Input(shape=(token_len,), dtype='float32', name="token_input")
 
-    sarcasm = models.load_model(pretrained_dir + 'sarcasm_model.h5')(input_tokens)
+    sarcasm = models.load_model(pretrained_dir + 'sarcasm_model.h5')
+    sarcasm.trainable = False
 
-    concat_features = [input_features, sarcasm]
+    concat_features = [input_features, sarcasm(input_tokens)]
     
     if (embeds):
         input_text = layers.Input(shape=(), dtype=tf.string, name="string_input")
@@ -30,9 +31,9 @@ def create_HUMOR_model(feature_len : int, token_len : int, embeds : bool = False
     output = layers.Dense(1, activation=sigmoid_3)(dense3_dropout)
 
     if (embeds):
-        HUMOR = Model(inputs=[input_features, input_text], outputs=output)
+        HUMOR = Model(inputs=[input_features, input_tokens, input_text], outputs=output)
     else:
-        HUMOR = Model(inputs=input_features, outputs=output)
+        HUMOR = Model(inputs=[input_features, input_tokens], outputs=output)
 
     HUMOR.compile(optimizer=optimizers.Adam(clipnorm=1., clipvalue=0.5),
                    loss="mean_squared_error",

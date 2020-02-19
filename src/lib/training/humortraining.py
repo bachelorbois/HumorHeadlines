@@ -4,6 +4,7 @@ import numpy as np
 import math
 import datetime
 import os
+import pickle
 
 from lib.models import create_HUMOR_model
 from lib.parsing.parser import read_task1_pb
@@ -14,11 +15,13 @@ class HumorTraining:
     LOG_DIR = DIR + '/logs/'
     SAVE_DIR = DIR + '/weights/'
     PRED_DIR = DIR + '/predictions/'
-    PRED_FILE = PRED_DIR + '/task-1.txt'
+    PRED_FILE = PRED_DIR + '/task-1-output.csv'
+    EMBED_FILE = "../data/embeddings/wiki-news-300d-1M"
 
     def __init__(self, Humor : Model, embeds : bool, train_path : str, test_path : str):
         self.humor = Humor
         self.embeds = embeds
+        print("Loading fastText Embedings...")
         self.fastTextEmbeds = self.load_embeddings()
 
         os.makedirs(self.LOG_DIR)
@@ -48,9 +51,9 @@ class HumorTraining:
 
         # Create callbacks
         tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR)
-        lr_schedule = self.create_learning_rate_scheduler(max_learn_rate=1e-3,
-                                                        end_learn_rate=1e-7,
-                                                        warmup_epoch_count=5,
+        lr_schedule = self.create_learning_rate_scheduler(max_learn_rate=1e-2,
+                                                        end_learn_rate=1e-6,
+                                                        warmup_epoch_count=15,
                                                         total_epoch_count=epoch)
 
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
@@ -69,7 +72,9 @@ class HumorTraining:
         features = self.test_data.GetFeatureVectors()
         ins = {"feature_input": features}
 
-        print(ins)
+        token = self.test_data.GetTokenizedWEdit()
+        processedSents = self.process_sentences(token, self.fastTextEmbeds)
+        ins["token_input"] = processedSents
 
         if (self.embeds):
             text = self.test_data.GetEditSentences()
@@ -77,9 +82,11 @@ class HumorTraining:
 
         # Predict on the data
         preds = self.humor.predict(ins)
-
+        ids = self.test_data.GetIDs()
+        
+        out = np.stack((ids, preds.flatten()), axis=-1)
         # Save the predictions to file
-        np.savetxt(self.PRED_FILE, preds)
+        np.savetxt(self.PRED_FILE, out, fmt="%d,%1.8f")
 
     @staticmethod
     def process_sentences(tokenized_sentences, dictionary):
@@ -95,17 +102,25 @@ class HumorTraining:
 
         return np.array(proc_sentences)
 
-    @staticmethod
-    def load_embeddings():
+    def load_embeddings(self):
         dictionary = {}
-        with open("../data/embeddings/wiki-news-300d-1M.vec") as infile:
-            for line in infile:
-                line = line.split()
-                word = line[0]
-                emb = np.array(line[1:], dtype='float')
-                dictionary[word] = emb
+        if not os.path.isfile(self.EMBED_FILE + '.p'):
+            with open(self.EMBED_FILE + '.vec', 'r') as infile:
+                for line in infile:
+                    line = line.split()
+                    word = line[0]
+                    emb = np.array(line[1:], dtype='float')
+                    dictionary[word] = emb
 
-        dictionary['UNK'] = np.array(list(dictionary.values())).mean()
+            dictionary['UNK'] = np.array(list(dictionary.values())).mean()
+
+            with open(self.EMBED_FILE + '.p', 'wb') as f:
+                pickle.dump(dictionary, f)
+
+
+        else:
+            with open(self.EMBED_FILE + '.p', 'rb') as f:
+                dictionary = pickle.load(f)
         
         return dictionary
 
