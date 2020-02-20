@@ -1,16 +1,22 @@
-import os
-import wget
-import linecache
-from zipfile import ZipFile
 import numpy as np
-import pickle
 from lib.parsing import Headline
 from lib.features import Feature
 from lib.features.embeddingContainer import EmbeddingContainer
 
 class DistanceFeature(Feature):
+    """A feature encoding the cosine distance between the edit and the edited word in embedding space.
+    The embedding used can be set in the EmbeddingContainer static class.
+    """
     @classmethod
     def compute_feature(cls, HL : Headline) -> np.ndarray:
+        """Computes the distance feature for the provided Headline.
+
+        Args:
+            HL (Headline): The headline the distance should be computed for.
+
+        Returns:
+            np.ndarray: Distance encoded as a vector
+        """
         EmbeddingContainer.init()
 
         w1 = HL.sentence[HL.word_index]

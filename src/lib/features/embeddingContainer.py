@@ -2,9 +2,12 @@ import os
 import wget
 import linecache
 from zipfile import ZipFile
+from typing import Tuple
 import numpy as np
 
 class EmbeddingContainer():
+    """A static container class managing embedding allocation.
+    """
     FT = None
 
     DATASET_URL = "https://dl.fbaipublicfiles.com/fasttext/vectors-english/wiki-news-300d-1M.vec.zip"
@@ -42,21 +45,36 @@ class EmbeddingContainer():
                 cls.FT[l.split(maxsplit=1)[0]] = i
 
     @classmethod
-    def lookup(cls, replaced, replacement):
-        replaced_emb, replacement_emb = np.zeros((300)), np.zeros((300))
-        try:
-            replaced_emb = np.array([float(e) for e in linecache.getline(cls.EMBED_FILE, cls.FT[replaced]).replace("\n", "").split(" ")[1:]])
-        except KeyError:
-            replaced_emb = np.zeros((300))
+    def lookup_single(cls, word : str) -> np.ndarray:
+        """Looks up a single word in the embedding
 
-        try:
-            replacement_emb = np.array([float(e) for e in linecache.getline(cls.EMBED_FILE, cls.FT[replacement]).replace("\n", "").split(" ")[1:]])
-        except KeyError:
-            replacement_emb = np.zeros((300))
+        Args:
+            word (str): A word to look up
 
-        return replaced_emb, replacement_emb
+        Returns:
+            np.ndarray: A 300d embedding vector
+        """
+        try:
+            return np.array([float(e) for e in linecache.getline(cls.EMBED_FILE, cls.FT[word]).replace("\n", "").split(" ")[1:]])
+
+        return np.zeros((300))
+
+    @classmethod
+    def lookup(cls, replaced : str, replacement : str) -> Tuple[np.ndarray, np.ndarray]:
+        """Looks up the appropriate embedding for a replaced and replacement word
+
+        Args:
+            replaced (str): A word
+            replacement (str): A word
+
+        Returns:
+            (np.ndarray, np.ndarray): An embedding vector for each word
+        """
+        return cls.lookup_single(replaced), cls.lookup_single(replacement)
 
     @classmethod
     def init(cls) -> None:
+        """Ensures that the container is properly initialised. Must be run before doing a lookup to ensure proper configuration.
+        """
         if cls.FT is None:
             cls.load_ft()
