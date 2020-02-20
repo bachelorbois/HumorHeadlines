@@ -10,14 +10,13 @@ class SentLenFeature(Feature):
     stpwds += '—‘’$“”'
     stpwds = list(stpwds)
     #possessive nouns are separated into 2 tokens, which has an unintended effect on length.
-    stpwds.append('’s')
-    stpwds.append("'s")
-    stpwds.append("'m")
+    stpwds.extend(['’s', "'s", "'m", "...", 'n’t'])
     #limit defined in the original paper.
     max_len = 20
     @classmethod
     def compute_feature(cls, HL: Headline) -> np.ndarray:
         s = HL.sentence
+        print(" ".join(s))
         #count for each word not specified in the stop-list
         len_wo_stpwds = sum([1 for w in s if w not in cls.stpwds])
         #len_stpwds = sum([1 for w in s if w in cls.stpwds])
