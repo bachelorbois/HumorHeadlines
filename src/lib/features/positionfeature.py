@@ -3,6 +3,8 @@ from lib.features import Feature
 from lib.parsing import Headline
 
 class PositionFeature(Feature):
+    """A feature encoding the relative position of the edit in the sentence.
+    """
     SCALING_FACTOR = 1
 
     @classmethod

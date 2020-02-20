@@ -63,3 +63,16 @@ def proc(i, o, f):
 
 for i in range(len(ins)):
     proc(ins[i], outs[i], read_funcs[i])
+
+# FunLines
+proc(
+    "../../data/FunLines/task-1/preproc/1_original_train.bin",
+    "../../data/FunLines/task-1/preproc/2_concat_train.bin",
+    lib.read_task1_pb
+)
+
+proc(
+    "../../data/FunLines/task-2/preproc/1_origial_train.bin",
+    "../../data/FunLines/task-2/preproc/2_concat_train.bin",
+    lib.read_task2_pb
+)

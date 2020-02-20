@@ -42,6 +42,12 @@ def PBToLabel(l : Candidates_pb2.CandidateCollection.Candidates.Label) -> Label:
     raise ValueError()
 
 class Headline:
+    """An object representing a Headline with edit.
+    Can optionally hold grading data
+
+    Raises:
+        ValueError: Raised on invalid BERT config
+    """
     BERT_VOCAB = None
     BERT_VECTOR_LENGTH = 27
 
@@ -119,6 +125,11 @@ class Headline:
             self.GenerateBERT()
         return np.asarray(self.bert_vector)
 
+    def GetEdited(self) -> str:
+        sent = self.sentence
+        sent[self.word_index] = self.edit
+        return " ".join(sent)
+
     def ToPB(self, HL : Headline_pb2.HeadlineCollection.Headline) -> None:
         HL.id = self.id
         HL.sentence.extend(self.sentence)
@@ -144,6 +155,8 @@ class Headline:
         return json.dumps(self.ToDict(), indent=4)
 
 class HeadlineCollection:
+    """A Collection of Headline objects.
+    """
     def __init__(
         self,
         iterable : List[Headline] = None
@@ -160,12 +173,16 @@ class HeadlineCollection:
     def AddFeatures(self, features : List) -> None:
         for e in self.collection:
             e.AddFeatures(features)
-    
+
     def GetFeatureVectors(self) -> np.ndarray:
         return np.array(
             [e.GetFeatureVector() for e in self.collection]
         )
 
+    def GetIDs(self) -> np.ndarray:
+        return np.array(
+            [h.id for h in self.collection]
+        )
 
     def GetBERT(self) -> np.ndarray:
         return np.asarray(
@@ -175,6 +192,16 @@ class HeadlineCollection:
     def GetGrades(self) -> np.ndarray:
         return np.array(
             [h.avg_grade for h in self.collection]
+        )
+
+    def GetEditSentences(self) -> np.ndarray:
+        return np.array(
+            [h.GetEdited() for h in self.collection]
+        )
+
+    def GetTokenizedWEdit(self) -> np.ndarray:
+        return np.array(
+            [h.GetTokenizedWEdit() for h in self.collection]
         )
 
     def ToPB(self) -> Headline_pb2.HeadlineCollection:
@@ -212,6 +239,8 @@ class HeadlineCollection:
 
 
 class Candidates:
+    """An object representing a pair of Headline with an optional Label
+    """
     def __init__(
         self,
         headline1 : Headline,
@@ -246,6 +275,8 @@ class Candidates:
         return json.dumps(self.ToDict(), indent=4)
 
 class CandidateCollection:
+    """A collection of Candidate objects.
+    """
     def __init__(
         self,
         iterable : List[Candidates] = None

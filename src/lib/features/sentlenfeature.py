@@ -1,9 +1,11 @@
-import string 
+import string
 import numpy as np
 from lib.parsing import Headline
 from lib.features import Feature
 
 class SentLenFeature(Feature):
+    """A feature encoding the length of the sentence.
+    """
     #construct a stop-word list consists of punctuation characters .
     stpwds = string.punctuation
     #expand the string with additional symbols found occuring in sentences.
@@ -13,6 +15,7 @@ class SentLenFeature(Feature):
     stpwds.extend(['’s', "'s", "'m", "...", 'n’t'])
     #limit defined in the original paper.
     max_len = 20
+
     @classmethod
     def compute_feature(cls, HL: Headline) -> np.ndarray:
         s = HL.sentence

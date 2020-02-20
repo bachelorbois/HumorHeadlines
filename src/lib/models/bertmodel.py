@@ -36,6 +36,3 @@ def create_BERT_model(max_seq_len, adapter_size=64):
     bertie.summary()
 
     return bertie
-
-if __name__ == '__main__':
-    bertie = create_model(30)
