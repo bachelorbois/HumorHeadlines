@@ -9,6 +9,9 @@ class EmbeddingContainer():
     """A static container class managing embedding allocation.
     """
     FT = None
+    ALL = None
+
+    BUILD_ALL = False
 
     DATASET_URL = "https://dl.fbaipublicfiles.com/fasttext/vectors-english/wiki-news-300d-1M.vec.zip"
     DATA_DIR = "../data/embeddings/"
@@ -42,7 +45,19 @@ class EmbeddingContainer():
             next(fd)
 
             for i, l in enumerate(fd):
-                cls.FT[l.split(maxsplit=1)[0]] = i
+                cls.FT[str.split(l, maxsplit=1)[0]] = i
+
+    @classmethod
+    def load_all(cls) -> None:
+        print("Building full embedding list...")
+
+        cls.ALL = []
+        for w in cls.FT.keys():
+            cls.key_emb = np.array([float(e) for e in linecache.getline(cls.EMBED_FILE, cls.FT[w]).replace("\n", "").split(" ")[1:]])
+            if cls.key_emb.shape[0] == 300:
+                cls.ALL.append(cls.key_emb)
+
+        cls.ALL = np.array(cls.ALL)
 
     @classmethod
     def lookup_single(cls, word : str) -> np.ndarray:
@@ -55,7 +70,7 @@ class EmbeddingContainer():
             np.ndarray: A 300d embedding vector
         """
         try:
-            return np.array([float(e) for e in linecache.getline(cls.EMBED_FILE, cls.FT[word]).replace("\n", "").split(" ")[1:]])
+            return np.array([float(e) for e in str.split(str.replace(linecache.getline(cls.EMBED_FILE, cls.FT[word]), "\n", ""), " ")[1:]])
         except:
             return np.zeros((300))
 
@@ -78,3 +93,6 @@ class EmbeddingContainer():
         """
         if cls.FT is None:
             cls.load_ft()
+
+        if cls.BUILD_ALL and cls.ALL is None:
+            cls.load_all()
