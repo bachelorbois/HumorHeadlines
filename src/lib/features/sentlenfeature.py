@@ -1,9 +1,11 @@
-import string 
+import string
 import numpy as np
 from lib.parsing import Headline
 from lib.features import Feature
 
 class SentLenFeature(Feature):
+    """A feature encoding the length of the sentence.
+    """
     #construct a stop-word list consists of punctuation characters .
     stpwds = string.punctuation
     #expand the string with additional symbols found occuring in sentences.

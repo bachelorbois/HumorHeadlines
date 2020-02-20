@@ -6,3 +6,4 @@ data/KnowledgeBase/
 **/headline_regression/
 **/*.ckpt*
 ssh_notes.txt
+src/profiles/

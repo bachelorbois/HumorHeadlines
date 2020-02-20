@@ -23,7 +23,7 @@ class ClusterFeature(Feature):
     def train_kmeans(cls):
         print("Running kmeans")
         cls.kmeans = KMeans(n_clusters=20, init='k-means++', n_init=2, max_iter=10, random_state=42, tol=0.001, verbose=1)
-        cls.kmeans.fit(cls.all_embeddings)
+        cls.kmeans.fit(EmbeddingContainer.ALL)
         pickle.dump(cls.kmeans, open(cls.MODEL_PATH, 'wb'))
 
     @classmethod
@@ -39,6 +39,8 @@ class ClusterFeature(Feature):
         replaced_emb, replacement_emb = EmbeddingContainer.lookup(replaced, replacement)
 
         if not os.path.isfile(cls.MODEL_PATH):
+            EmbeddingContainer.BUILD_ALL = True
+            EmbeddingContainer.init()
             cls.train_kmeans()
         else:
             cls.kmeans = pickle.load(open(cls.MODEL_PATH, 'rb'))

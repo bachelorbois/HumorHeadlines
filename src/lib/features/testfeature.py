@@ -4,6 +4,8 @@ from lib.parsing import Headline
 from random import randint
 
 class TestFeature(Feature):
+    """A dummy feature used for testing.
+    """
     FROM = 1
     TO = 6
 
