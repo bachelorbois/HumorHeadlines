@@ -18,7 +18,7 @@ def create_HUMOR_model(feature_len : int, token_len : int, embeds : bool = False
     
     if (embeds):
         input_text = layers.Input(shape=(), dtype=tf.string, name="string_input")
-        embed = hub.KerasLayer('https://tfhub.dev/google/tf2-preview/nnlm-en-dim128-with-normalization/1')(input_text)    # Expects a tf.string input tensor.
+        embed = hub.KerasLayer('https://tfhub.dev/google/tf2-preview/nnlm-en-dim128/1')(input_text)    # Expects a tf.string input tensor.
         concat_features.append(embed)
     
     concat = layers.Concatenate()(concat_features)
@@ -35,7 +35,11 @@ def create_HUMOR_model(feature_len : int, token_len : int, embeds : bool = False
     else:
         HUMOR = Model(inputs=[input_features, input_tokens], outputs=output)
 
-    HUMOR.compile(optimizer=optimizers.Adam(clipnorm=1., clipvalue=0.5),
+    # opt = optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
+    # opt = optimizers.Adam(clipnorm=1., clipvalue=0.5)
+    opt = optimizers.Nadam(clipnorm=1., clipvalue=0.5)
+
+    HUMOR.compile(optimizer=opt,
                    loss="mean_squared_error",
                    metrics=[metrics.RootMeanSquaredError()])
 

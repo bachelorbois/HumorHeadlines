@@ -80,14 +80,21 @@ class BertTraining:
                                    warmup_epoch_count=10,
                                    total_epoch_count=90):
 
-        def lr_scheduler(epoch):
+        def lr_scheduler_exp_decay(epoch):
             if epoch < warmup_epoch_count:
                 res = (max_learn_rate/warmup_epoch_count) * (epoch + 1)
             else:
                 res = max_learn_rate*math.exp(math.log(end_learn_rate/max_learn_rate)*(epoch-warmup_epoch_count+1)/(total_epoch_count-warmup_epoch_count+1))
             return float(res)
+
+        def lr_scheduler_step_decay(epoch):
+            initial_lrate = 0.1
+            drop = 0.5
+            epochs_drop = 10.0
+            lrate = initial_lrate * math.pow(drop, math.floor((1+epoch)/epochs_drop))
+            return lrate
         
-        learning_rate_scheduler = tf.keras.callbacks.LearningRateScheduler(lr_scheduler, verbose=1)
+        learning_rate_scheduler = tf.keras.callbacks.LearningRateScheduler(lr_scheduler_exp_decay, verbose=1)
 
         return learning_rate_scheduler
 

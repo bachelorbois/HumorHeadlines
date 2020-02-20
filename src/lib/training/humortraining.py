@@ -8,7 +8,7 @@ import pickle
 
 from lib.models import create_HUMOR_model
 from lib.parsing.parser import read_task1_pb
-from lib.features import PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeatures, SentLenFeature
+from lib.features import PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature
 
 class HumorTraining:
     DIR = "./headline_regression/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -32,7 +32,7 @@ class HumorTraining:
         self.train_data = self.load_data(train_path)
         self.test_data = self.load_data(test_path)
 
-        features = [PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeatures, SentLenFeature]
+        features = [PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature]
 
         self.train_data.AddFeatures(features)
         self.test_data.AddFeatures(features)
@@ -53,7 +53,7 @@ class HumorTraining:
         tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR)
         lr_schedule = self.create_learning_rate_scheduler(max_learn_rate=1e-2,
                                                         end_learn_rate=1e-6,
-                                                        warmup_epoch_count=15,
+                                                        warmup_epoch_count=20,
                                                         total_epoch_count=epoch)
 
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
@@ -116,8 +116,6 @@ class HumorTraining:
 
             with open(self.EMBED_FILE + '.p', 'wb') as f:
                 pickle.dump(dictionary, f)
-
-
         else:
             with open(self.EMBED_FILE + '.p', 'rb') as f:
                 dictionary = pickle.load(f)
@@ -130,14 +128,21 @@ class HumorTraining:
                                    warmup_epoch_count=10,
                                    total_epoch_count=90):
 
-        def lr_scheduler(epoch):
+        def lr_scheduler_exp_decay(epoch):
             if epoch < warmup_epoch_count:
                 res = (max_learn_rate/warmup_epoch_count) * (epoch + 1)
             else:
                 res = max_learn_rate*math.exp(math.log(end_learn_rate/max_learn_rate)*(epoch-warmup_epoch_count+1)/(total_epoch_count-warmup_epoch_count+1))
             return float(res)
+
+        def lr_scheduler_step_decay(epoch):
+            initial_lrate = 0.005
+            drop = 0.5
+            epochs_drop = 5.0
+            lrate = initial_lrate * math.pow(drop, math.floor((1+epoch)/epochs_drop))
+            return lrate
         
-        learning_rate_scheduler = tf.keras.callbacks.LearningRateScheduler(lr_scheduler, verbose=1)
+        learning_rate_scheduler = tf.keras.callbacks.LearningRateScheduler(lr_scheduler_step_decay, verbose=1)
 
         return learning_rate_scheduler
     
