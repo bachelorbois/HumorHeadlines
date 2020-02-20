@@ -56,8 +56,8 @@ class EmbeddingContainer():
         """
         try:
             return np.array([float(e) for e in linecache.getline(cls.EMBED_FILE, cls.FT[word]).replace("\n", "").split(" ")[1:]])
-
-        return np.zeros((300))
+        except:
+            return np.zeros((300))
 
     @classmethod
     def lookup(cls, replaced : str, replacement : str) -> Tuple[np.ndarray, np.ndarray]:
