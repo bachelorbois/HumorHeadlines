@@ -3,10 +3,10 @@ sys.path.append("..")
 import lib
 
 ins = [
-    "../../data/task-1/train.csv",
     "../../data/task-1/dev.csv",
-    "../../data/task-2/train.csv",
-    "../../data/task-2/dev.csv"
+    "../../data/task-1/test.csv",
+    "../../data/task-2/dev.csv",
+    "../../data/task-2/test.csv"
 ]
 
 grades = [
@@ -24,10 +24,10 @@ read_funcs = [
 ]
 
 outs = [
-    "../../data/task-1/preproc/1_original_train.bin",
     "../../data/task-1/preproc/1_original_dev.bin",
-    "../../data/task-2/preproc/1_original_train.bin",
-    "../../data/task-2/preproc/1_original_dev.bin"
+    "../../data/task-1/preproc/1_original_test.bin",
+    "../../data/task-2/preproc/1_original_dev.bin",
+    "../../data/task-2/preproc/1_original_test.bin"
 ]
 
 def proc(i, o, g, f):
