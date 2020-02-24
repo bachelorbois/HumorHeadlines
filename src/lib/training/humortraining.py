@@ -5,6 +5,7 @@ import math
 import datetime
 import os
 import pickle
+from typing import List
 
 from lib.models import create_HUMOR_model
 from lib.parsing.parser import read_task1_pb
@@ -18,7 +19,7 @@ class HumorTraining:
     PRED_FILE = PRED_DIR + '/task-1-output.csv'
     EMBED_FILE = "../data/embeddings/wiki-news-300d-1M"
 
-    def __init__(self, Humor : Model, embeds : bool, train_path : str, test_path : str):
+    def __init__(self, Humor : Model, embeds : bool, train_paths : List[str], dev_path : List[str], test_path : List[str]):
         self.humor = Humor
         self.embeds = embeds
         print("Loading fastText Embedings...")
@@ -29,7 +30,7 @@ class HumorTraining:
         os.makedirs(self.PRED_DIR)
         os.mknod(self.PRED_FILE)
 
-        self.train_data = self.load_data(train_path)
+        self.train_data = self.load_data(train_paths)
         self.test_data = self.load_data(test_path)
 
         features = [PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature]
@@ -124,9 +125,9 @@ class HumorTraining:
 
     @staticmethod
     def create_learning_rate_scheduler(max_learn_rate=5e-5,
-                                   end_learn_rate=1e-7,
-                                   warmup_epoch_count=10,
-                                   total_epoch_count=90):
+                                        end_learn_rate=1e-7,
+                                        warmup_epoch_count=10,
+                                        total_epoch_count=90):
 
         def lr_scheduler_exp_decay(epoch):
             if epoch < warmup_epoch_count:
@@ -142,13 +143,17 @@ class HumorTraining:
             lrate = initial_lrate * math.pow(drop, math.floor((1+epoch)/epochs_drop))
             return lrate
         
-        learning_rate_scheduler = tf.keras.callbacks.LearningRateScheduler(lr_scheduler_step_decay, verbose=1)
+        learning_rate_scheduler = tf.keras.callbacks.LearningRateScheduler(lr_scheduler_exp_decay, verbose=1)
 
         return learning_rate_scheduler
     
     @staticmethod
-    def load_data(path):
-        with open(path, 'rb') as fd:
-            data = read_task1_pb(fd)
-
-        return data
+    def load_data(paths):
+        hc = None
+        for path in paths:
+            with open(path, 'rb') as fd:
+                if not hc:
+                    hc = read_task1_pb(fd)
+                else: 
+                    hc.extend(read_task1_pb(fd))
+        return hc

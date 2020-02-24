@@ -166,6 +166,9 @@ class HeadlineCollection:
     def append(self, H : Headline) -> None:
         self.collection.append(H)
 
+    def extend(self, HC) -> None:
+        self.collection.extend(HC.collection)
+
     def AddFeature(self, feature) -> None:
         for e in self.collection:
             e.AddFeature(feature)
@@ -259,6 +262,28 @@ class Candidates:
         self.HL1.AddFeatures(features)
         self.HL2.AddFeatures(features)
 
+    def GetFeatureVectors(self) -> np.ndarray:
+        return np.array([
+            self.HL1.GetFeatureVector(),
+            self.HL2.GetFeatureVector()
+        ])
+
+    def GetTokenizedWEdit(self) -> np.ndarray:
+        arr = [
+            self.HL1.GetTokenizedWEdit(),
+            self.HL2.GetTokenizedWEdit()
+        ]
+        return arr
+
+    def GetEditedSentences(self) -> np.ndarray:
+        return np.array([
+            self.HL1.GetEdited(),
+            self.HL2.GetEdited()
+        ])
+
+    def GetIDS(self) -> np.ndarray:
+        return f'{self.HL1.id}-{self.HL2.id}'
+
     def ToPB(self, C : Candidates_pb2.CandidateCollection.Candidates) -> None:
         self.HL1.ToPB(C.HL1)
         self.HL2.ToPB(C.HL2)
@@ -293,6 +318,24 @@ class CandidateCollection:
     def AddFeatures(self, features : List) -> None:
         for e in self.collection:
             e.AddFeatures(features)
+
+    def GetFeatureVectors(self) -> np.ndarray:
+        return np.array(
+            [c.GetFeatureVectors() for c in self.collection]
+        )
+
+    def GetTokenizedWEdit(self) -> List:
+        return [c.GetTokenizedWEdit() for c in self.collection]
+
+    def GetEditedSentences(self) -> np.ndarray:
+        return np.array(
+            [c.GetEditedSentences() for c in self.collection]
+        )
+
+    def GetIDS(self) -> np.ndarray:
+        return np.array(
+            [cc.GetIDS() for cc in self.collection]
+        )
 
     def ToPB(self) -> Candidates_pb2.CandidateCollection:
         col_pb = Candidates_pb2.CandidateCollection()
