@@ -1,0 +1,1 @@
+from lib.inference.task2 import * 
