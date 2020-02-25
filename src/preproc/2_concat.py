@@ -17,10 +17,10 @@ read_funcs = [
 ]
 
 outs = [
-    "../../data/task-1/preproc/1_concat_dev.bin",
-    "../../data/task-1/preproc/1_concat_test.bin",
-    "../../data/task-2/preproc/1_concat_dev.bin",
-    "../../data/task-2/preproc/1_concat_test.bin"
+    "../../data/task-1/preproc/2_concat_dev.bin",
+    "../../data/task-1/preproc/2_concat_test.bin",
+    "../../data/task-2/preproc/2_concat_dev.bin",
+    "../../data/task-2/preproc/2_concat_test.bin"
 ]
 
 def proc(i, o, f):

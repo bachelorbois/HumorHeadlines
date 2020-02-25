@@ -31,24 +31,39 @@ class HumorTraining:
         os.mknod(self.PRED_FILE)
 
         self.train_data = self.load_data(train_paths)
+        self.dev_data = self.load_data(dev_path)
         self.test_data = self.load_data(test_path)
 
         features = [PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature]
 
         self.train_data.AddFeatures(features)
+        self.dev_data.AddFeatures(features)
         self.test_data.AddFeatures(features)
 
     def train(self, epoch, batch_size, validation_split=0.2):
+        # Train data
         features, y_train = self.train_data.GetFeatureVectors(), self.train_data.GetGrades()
         ins = {"feature_input": features}
 
+        # Dev data
+        dev_features, y_dev = self.dev_data.GetFeatureVectors(), self.dev_data.GetGrades()
+        dev_ins = {"feature_input": dev_features}
+
+        # Train data
         token = self.train_data.GetTokenizedWEdit()
         processedSents = self.process_sentences(token, self.fastTextEmbeds)
         ins["token_input"] = processedSents
 
+        # Dev data
+        token = self.dev_data.GetTokenizedWEdit()
+        processedSents = self.process_sentences(token, self.fastTextEmbeds)
+        dev_ins["token_input"] = processedSents
+
         if (self.embeds):
             text = self.train_data.GetEditSentences()
             ins["string_input"] = text
+            text = self.dev_data.GetEditSentences()
+            dev_ins["string_input"] = text
 
         # Create callbacks
         tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR)
@@ -60,7 +75,7 @@ class HumorTraining:
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
 
         self.humor.fit(x=ins, y=y_train,
-                        validation_split=validation_split,
+                        validation_data=(dev_ins, y_dev),
                         batch_size=batch_size,
                         epochs=epoch,
                         shuffle=True,
