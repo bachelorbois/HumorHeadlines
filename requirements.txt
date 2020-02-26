@@ -6,3 +6,4 @@ g2p_en
 sklearn
 matplotlib
 sentencepiece
+bidict
