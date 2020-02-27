@@ -12,7 +12,7 @@ class SentLenFeature(Feature):
     stpwds += '—‘’$“”'
     stpwds = list(stpwds)
     #possessive nouns are separated into 2 tokens, which has an unintended effect on length.
-    stpwds.extend(['’s', "'s", "'m", "...", 'n’t'])
+    stpwds.extend(['’s', "'s", "'m", "...", 'n’t', "`"])
     #limit defined in the original paper.
     max_len = 20
 
