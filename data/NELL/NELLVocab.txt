@@ -1055,7 +1055,6 @@ concept:athlete:tom_hall
 concept:athlete:brian_rafalski
 concept:coach:dusty_hughes
 concept:celebrity:patsy_kensit
-file:///home/kristiannj/Downloads/NELL/28
 concept:academicfield:earth_science
 concept:male:michelle_williams
 concept:person:ted_arison
@@ -7446,7 +7445,6 @@ concept:stateorprovince:l_aquila
 concept:weapon:gas_shells
 concept:visualizablescene:tinley_park
 concept:televisionstation:ktwu
-file:///home/kristiannj/Downloads/NELL/52
 concept:athlete:milan_hejduk
 concept:hotel:sheraton_centre
 concept:book:past_week
@@ -8212,7 +8210,6 @@ concept:chemical:hydrocarbon
 concept:economicsector:consulting
 concept:hobby:other_activities
 concept:visualizablething:natural_water
-file:///home/kristiannj/Downloads/NELL/17
 concept:musician:the_twins
 concept:televisionstation:wkpc_tv
 concept:book:acts
@@ -8971,7 +8968,6 @@ concept:drug:medication
 concept:programminglanguage:document
 concept:bakedgood:free_chocolate
 concept:person:pope_john_paul_ii
-file:///home/kristiannj/Downloads/NELL/80
 concept:drug:cardizem
 concept:room:unit
 concept:director:fernando_meirelles
@@ -10975,7 +10971,6 @@ concept:coach:jean_marie_messier
 concept:visualizablething:drumsticks
 concept:visualizablescene:woodland_hills
 concept:city:ewing
-file:///home/kristiannj/Downloads/NELL/66
 concept:plant:hornbeams
 concept:park:kingdom
 concept:cheese:boursin_cheese
@@ -13256,7 +13251,6 @@ concept:product:n2000
 concept:transportation:mccarran
 concept:farm:mennabroom_farm
 concept:chemical:soot
-file:///home/kristiannj/Downloads/NELL/18
 concept:company:devon_energy
 concept:fish:pelagic
 concept:vertebrate:feline_friends
@@ -13498,7 +13492,6 @@ concept:athlete:randle_el
 concept:personalcareitem:olive_oil
 concept:ceo:carol_meyrowitz
 concept:charactertrait:dwelling
-file:///home/kristiannj/Downloads/NELL/7
 concept:sportsleague:north_american_hockey_league
 concept:televisionstation:ksas_tv
 concept:agent:boko_haram_militants
@@ -14807,7 +14800,6 @@ concept:company:global_payments_inc_
 concept:visualizableattribute:cafe
 concept:invertebrate:common_meadow_spittlebug
 concept:journalist:william_saletan
-file:///home/kristiannj/Downloads/NELL/38
 concept:animal:stoats
 concept:sportsteam:air_force_academy_falcons
 concept:airport:jersey
@@ -18000,7 +17992,6 @@ concept:geopoliticalorganization:napa
 concept:software:imovie
 concept:weapon:back_up_gun
 concept:televisionstation:kfor_tv
-file:///home/kristiannj/Downloads/NELL/3-2
 concept:city:brooks
 concept:televisionstation:wouc_tv
 concept:river:popo_agie
@@ -19422,7 +19413,6 @@ concept:person:son
 concept:musician:glenn_tipton
 concept:male:dale
 concept:furniture:mattress
-file:///home/kristiannj/Downloads/NELL/34
 concept:visualizablething:finder
 concept:hotel:quality
 concept:nonprofitorganization:night
@@ -20765,7 +20755,6 @@ concept:hobby:motorcycling
 concept:programminglanguage:pilot
 concept:agriculturalproduct:lemon_wedges
 concept:agent:tamerlan_tsarnaev
-file:///home/kristiannj/Downloads/NELL/47
 concept:landscapefeatures:memory
 concept:automobilemaker:bmw__lexus
 concept:chemical:oil
@@ -23276,7 +23265,6 @@ concept:movie:captain_from_castile
 concept:city:moorhead
 concept:musician:eric_burdon
 concept:person:jonathan
-file:///home/kristiannj/Downloads/NELL/71
 concept:politician:prime_candidate
 concept:county:hampshire
 concept:athlete:roger_clemens
@@ -23544,7 +23532,6 @@ concept:room:huge_bath
 concept:officebuildingroom:large_full_bathroom
 concept:biotechcompany:novartis
 concept:agriculturalproduct:cumin_seeds
-file:///home/kristiannj/Downloads/NELL/75
 concept:musician:simon_le_bon
 concept:city:dearborn_heights
 concept:stateorprovince:louisiana
@@ -24494,7 +24481,6 @@ concept:governmentorganization:resources_office
 concept:sportsleague:college_basketball
 concept:date:dec_
 concept:celebrity:jessica_seinfeld
-file:///home/kristiannj/Downloads/NELL/24
 concept:bakedgood:chocolate_sauce
 concept:person:grandmother
 concept:county:suffolk
@@ -24564,7 +24550,6 @@ concept:clothing:polo_neck
 concept:location:karaka_rd
 concept:website:http___www_hongkongdisneyland_com
 concept:city:aspen
-file:///home/kristiannj/Downloads/NELL/21
 concept:comedian:clyde_klotz
 concept:person:sam
 concept:mammal:bowhead_whales
@@ -24871,7 +24856,6 @@ concept:athlete:max_talbot
 concept:geopoliticalorganization:samarkand
 concept:stateorprovince:mississippi_state
 concept:mlauthor:world_wide_web
-file:///home/kristiannj/Downloads/NELL/4-2
 concept:beverage:carrot_juice
 concept:chemical:hydrogen_cyanide
 concept:writer:palahniuk_chuck
@@ -25085,7 +25069,6 @@ concept:geopoliticalorganization:default
 concept:agriculturalproduct:dandelion_greens
 concept:book:stormbreaker
 concept:newspaper:long_island_press
-file:///home/kristiannj/Downloads/NELL/82
 concept:person:bishop
 concept:biotechcompany:eisai_co_
 concept:coach:nik_antropov
@@ -27471,7 +27454,6 @@ concept:athlete:joe_theismann
 concept:book:first_corinthians_15
 concept:musician:roger_waters
 concept:person:tahmima_anam
-file:///home/kristiannj/Downloads/NELL/130
 concept:person:ed
 concept:river:garonne
 concept:city:kampala
@@ -28141,7 +28123,6 @@ concept:clothing:simple_tee_shirt
 concept:book:metropolis
 concept:politicsissue:managements
 concept:movie:cloverfield
-file:///home/kristiannj/Downloads/NELL/8-6
 concept:academicfield:geography
 concept:city:hamar
 concept:personus:margaret_weis
@@ -30898,7 +30879,6 @@ concept:date:n1831
 concept:awardtrophytournament:medals
 concept:personsouthamerica:michael_grant
 concept:bodypart:network
-file:///home/kristiannj/Downloads/NELL/93
 concept:stateorprovince:international
 concept:city:nevis
 concept:recordlabel:young_money_entertainment
@@ -32217,7 +32197,6 @@ concept:comedian:charles_kuralt
 concept:university:wisconsin
 concept:book:martin_eden
 concept:company:public
-file:///home/kristiannj/Downloads/NELL/27
 concept:sportsgame:super_bowl_xxxvii
 concept:trainstation:sacramento_rt
 concept:bodypart:lap
@@ -32294,8 +32273,6 @@ concept:person:lionel
 concept:buildingfeature:store
 concept:person:natalie
 concept:televisionstation:kxvo
-file:///home/kristiannj/Downloads/NELL/6-2
-file:///home/kristiannj/Downloads/NELL/25
 concept:visualartform:drawings
 concept:athlete:brady_clark
 concept:perceptionaction:laws
@@ -32686,7 +32663,6 @@ concept:city:carrick_on_shannon
 concept:book:the_south_beach_diet
 concept:room:n3_piece_suite
 concept:school:polytechnic_university
-file:///home/kristiannj/Downloads/NELL/0-2
 concept:animal:bull
 concept:personaustralia:mike_ashley
 concept:politicalparty:international_steel_group
@@ -34042,7 +34018,6 @@ concept:aquarium:stackable_aquarium
 concept:location:yardley
 concept:comedian:lucille_ball
 concept:politician:jean_quan
-file:///home/kristiannj/Downloads/NELL/0-1
 concept:country:commonwealth_countries
 concept:personmexico:nenad_krstic
 concept:publication:data_loss
@@ -35982,7 +35957,6 @@ concept:bank:robertson_stephens
 concept:musicartist:tokyo_ska_paradise_orchestra
 concept:jobposition:executive_assistant
 concept:bird:shrikes
-file:///home/kristiannj/Downloads/NELL/46
 concept:geopoliticalorganization:skokie
 concept:blog:wired_com
 concept:officebuildingroom:loft_rooms
@@ -36159,7 +36133,6 @@ concept:person:cynthia
 concept:politicsblog:instapundit
 concept:tradeunion:tuc
 concept:writer:rachel_marsden
-file:///home/kristiannj/Downloads/NELL/49
 concept:sportsteam:anderson_ravens
 concept:male:kenan_eight_hundred
 concept:sportsteam:csu_stanislaus
@@ -36811,7 +36784,6 @@ concept:religion:christianity
 concept:musicinstrument:choir
 concept:recordlabel:eric_nicoli
 concept:personafrica:dave_mckenna
-file:///home/kristiannj/Downloads/NELL/19
 concept:athlete:cesar_ramos
 concept:country:central_african_republic
 concept:book:the_home_and_the_world
@@ -37088,7 +37060,6 @@ concept:magazine:tesco_magazine
 concept:crimeorcharge:serious_problem
 concept:musicartist:the_telling
 concept:terroristorganization:hussein
-file:///home/kristiannj/Downloads/NELL/6-1
 concept:radiostation:kqlz
 concept:company:interface
 concept:book:redwall
@@ -39661,7 +39632,6 @@ concept:sportsteam:eagles_32_25
 concept:museum:nation_s_no_
 concept:automobilemodel:dodge_ram
 concept:aquarium:hong_kong_s_ocean_park
-file:///home/kristiannj/Downloads/NELL/81
 concept:athlete:qb_jake_delhomme
 concept:bird:american_kestrel
 concept:museum:boston_science_museum
@@ -42545,7 +42515,6 @@ concept:clothing:oxford_shirt
 concept:hotel:residence_inn_by_marriott
 concept:geopoliticallocation:mass_
 concept:profession:slaves
-file:///home/kristiannj/Downloads/NELL/0-15
 concept:perceptionaction:scoping_meetings
 concept:athlete:matt_clement
 concept:book:a_little_princess
@@ -42821,7 +42790,6 @@ concept:plant:deciduous_shrub
 concept:plant:tress
 concept:politicsissue:money
 concept:coach:rick_smith
-file:///home/kristiannj/Downloads/NELL/4
 concept:personeurope:george___weedon_grossmith
 concept:televisionstation:kmct_tv
 concept:disease:developmental_delays
@@ -45042,7 +45010,6 @@ concept:language:polish
 concept:person:charlie_hustle
 concept:sportsleague:fai
 concept:disease:chronic_depression
-file:///home/kristiannj/Downloads/NELL/65
 concept:county:adams_city
 concept:male:mike_cameron
 concept:politicaloffice:chief_of_staff
@@ -46072,7 +46039,6 @@ concept:sportsteam:marymount_university
 concept:televisionstation:kdfi
 concept:plant:gold
 concept:drug:zelnorm
-file:///home/kristiannj/Downloads/NELL/129
 concept:politicianus:christopher_cox
 concept:profession:research_mentor
 concept:televisionstation:wear
@@ -46281,7 +46247,6 @@ concept:visualizablescene:seatac
 concept:scientificterm:sequential_minimal_optimization
 concept:female:cate_blanchett
 concept:musicinstrument:store
-file:///home/kristiannj/Downloads/NELL/50
 concept:invertebrate:jellyfish
 concept:bacteria:legionella_longbeachae
 concept:televisionstation:wtvs
@@ -49115,7 +49080,6 @@ concept:writer:r_l_stine
 concept:insect:butterflies
 concept:drug:epivir
 concept:city:sunnyvale
-file:///home/kristiannj/Downloads/NELL/39
 concept:athlete:severiano_ballesteros
 concept:city:frisco
 concept:visualizablething:mot
@@ -51769,7 +51733,6 @@ concept:officebuildingroom:modern_white_bathroom
 concept:candy:candy_corn
 concept:writer:walter_isaacson
 concept:company:sun_micro
-file:///home/kristiannj/Downloads/NELL/2-4
 concept:ceo:darwin_deason
 concept:country:afghan_regime
 concept:stadiumoreventvenue:john_paul_jones_arena
@@ -53744,7 +53707,6 @@ concept:athlete:john_bannister
 concept:agriculturalproduct:soya_beans
 concept:book:the_city_of_ember
 concept:physiologicalcondition:renal_insufficiency
-file:///home/kristiannj/Downloads/NELL/72
 concept:location:government_exposition
 concept:profession:sponsors
 concept:book:lost_city
@@ -57470,7 +57432,6 @@ concept:personasia:jackie_chan
 concept:coach:bobby_livingston
 concept:physiologicalcondition:vaccines
 concept:officebuildingroom:guest_bathroom
-file:///home/kristiannj/Downloads/NELL/35
 concept:officebuildingroom:one_bedroom_suites
 concept:celebrity:pics
 concept:airport:prestwick_airport
@@ -61393,7 +61354,6 @@ concept:geopoliticallocation:kinnelon
 concept:athlete:ricky_watters
 concept:chemical:sulfur_dioxide
 concept:ceo:jeffrey_skoll
-file:///home/kristiannj/Downloads/NELL/76
 concept:county:pilesgrove
 concept:city:curacao
 concept:comedian:soundtrack
@@ -63424,7 +63384,6 @@ concept:room:bed_room
 concept:geopoliticallocation:lincoln_nebraska
 concept:website:airline
 concept:athlete:hank_aaron
-file:///home/kristiannj/Downloads/NELL/23
 concept:sportsteam:diamondbacks_live
 concept:creditunion:low_interest_rates
 concept:dateliteral:april_16__2013l
@@ -65645,7 +65604,6 @@ concept:plant:clematis
 concept:profession:school_personnel
 concept:athlete:carlos_pena
 concept:stateorprovince:western_finland
-file:///home/kristiannj/Downloads/NELL/48
 concept:book:memoirs_of_a_dutiful_daughter
 concept:emotion:relief
 concept:male:heath_ledger
@@ -66203,7 +66161,6 @@ concept:software:bioclipse
 concept:musician:joe_strummer
 concept:eventoutcome:call
 concept:date:holidays
-file:///home/kristiannj/Downloads/NELL/41
 concept:insect:sparrows
 concept:celebrity:sir_paul_mccartney
 concept:stadiumoreventvenue:merrill_auditorium
@@ -66443,7 +66400,6 @@ concept:book:schindler_s_list
 concept:emotion:pardon
 concept:food:calcium
 concept:profession:medical_technicians
-file:///home/kristiannj/Downloads/NELL/15-11
 concept:muscle:lower_back
 concept:officebuildingroom:dinner
 concept:winery:black_bridge_winery
@@ -67042,7 +66998,6 @@ concept:male:frank_robinson
 concept:stadiumoreventvenue:dell_diamond
 concept:location:bemidji
 concept:hotel:farmer_s_daughter
-file:///home/kristiannj/Downloads/NELL/26
 concept:drug:theobromine
 concept:academicfield:divinity
 concept:ceo:gordon_nixon
@@ -67422,7 +67377,6 @@ concept:female:virgin
 concept:weapon:guns
 concept:room:third_floor_bedroom
 concept:automobilemodel:contour
-file:///home/kristiannj/Downloads/NELL/30
 concept:female:nichols
 concept:male:anthony_lewis
 concept:bedroomitem:worldspace
@@ -67940,7 +67894,6 @@ concept:biotechcompany:eisai
 concept:visualartist:van_dyck
 concept:person:allan_rivlin
 concept:musicinstrument:world
-file:///home/kristiannj/Downloads/NELL/90
 concept:color:reddish_purple
 concept:chemical:diesel
 concept:athlete:michael_frolik
@@ -68055,7 +68008,6 @@ concept:journalist:bill_plaschke
 concept:blog:google_com
 concept:restaurant:carmelo_s_restaurant
 concept:celebrity:suzanne_fields
-file:///home/kristiannj/Downloads/NELL/399
 concept:coach:jason_labarbera
 concept:musicinstrument:clarinet
 concept:athlete:marty_cordova
@@ -70799,7 +70751,6 @@ concept:clothing:clothes
 concept:wallitem:output
 concept:athlete:bernie_kosar
 concept:blog:visitor
-file:///home/kristiannj/Downloads/NELL/60
 concept:personeurope:english_department
 concept:agriculturalproduct:sauerkraut
 concept:nongovorganization:n2004_green_party
@@ -70921,7 +70872,6 @@ concept:hobby:hobbies
 concept:vegetable:tarragon
 concept:book:odd_and_the_frost_giants
 concept:room:last_bedroom
-file:///home/kristiannj/Downloads/NELL/58
 concept:publication:dow_jones_newswire
 concept:country:kazakstan
 concept:city:main_page
@@ -75415,7 +75365,6 @@ concept:geopoliticallocation:destination
 concept:person:jack_kevorkian
 concept:book:the_player_of_games
 concept:plant:lush_palm
-file:///home/kristiannj/Downloads/NELL/1
 concept:biotechcompany:capital_one_financial
 concept:room:nice_living_room
 concept:athlete:tanyon_sturtze
