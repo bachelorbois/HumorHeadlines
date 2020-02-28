@@ -4,6 +4,7 @@
 data/embeddings/
 data/KnowledgeBase/
 **/headline_regression/
+**/entity_representation/
 **/*.ckpt*
 ssh_notes.txt
 src/profiles/
