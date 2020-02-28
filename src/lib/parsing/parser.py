@@ -4,6 +4,7 @@ from collections import Iterator
 from typing import List, Dict, TextIO, BinaryIO
 from enum import Enum
 
+from bidict import bidict
 import numpy as np
 
 import lib.parsing.Headline_pb2 as Headline_pb2
@@ -27,19 +28,18 @@ class Label(Enum):
     H1 = 1
     H2 = 2
 
+LabelTranslate = bidict({
+    Label.NA: Candidates_pb2.CandidateCollection.Candidates.Label.NA,
+    Label.EQUAL: Candidates_pb2.CandidateCollection.Candidates.Label.EQUAL,
+    Label.H1: Candidates_pb2.CandidateCollection.Candidates.Label.H1,
+    Label.H2: Candidates_pb2.CandidateCollection.Candidates.Label.H2
+})
+
 def LabelToPB(l : Label) -> Candidates_pb2.CandidateCollection.Candidates.Label:
-    if l == Label.NA: return Candidates_pb2.CandidateCollection.Candidates.Label.NA
-    if l == Label.EQUAL: return Candidates_pb2.CandidateCollection.Candidates.Label.EQUAL
-    if l == Label.H1: return Candidates_pb2.CandidateCollection.Candidates.Label.H1
-    if l == Label.H2: return Candidates_pb2.CandidateCollection.Candidates.Label.H2
-    raise ValueError()
+    return LabelTranslate[l]
 
 def PBToLabel(l : Candidates_pb2.CandidateCollection.Candidates.Label) -> Label:
-    if l == Candidates_pb2.CandidateCollection.Candidates.Label.NA: return Label.NA
-    if l == Candidates_pb2.CandidateCollection.Candidates.Label.EQUAL: return Label.EQUAL
-    if l == Candidates_pb2.CandidateCollection.Candidates.Label.H1: return Label.H1
-    if l == Candidates_pb2.CandidateCollection.Candidates.Label.H2: return Label.H2
-    raise ValueError()
+    return LabelTranslate.inverse[l]
 
 class Headline:
     """An object representing a Headline with edit.
@@ -98,6 +98,12 @@ class Headline:
 
     @classmethod
     def SetBERTVocab(cls, vocab_fd : TextIO) -> None:
+        """Sets the BERT vocab statically.
+        This needs to be called before calling GetBERT is called!
+
+        Args:
+            vocab_fd (TextIO): A file descriptor pointing to a BERT vocab.
+        """
         cls.BERT_VOCAB = {}
         for i, t in enumerate(vocab_fd):
             cls.BERT_VOCAB[t.strip("\n")] = i
