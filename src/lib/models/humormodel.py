@@ -28,7 +28,7 @@ def create_HUMOR_model(feature_len : int, token_len : int, embeds : bool = False
     dense2_dropout = layers.Dropout(0.5)(dense2)
     dense3 = layers.Dense(32, activation='relu')(dense2_dropout)
     dense3_dropout = layers.Dropout(0.5)(dense3)
-    output = layers.Dense(1, activation=sigmoid_3)(dense3_dropout)
+    output = layers.Dense(1)(dense3_dropout)
 
     if (embeds):
         HUMOR = Model(inputs=[input_features, input_tokens, input_text], outputs=output)

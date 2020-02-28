@@ -7,3 +7,4 @@ data/KnowledgeBase/
 **/*.ckpt*
 ssh_notes.txt
 src/profiles/
+data/NELL/*.xml
