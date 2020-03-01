@@ -8,6 +8,7 @@ from lib.models.sarcasm_FFNN import SarcasmClassifier
 
 class SarcasmFeature(Feature):
     MODEL_PATH = "lib/models/pre-trained/sarcasm_model.h5"
+    model = None
 
     @classmethod
     def compute_feature(cls, HL):
@@ -15,18 +16,17 @@ class SarcasmFeature(Feature):
 
         sentence = HL.sentence
         sentence[HL.word_index] = HL.edit
-
-        cls.sc = SarcasmClassifier()
-
-        if not os.path.isfile(cls.MODEL_PATH):
-            EmbeddingContainer.BUILD_ALL = True
-            EmbeddingContainer.init()
-            cls.sc.run_preproc()
-            cls.sc.run_model()
-        else:
-            cls.model = pickle.load(open(cls.MODEL_PATH, 'rb'))
-
-        cls.processed_sentence = cls.sc.process_sentence(sentence)
-        cls.preds = cls.predict_sarcasm([cls.processed_sentence])
+        if not cls.model:
+            cls.model = SarcasmClassifier()
+            if os.path.isfile(cls.MODEL_PATH):
+                cls.model.load_model(cls.MODEL_PATH)
+            else:
+                EmbeddingContainer.BUILD_ALL = True
+                EmbeddingContainer.init()
+                cls.model.run_preproc()
+                cls.model.run_model()
+        
+        cls.processed_sentence = cls.model.process_sentence(sentence)
+        cls.preds = cls.model.predict_sarcasm(cls.processed_sentence)
 
         return cls.preds
