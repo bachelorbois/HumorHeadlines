@@ -110,7 +110,8 @@ class SarcasmClassifier():
 
     @classmethod
     def load_model(cls, PATH):
-        cls.model = load_model(PATH)
+        if not cls.model:
+            cls.model = load_model(PATH)
 
 
     @classmethod
@@ -144,43 +145,22 @@ class SarcasmClassifier():
     def process_sentence(cls, sentence):
         if not cls.vocab:
             cls.run_preproc()
-            """
-            TOKENS_TO_ID_FILE = '../data/sarcasm_utils/sarcasm_tokens_to_id.txt'
-            ID_TO_TOKENS_FILE = '../data/sarcasm_utils/sarcasm_id_to_tokens.txt'
-            if os.path.isfile(TOKENS_TO_ID_FILE) or os.path.isfile(ID_TO_TOKENS_FILE):
-                with open(TOKENS_TO_ID_FILE) as infile:
-                    tok_to_id = json.load(infile)
-                with open(ID_TO_TOKENS_FILE) as infile:
-                    id_to_tok = json.load(infile)
-            """
 
-        #proc_sentence = []
-        proc_sentence = np.zeros((300))
+        proc_sentence = []
         for w in sentence:
             try:
-                proc_sentence = np.add(proc_sentence, cls.vocab[w])
-                #proc_sentence.append(cls.vocab[w])
+                proc_sentence.append(cls.tok_to_id[w])
             except KeyError:
-                proc_sentence = np.add(proc_sentence, cls.vocab['UNK'])
-                #proc_sentence.append(cls.vocab['UNK'])
-        #proc_sentence = np.array(proc_sentence)
-        proc_sentence = proc_sentence/len(sentence)
+                proc_sentence.append(cls.tok_to_id['UNK'])
+
         proc_sentence = [proc_sentence]
         proc_sentence = np.array(proc_sentence)
-        #proc_sentence = pad_sequences(proc_sentence, maxlen=cls.max_length, padding='post')
 
+        proc_sentence = pad_sequences(proc_sentence, maxlen=cls.max_length, padding='post')
         return proc_sentence
+
 
     @classmethod
     def predict_sarcasm(cls, sentence):
         return cls.model.predict(sentence)
     
-"""
-def run():
-    classifier = SarcasmClassifier()
-    classifier.run_preproc()
-    classifier.run_model()
-
-if __name__ == "__main__":
-   run()
-"""
