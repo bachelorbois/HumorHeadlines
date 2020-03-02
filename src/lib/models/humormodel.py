@@ -6,17 +6,11 @@ import os
 from lib.models.module.functionmodule import sigmoid_3
 from lib.models.layers.elmo import ElmoEmbeddingLayer
 
-def create_HUMOR_model(feature_len : int, token_len : int, embeds : bool = False) -> Model:
+def create_HUMOR_model(feature_len : int) -> Model:
     ###### Feature Part
-    pretrained_dir = f'{os.getcwd()}/lib/models/pre-trained/'
     input_features = layers.Input(shape=(feature_len,), dtype='float32', name="feature_input")
-    input_tokens = layers.Input(shape=(token_len,), dtype='float32', name="token_input")
 
-    sarcasm = models.load_model(pretrained_dir + 'sarcasm_model.h5')
-    sarcasm.trainable = False
-
-    concat_features = layers.Concatenate()([input_features, sarcasm(input_tokens)])
-    feature_dense = layers.Dense(16, activation='relu')(concat_features)
+    feature_dense = layers.Dense(16, activation='relu')(input_features)
     feature_dense = layers.Dense(16, activation='relu')(feature_dense)
     ####################
 
@@ -39,7 +33,7 @@ def create_HUMOR_model(feature_len : int, token_len : int, embeds : bool = False
     concat = layers.Concatenate()([feature_dense, concat_sentence])
     output = layers.Dense(1)(concat)
 
-    HUMOR = Model(inputs=[input_features, input_tokens, input_replaced, input_replacement], outputs=output)
+    HUMOR = Model(inputs=[input_features, input_replaced, input_replacement], outputs=output)
 
     # opt = optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
     opt = optimizers.Adam()

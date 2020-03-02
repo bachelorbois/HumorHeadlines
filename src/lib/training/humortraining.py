@@ -6,10 +6,11 @@ import datetime
 import os
 import pickle
 from typing import List
+import time
 
 from lib.models import create_HUMOR_model
 from lib.parsing.parser import read_task1_pb
-from lib.features import PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature
+from lib.features import PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature, SarcasmFeature
 
 class HumorTraining:
     DIR = "./headline_regression/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -20,6 +21,7 @@ class HumorTraining:
     EMBED_FILE = "../data/embeddings/wiki-news-300d-1M"
 
     def __init__(self, Humor : Model, embeds : bool, train_paths : List[str], dev_path : List[str], test_path : List[str]):
+        self.start = time.time()
         self.humor = Humor
         self.embeds = embeds
         print("Loading fastText Embedings...")
@@ -34,7 +36,7 @@ class HumorTraining:
         self.dev_data = self.load_data(dev_path)
         self.test_data = self.load_data(test_path)
 
-        features = [PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature]
+        features = [PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature, SarcasmFeature]
 
         self.train_data.AddFeatures(features)
         self.dev_data.AddFeatures(features)
@@ -45,27 +47,19 @@ class HumorTraining:
         features, y_train = self.train_data.GetFeatureVectors(), self.train_data.GetGrades()
         ins = {"feature_input": features}
 
+        text = self.train_data.GetEditSentences()
+        ins["replaced_input"] = text
+
+        text = self.train_data.GetSentences()
+        ins["repacement_input"] = text
+
         # Dev data
         dev_features, y_dev = self.dev_data.GetFeatureVectors(), self.dev_data.GetGrades()
         dev_ins = {"feature_input": dev_features}
 
-        # Train data
-        token = self.train_data.GetTokenizedWEdit()
-        processedSents = self.process_sentences(token, self.fastTextEmbeds)
-        ins["token_input"] = processedSents
-
-        # Dev data
-        token = self.dev_data.GetTokenizedWEdit()
-        processedSents = self.process_sentences(token, self.fastTextEmbeds)
-        dev_ins["token_input"] = processedSents
-
-        text = self.train_data.GetEditSentences()
-        ins["replaced_input"] = text
         text = self.dev_data.GetEditSentences()
         dev_ins["replaced_input"] = text
 
-        text = self.train_data.GetSentences()
-        ins["repacement_input"] = text
         text = self.dev_data.GetSentences()
         dev_ins["repacement_input"] = text
 
@@ -77,7 +71,7 @@ class HumorTraining:
         #                                                 total_epoch_count=epoch)
         # lr_schedule = callbacks.ReduceLROnPlateau(monitor='val_root_mean_squared_error', factor=0.1, patience=5, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0.0001)
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
-
+        print(f"--------- It took {time.time() - self.start} second from start to training ---------")
         self.humor.fit(x=ins, y=y_train,
                         validation_data=(dev_ins, y_dev),
                         batch_size=batch_size,
@@ -91,10 +85,6 @@ class HumorTraining:
         # Test data
         features = self.test_data.GetFeatureVectors()
         ins = {"feature_input": features}
-
-        token = self.test_data.GetTokenizedWEdit()
-        processedSents = self.process_sentences(token, self.fastTextEmbeds)
-        ins["token_input"] = processedSents
 
         text = self.test_data.GetEditSentences()
         ins["replaced_input"] = text
