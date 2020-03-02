@@ -61,16 +61,11 @@ class SarcasmClassifier():
         tokens_set = set(tokens_set)
         tokens_set.add('UNK')
         cls.tok_to_id = {}
-        cls.id_to_tok = {}
         for i, tok in enumerate(tokens_set):
             cls.tok_to_id[tok] = i+1
-            cls.id_to_tok[i+1] = tok
 
         with open('../data/sarcasm_utils/sarcasm_tokens_to_id.txt', 'w') as outfile:
             outfile.write(json.dumps(cls.tok_to_id))
-        
-        with open('../data/sarcasm_utils/sarcasm_id_to_tokens.txt', 'w') as outfile:
-            outfile.write(json.dumps(cls.id_to_tok))
 
         proc_data = []
         for sentence in tokenized_sentences:
@@ -110,9 +105,6 @@ class SarcasmClassifier():
 
         cls.model.fit(cls.X_train, cls.y_train, nb_epoch=15, validation_split=0.2)
         cls.model.evaluate(cls.X_test, cls.y_test)
-
-        with open("lib/models/pre-trained/sarcasm_model_config.json", "w") as json_file:
-            json_file.write(cls.model.to_json())
 
         cls.model.save("lib/models/pre-trained/sarcasm_model.h5")
 
