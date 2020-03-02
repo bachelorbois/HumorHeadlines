@@ -16,7 +16,7 @@ def create_NAM_model(L : int, no_entities : int, no_relations : int) -> Model:
     size = 64
     for l in range(L):
         x = layers.Dense(size, activation="relu")(x)
-        x = layers.Dropout(0.25)(x)
+        x = layers.Dropout(0.2)(x)
 
     out = layers.Dot(-1)([x, tail_embed])
     out = layers.Flatten()(out)

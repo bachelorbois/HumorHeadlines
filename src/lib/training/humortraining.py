@@ -59,19 +59,23 @@ class HumorTraining:
         processedSents = self.process_sentences(token, self.fastTextEmbeds)
         dev_ins["token_input"] = processedSents
 
-        if (self.embeds):
-            text = self.train_data.GetEditSentences()
-            ins["string_input"] = text
-            text = self.dev_data.GetEditSentences()
-            dev_ins["string_input"] = text
+        text = self.train_data.GetEditSentences()
+        ins["replaced_input"] = text
+        text = self.dev_data.GetEditSentences()
+        dev_ins["replaced_input"] = text
+
+        text = self.train_data.GetSentences()
+        ins["repacement_input"] = text
+        text = self.dev_data.GetSentences()
+        dev_ins["repacement_input"] = text
 
         # Create callbacks
         tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR)
-        lr_schedule = self.create_learning_rate_scheduler(max_learn_rate=1e-2,
-                                                        end_learn_rate=1e-6,
-                                                        warmup_epoch_count=20,
-                                                        total_epoch_count=epoch)
-
+        # lr_schedule = self.create_learning_rate_scheduler(max_learn_rate=1e-2,
+        #                                                 end_learn_rate=1e-6,
+        #                                                 warmup_epoch_count=20,
+        #                                                 total_epoch_count=epoch)
+        # lr_schedule = callbacks.ReduceLROnPlateau(monitor='val_root_mean_squared_error', factor=0.1, patience=5, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0.0001)
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
 
         self.humor.fit(x=ins, y=y_train,
@@ -79,7 +83,7 @@ class HumorTraining:
                         batch_size=batch_size,
                         epochs=epoch,
                         shuffle=True,
-                        callbacks=[lr_schedule, tensorboard])
+                        callbacks=[tensorboard])
 
         self.humor.save(self.SAVE_DIR+'final.hdf5')
 
@@ -92,9 +96,10 @@ class HumorTraining:
         processedSents = self.process_sentences(token, self.fastTextEmbeds)
         ins["token_input"] = processedSents
 
-        if (self.embeds):
-            text = self.test_data.GetEditSentences()
-            ins["string_input"] = text
+        text = self.test_data.GetEditSentences()
+        ins["replaced_input"] = text
+        text = self.test_data.GetSentences()
+        ins["repacement_input"] = text
 
         # Predict on the data
         preds = self.humor.predict(ins)

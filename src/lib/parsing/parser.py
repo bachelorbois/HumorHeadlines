@@ -208,6 +208,11 @@ class HeadlineCollection:
             [h.GetEdited() for h in self.collection]
         )
 
+    def GetSentences(self) -> np.ndarray:
+        return np.array(
+            [" ".join(h.sentence) for h in self.collection]
+        )
+
     def GetTokenizedWEdit(self) -> np.ndarray:
         return np.array(
             [h.GetTokenizedWEdit() for h in self.collection]
