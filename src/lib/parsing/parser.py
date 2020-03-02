@@ -6,6 +6,7 @@ from enum import Enum
 
 from bidict import bidict
 import numpy as np
+from tqdm import tqdm
 
 import lib.parsing.Headline_pb2 as Headline_pb2
 import lib.parsing.Candidates_pb2 as Candidates_pb2
@@ -184,9 +185,10 @@ class HeadlineCollection:
             e.AddFeatures(features)
 
     def GetFeatureVectors(self) -> np.ndarray:
-        return np.array(
-            [e.GetFeatureVector() for e in self.collection]
-        )
+        features = []
+        for e in tqdm(self.collection):
+            features.append(e.GetFeatureVector())
+        return np.asarray(features)
 
     def GetIDs(self) -> np.ndarray:
         return np.array(

@@ -3,9 +3,11 @@
 **/test.py
 data/embeddings/
 data/KnowledgeBase/
+data/sarcasm_utils/
 **/headline_regression/
 **/entity_representation/
 **/*.ckpt*
 ssh_notes.txt
 src/profiles/
 data/NELL/*.xml
+**/sarcasm_model.h5
