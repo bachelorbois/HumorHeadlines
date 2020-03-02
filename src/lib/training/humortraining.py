@@ -11,6 +11,7 @@ import time
 from lib.models import create_HUMOR_model
 from lib.parsing.parser import read_task1_pb
 from lib.features import PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature, SarcasmFeature
+from lib.features.embeddingContainer import EmbeddingContainer
 
 class HumorTraining:
     DIR = "./headline_regression/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -20,12 +21,10 @@ class HumorTraining:
     PRED_FILE = PRED_DIR + '/task-1-output.csv'
     EMBED_FILE = "../data/embeddings/wiki-news-300d-1M"
 
-    def __init__(self, Humor : Model, embeds : bool, train_paths : List[str], dev_path : List[str], test_path : List[str]):
+    def __init__(self, Humor : Model, train_paths : List[str], dev_path : List[str], test_path : List[str]):
         self.start = time.time()
         self.humor = Humor
-        self.embeds = embeds
-        print("Loading fastText Embedings...")
-        self.fastTextEmbeds = self.load_embeddings()
+        EmbeddingContainer.init()
 
         os.makedirs(self.LOG_DIR)
         os.makedirs(self.SAVE_DIR)
@@ -98,40 +97,6 @@ class HumorTraining:
         out = np.stack((ids, preds.flatten()), axis=-1)
         # Save the predictions to file
         np.savetxt(self.PRED_FILE, out, fmt="%d,%1.8f")
-
-    @staticmethod
-    def process_sentences(tokenized_sentences, dictionary):
-        proc_sentences = [] 
-        for sentence in tokenized_sentences:
-            agg = np.zeros((300))
-            for token in sentence:
-                try:
-                    agg = np.add(agg, dictionary[token])
-                except KeyError:
-                    agg = np.add(agg, dictionary['UNK'])
-            proc_sentences.append(agg/len(sentence))
-
-        return np.array(proc_sentences)
-
-    def load_embeddings(self):
-        dictionary = {}
-        if not os.path.isfile(self.EMBED_FILE + '.p'):
-            with open(self.EMBED_FILE + '.vec', 'r') as infile:
-                for line in infile:
-                    line = line.split()
-                    word = line[0]
-                    emb = np.array(line[1:], dtype='float')
-                    dictionary[word] = emb
-
-            dictionary['UNK'] = np.array(list(dictionary.values())).mean()
-
-            with open(self.EMBED_FILE + '.p', 'wb') as f:
-                pickle.dump(dictionary, f)
-        else:
-            with open(self.EMBED_FILE + '.p', 'rb') as f:
-                dictionary = pickle.load(f)
-        
-        return dictionary
 
     @staticmethod
     def create_learning_rate_scheduler(max_learn_rate=5e-5,

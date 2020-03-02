@@ -8,7 +8,7 @@ from lib.models.layers.elmo import ElmoEmbeddingLayer
 
 def create_HUMOR_model(feature_len : int) -> Model:
     ###### Feature Part
-    input_features = layers.Input(shape=(feature_len,), dtype='float32', name="feature_input")
+    input_features = layers.Input(shape=(feature_len,), dtype='float64', name="feature_input")
 
     feature_dense = layers.Dense(16, activation='relu')(input_features)
     feature_dense = layers.Dense(16, activation='relu')(feature_dense)
