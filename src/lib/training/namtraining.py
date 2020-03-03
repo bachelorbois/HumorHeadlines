@@ -14,8 +14,8 @@ class NAMTraining:
     DATA_DIR = '../data/NELL/'
     PREPROC_DIR = DATA_DIR + 'preproc/'
     EMBED_DIR = DATA_DIR + 'embeddings/'
-    DATAX = DATA_DIR + 'triples.npy'
-    DATAY = DATA_DIR + 'labels.npy'
+    DATAX = PREPROC_DIR + 'triples.npy'
+    DATAY = PREPROC_DIR + 'labels.npy'
     REL_EMBED = EMBED_DIR + 'relation.npy'
     ENT_EMBED = EMBED_DIR + 'entity.npy'
     def __init__(self, model, data_path, entity_vocab, relation_vocab):
@@ -40,13 +40,14 @@ class NAMTraining:
         print("Training the model...")
 
         tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR)
+        reduceLR = callbacks.ReduceLROnPlateau(monitor='val_accuracy', factor=0.1, patience=10, verbose=0, mode='auto', min_delta=0.001, cooldown=0, min_lr=0.0001)
 
         self.model.fit([self.train_x[:, 0], self.train_x[:, 1], self.train_x[:, 2]], self.train_y, 
                         epochs=epoch, 
                         batch_size=batch_size, 
                         validation_split=.2,
                         shuffle=True,
-                        callbacks=[tensorboard])
+                        callbacks=[tensorboard, reduceLR])
 
         self.model.save(self.SAVE_DIR+'final.hdf5')
 
@@ -64,13 +65,14 @@ class NAMTraining:
         data = []
         y = []
         ent_vocab['UNK'] = 0
+        rel_vocab['UNK'] = 0
         with open(entity_vocab, 'r') as f:
             for i, line in enumerate(f):
                 ent_vocab[line.strip()] = i+1
 
         with open(relation_vocab, 'r') as f:
             for i, line in enumerate(f):
-                rel_vocab[line.strip()] = i
+                rel_vocab[line.strip()] = i+1
         print("Parsed the dictionaries...")
         if not os.path.isfile(self.DATAX):
             g = Graph()

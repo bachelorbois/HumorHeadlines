@@ -36,6 +36,9 @@ class SarcasmClassifier():
         cls.merge_datasets(DATA_FILE, DATA_FILE_v2)
         cls.load_embeddings()
 
+        if not os.path.exists('../data/sarcasm_utils/'):
+            os.makedirs('../data/sarcasm_utils/')
+
         proc_data, labels = cls.process_dataset()
 
         cls.X_train, cls.X_test, cls.y_train, cls.y_test = train_test_split(proc_data, labels, test_size=0.2)

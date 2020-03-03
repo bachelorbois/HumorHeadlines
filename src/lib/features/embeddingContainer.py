@@ -4,6 +4,7 @@ import linecache
 from zipfile import ZipFile
 from typing import Tuple
 import numpy as np
+from tqdm import tqdm
 
 class EmbeddingContainer():
     """A static container class managing embedding allocation.
@@ -44,7 +45,7 @@ class EmbeddingContainer():
         with open(cls.EMBED_FILE, "r") as fd:
             next(fd)
 
-            for i, l in enumerate(fd):
+            for i, l in tqdm(enumerate(fd)):
                 cls.FT[str.split(l, maxsplit=1)[0]] = i
 
     @classmethod
