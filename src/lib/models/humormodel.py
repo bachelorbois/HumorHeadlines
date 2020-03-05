@@ -28,23 +28,23 @@ def create_HUMOR_model(feature_len : int, token_len : int) -> Model:
     
     sentence_in = layers.Input(shape=(), dtype=tf.string, name="sentence_in")
     embed = hub.KerasLayer('https://tfhub.dev/google/tf2-preview/nnlm-en-dim128/1')(sentence_in)    # Expects a tf.string input tensor.
-    sentence_dense = layers.Dense(128, activation='relu', name="SentenceDense1")(embed)
+    sentence_dense = layers.Dense(64, activation='relu', name="SentenceDense1")(embed)
     sentence_dense = layers.Dropout(0.50)(sentence_dense)
-    sentence_dense = layers.Dense(64, activation='relu', name="SentenceDense2")(sentence_dense)
+    sentence_dense = layers.Dense(32, activation='relu', name="SentenceDense2")(sentence_dense)
     sentence_dense = layers.Dropout(0.50)(sentence_dense)
-    sentence_dense = layers.Dense(32, activation='relu', name="SentenceDense3")(sentence_dense)
+    sentence_dense = layers.Dense(16, activation='relu', name="SentenceDense3")(sentence_dense)
     sentence_dense = layers.Dropout(0.50)(sentence_dense)
 
-    sentence_model = Model(sentence_in, sentence_dense)
+    sentence_model = Model(sentence_in, sentence_dense, name="SentenceModel")
 
     concat_sentence = layers.Concatenate()([sentence_model(input_replaced), sentence_model(input_replacement)])
     #####################
 
     ###### Common Part
     concat = layers.Concatenate()([feature_dense, concat_sentence])
-    output = layers.Dense(16, activation='relu', name="OutoutDense1")(concat)
-    output = layers.Dense(1, name="Outout")(output)
-    #  input_tokens,
+    # output = layers.Dense(16, activation='relu', name="OutoutDense1")(feature_dense)
+    output = layers.Dense(1, name="Outout")(concat)
+    #  input_tokens, 
     HUMOR = Model(inputs=[input_features, input_replaced, input_replacement], outputs=output)
 
     # opt = optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)

@@ -35,7 +35,7 @@ class HumorTraining:
         os.mknod(self.PRED_FILE)
 
         tf.keras.utils.plot_model(
-            self.humor, to_file=f'{VIZ_DIR}model.png', show_shapes=True, show_layer_names=True,
+            self.humor, to_file=f'{self.VIZ_DIR}model.png', show_shapes=True, show_layer_names=True,
             rankdir='TB', expand_nested=True, dpi=96
         )
 
@@ -55,10 +55,10 @@ class HumorTraining:
         ins = {"feature_input": features[:,:6]}
         # ins["token_input"] = features[:,6:]
 
-        text = self.train_data.GetEditSentences()
+        text = self.train_data.GetReplaced()
         ins["replaced_input"] = text
 
-        text = self.train_data.GetSentences()
+        text = self.train_data.GetEdits()
         ins["repacement_input"] = text
 
         # Dev data
@@ -66,10 +66,10 @@ class HumorTraining:
         dev_ins = {"feature_input": dev_features[:,:6]}
         # dev_ins["token_input"] = dev_features[:,6:]
 
-        text = self.dev_data.GetEditSentences()
+        text = self.dev_data.GetReplaced()
         dev_ins["replaced_input"] = text
 
-        text = self.dev_data.GetSentences()
+        text = self.dev_data.GetEdits()
         dev_ins["repacement_input"] = text
 
         # Create callbacks
@@ -96,9 +96,9 @@ class HumorTraining:
         ins = {"feature_input": features[:,:6]}
         # ins["token_input"] = features[:,6:]
 
-        text = self.test_data.GetEditSentences()
+        text = self.test_data.GetReplaced()
         ins["replaced_input"] = text
-        text = self.test_data.GetSentences()
+        text = self.test_data.GetEdits()
         ins["repacement_input"] = text
 
         # Predict on the data

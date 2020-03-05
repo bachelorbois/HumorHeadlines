@@ -188,6 +188,14 @@ class HeadlineCollection:
         
         return np.asarray(features, dtype='float32')
 
+    def GetEdits(self) -> np.ndarray:
+        edits = [h.edit for h in self.collection]
+        return np.array(edits)
+
+    def GetReplaced(self) -> np.ndarray:
+        replaced = [h.sentence[h.word_index] for h in self.collection]
+        return np.array(replaced)
+
     def GetIDs(self) -> np.ndarray:
         return np.array(
             [h.id for h in self.collection]

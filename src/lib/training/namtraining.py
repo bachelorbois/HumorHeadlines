@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from rdflib import Graph
 from tensorflow.keras import callbacks
+from tqdm import tqdm
 
 class NAMTraining:
     DIR = "./entity_representation/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -80,11 +81,8 @@ class NAMTraining:
                 g.parse(data=f.read(), format="xml")
             print("Parsed the NELL Graph...")
             print(f"No. points in graph: {len(g)}")
-            idx = 0
-            sizes = [int(len(g)*(i/10)) for i in range(10)]
-            print("Will report when we have finished: ", sizes)
-            for e1, r, e2 in g:
-                if r.strip() != "concept:haswikipediaurl" and r.strip() != "concept:generalizations" and r.strip() != "concept:latitudelongitude":
+            for e1, r, e2 in tqdm(g):
+                if r.strip() != "concept:haswikipediaurl" and r.strip() != "concept:latitudelongitude":
                     if f'{e1}' in list(ent_vocab) and f'{e2}' in list(ent_vocab) and f'{r}' in list(rel_vocab):
                         triple1 = np.array([ent_vocab[f'{e1}'], rel_vocab[f'{r}'], ent_vocab[f'{e2}']])
                         data.append(triple1)
@@ -93,9 +91,26 @@ class NAMTraining:
                         triple2 = np.array([ent_vocab[new_e1], rel_vocab[f'{r}'], ent_vocab[f'{e2}']])
                         data.append(triple2)
                         y.append(0)
-                idx += 1
-                if idx in sizes:
-                    print(f'Currently at {idx}')
+                    # Generalizations
+                    e1_list = e1.split(':')
+                    e2_list = e2.split(':')
+                    if f'{e1_list[0]}:{e1_list[1]}' in list(ent_vocab):
+                        triple1 = np.array([ent_vocab[f'{e1}'], rel_vocab['concept:isa'], ent_vocab[f'{e1_list[0]}:{e1_list[1]}']])
+                        data.append(triple1)
+                        y.append(1)
+                        new_e1 = self.pick_random_2(e1, e1_list, ent_vocab)
+                        triple2 = np.array([ent_vocab[new_e1], rel_vocab['concept:isa'], ent_vocab[f'{e1_list[0]}:{e1_list[1]}']])
+                        data.append(triple2)
+                        y.append(0)
+
+                    if f'{e2_list[0]}:{e2_list[1]}' in list(ent_vocab):
+                        triple1 = np.array([ent_vocab[f'{e2}'], rel_vocab['concept:isa'], ent_vocab[f'{e2_list[0]}:{e2_list[1]}']])
+                        data.append(triple1)
+                        y.append(1)
+                        new_e2 = self.pick_random_2(e2, e2_list, ent_vocab)
+                        triple2 = np.array([ent_vocab[new_e2], rel_vocab['concept:isa'], ent_vocab[f'{e2_list[0]}:{e2_list[1]}']])
+                        data.append(triple2)
+                        y.append(0)   
         else:
             print("Data file exists...")
             data = np.load(self.DATAX)
@@ -106,6 +121,13 @@ class NAMTraining:
     def pick_random(self, g, e1, r, e2, vocab):
         new_e = e1
         while (new_e, r, e2) in g:
+            new_e = random.sample(list(vocab), 1)[0]
+
+        return new_e
+
+    def pick_random_2(self, e, e_list, vocab):
+        new_e = e
+        while new_e == e or f'{new_e}' == f'{e_list[0]}:{e_list[1]}':
             new_e = random.sample(list(vocab), 1)[0]
 
         return new_e
