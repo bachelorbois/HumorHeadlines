@@ -1,72 +1,54 @@
 import string
 import numpy as np
-from nltk import pos_tag
-from nltk.corpus import wordnet as wn
-from bidict import bidict
 from nltk.stem import WordNetLemmatizer
-from collections import defaultdict
 from lib.parsing import Headline
 from lib.features import Feature
+from lib.features.NELLWordnetVocab import generate_vocab_dict
 
 class NellKbFeature(Feature):
-    word2int = defaultdict(dict)
-    cat2int = defaultdict(int)
+    max_len = 20
     lemmatizer = WordNetLemmatizer()
     punct = set(string.punctuation)
     punct.add('—‘’$“”')
     punct = list(punct)
     punct.extend(['’s', "'s", "'m", "...", 'n’t', "`"])
-    #construct vocab dictionary from Nell knowledge base.
-    with open('../data/NELL/NELLVocab.txt', 'r') as f:
-        vocab = f.readlines()
-        for idx, e in enumerate(vocab):
-            #extract the actual concept and its generalization (category).
-            #and correct spaces.
-            e = e.strip()
-            e = e.replace('_', ' ')
-            e = e.split(':')
-            word = e[-1]
-            category = e[-2]
-            try:
-                word2int[category][word] = idx+1
-            except KeyError:
-                print('fuck!')
-        for idx, c in enumerate(word2int.keys()):
-            try:
-                cat2int[c] = idx+1
-            except KeyError:
-                print('category KeyError exception captured!')
+    word2int, int2word = generate_vocab_dict("../data/NELL/NELLWordNetVocab.txt")
 
     @classmethod
-    def compute_feature(cls, HL: Headline) -> np.ndarray:
-        entities = []
-        generalizations = []
+    def preprocess(cls, HL):
         sent = HL.sentence
-        found = False
         sent[HL.word_index] = HL.edit
+        sent = [w.lower().replace("'s", "") for w in sent]
         try:
             sent = [cls.lemmatizer.lemmatize(w) for w in sent if w not in cls.punct]
         except Exception as e:
             print(e)
-        print(sent)
-        for token in sent:
-            found = False
-            token = token.lower()
-            for c in cls.word2int.keys():
-                if found:
-                    break
-                else:
-                    try:
-                        entities.append(cls.word2int[c][token])
-                        generalizations.append(cls.cat2int[c])
-                        found = True
-                    except KeyError:
-                        continue
-            if not found:
-                entities.append(0)
-                generalizations.append(0)
-        a = np.array(generalizations)
-        b = np.array(entities)
-        stacked = np.stack((a,b))
-        #print(a.shape, stacked.shape)
-        return stacked
+        return sent
+
+    def pad(n, list_to_pad):
+        if n >= 1:
+            for _ in range(0, n):
+                list_to_pad.append(0)
+
+    @classmethod
+    def compute_feature(cls, HL: Headline) -> np.ndarray:
+        entities = []
+        sentence = cls.preprocess(HL)
+        # print(sentence)
+        for token in sentence:
+            try:
+                entities.append(cls.word2int[token])
+            except KeyError:
+                pass
+        
+        curr_len = len(entities)
+        
+        if curr_len > cls.max_len:
+            print(f"oh shit {curr_len}")
+        
+        pad_size = cls.max_len - curr_len
+        cls.pad(pad_size, entities)
+        
+        a = np.array(entities)
+        # print(a.shape)
+        return a
