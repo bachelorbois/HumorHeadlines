@@ -80,6 +80,9 @@ class Headline:
     def AddFeatures(self, features : List) -> None:
         self.features.extend(features)
 
+    def ClearFeatures(self) -> None:
+        self.features = []
+
     def GetFeatureVector(self) -> np.ndarray:
         res = []
         for feature in self.features:
@@ -181,11 +184,15 @@ class HeadlineCollection:
         for e in self.collection:
             e.AddFeatures(features)
 
+    def ClearFeatures(self) -> None:
+        for e in self.collection:
+            e.ClearFeatures()
+
     def GetFeatureVectors(self) -> np.ndarray:
         features = []
         for e in tqdm(self.collection, unit='headline(s)', desc="Computing features"):
             features.append(e.GetFeatureVector())
-        
+
         return np.asarray(features, dtype='float32')
 
     def GetEdits(self) -> np.ndarray:
@@ -281,6 +288,10 @@ class Candidates:
         self.HL1.AddFeatures(features)
         self.HL2.AddFeatures(features)
 
+    def ClearFeatures(self) -> None:
+        self.HL1.ClearFeatures()
+        self.HL2.ClearFeatures()
+
     def GetFeatureVectors(self) -> np.ndarray:
         return np.array([
             self.HL1.GetFeatureVector(),
@@ -337,6 +348,10 @@ class CandidateCollection:
     def AddFeatures(self, features : List) -> None:
         for e in self.collection:
             e.AddFeatures(features)
+
+    def ClearFeatures(self) -> None:
+        for e in self.collection:
+            e.ClearFeatures()
 
     def GetFeatureVectors(self) -> np.ndarray:
         return np.array(
