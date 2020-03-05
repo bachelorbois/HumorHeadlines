@@ -16,13 +16,12 @@ class SarcasmFeature(Feature):
 
         sentence = HL.sentence
         sentence[HL.word_index] = HL.edit
-        if os.path.isfile(cls.MODEL_PATH):
-            SarcasmClassifier.load_model(cls.MODEL_PATH)
-        else:
-            SarcasmClassifier.run_preproc()
-            SarcasmClassifier.run_model()
+        # if os.path.isfile(cls.MODEL_PATH):
+        #     SarcasmClassifier.load_model(cls.MODEL_PATH)
+        # else:
+        #     SarcasmClassifier.run_preproc()
+        #     SarcasmClassifier.run_model()
         
         cls.processed_sentence = SarcasmClassifier.process_sentence(sentence)
-        cls.preds = SarcasmClassifier.predict_sarcasm(cls.processed_sentence)
-
-        return cls.preds
+        # cls.preds = SarcasmClassifier.predict_sarcasm(cls.processed_sentence)
+        return list(cls.processed_sentence)

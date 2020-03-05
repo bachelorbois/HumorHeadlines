@@ -25,10 +25,11 @@ class SarcasmClassifier():
     dataset = None
     vocab = None
     X_train, X_test, y_train, y_test = None, None, None, None
-    max_length = None
+    max_length = 26
     embedding_matrix = None
     model = None
     tok_to_id, id_to_tok = None, None
+    tok_to_id_path = '../data/sarcasm_utils/sarcasm_tokens_to_id.txt'
 
     @classmethod
     def run_preproc(cls):
@@ -146,7 +147,11 @@ class SarcasmClassifier():
 
     @classmethod
     def process_sentence(cls, sentence):
-        if not cls.vocab:
+        if os.path.isfile(cls.tok_to_id_path): 
+            if not cls.tok_to_id:
+                with open(cls.tok_to_id_path, 'r') as fp:
+                    cls.tok_to_id = json.load(fp)
+        else:
             cls.run_preproc()
 
         proc_sentence = []
@@ -158,8 +163,7 @@ class SarcasmClassifier():
 
         proc_sentence = [proc_sentence]
         proc_sentence = np.array(proc_sentence)
-
-        proc_sentence = pad_sequences(proc_sentence, maxlen=cls.max_length, padding='post')
+        proc_sentence = pad_sequences(proc_sentence, maxlen=cls.max_length, padding='post')[0]
         return proc_sentence
 
 

@@ -12,12 +12,14 @@ from lib.models import create_HUMOR_model
 from lib.parsing.parser import read_task1_pb
 from lib.features import PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature, SarcasmFeature
 from lib.features.embeddingContainer import EmbeddingContainer
+from lib.models.sarcasm_FFNN import SarcasmClassifier
 
 class HumorTraining:
     DIR = "./headline_regression/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     LOG_DIR = DIR + '/logs/'
     SAVE_DIR = DIR + '/weights/'
     PRED_DIR = DIR + '/predictions/'
+    VIZ_DIR = DIR + '/visualization/'
     PRED_FILE = PRED_DIR + '/task-1-output.csv'
     EMBED_FILE = "../data/embeddings/wiki-news-300d-1M"
 
@@ -29,7 +31,13 @@ class HumorTraining:
         os.makedirs(self.LOG_DIR)
         os.makedirs(self.SAVE_DIR)
         os.makedirs(self.PRED_DIR)
+        os.makedirs(self.VIZ_DIR)
         os.mknod(self.PRED_FILE)
+
+        tf.keras.utils.plot_model(
+            self.humor, to_file=f'{VIZ_DIR}model.png', show_shapes=True, show_layer_names=True,
+            rankdir='TB', expand_nested=True, dpi=96
+        )
 
         self.train_data = self.load_data(train_paths)
         self.dev_data = self.load_data(dev_path)
@@ -44,7 +52,8 @@ class HumorTraining:
     def train(self, epoch, batch_size, validation_split=0.2):
         # Train data
         features, y_train = self.train_data.GetFeatureVectors(), self.train_data.GetGrades()
-        ins = {"feature_input": features}
+        ins = {"feature_input": features[:,:6]}
+        # ins["token_input"] = features[:,6:]
 
         text = self.train_data.GetEditSentences()
         ins["replaced_input"] = text
@@ -54,7 +63,8 @@ class HumorTraining:
 
         # Dev data
         dev_features, y_dev = self.dev_data.GetFeatureVectors(), self.dev_data.GetGrades()
-        dev_ins = {"feature_input": dev_features}
+        dev_ins = {"feature_input": dev_features[:,:6]}
+        # dev_ins["token_input"] = dev_features[:,6:]
 
         text = self.dev_data.GetEditSentences()
         dev_ins["replaced_input"] = text
@@ -63,11 +73,11 @@ class HumorTraining:
         dev_ins["repacement_input"] = text
 
         # Create callbacks
-        tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR)
-        # lr_schedule = self.create_learning_rate_scheduler(max_learn_rate=1e-2,
-        #                                                 end_learn_rate=1e-6,
-        #                                                 warmup_epoch_count=20,
-        #                                                 total_epoch_count=epoch)
+        tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR, write_graph=True, write_images=True)
+        lr_schedule = self.create_learning_rate_scheduler(max_learn_rate=1e-2,
+                                                        end_learn_rate=1e-6,
+                                                        warmup_epoch_count=20,
+                                                        total_epoch_count=epoch)
         # lr_schedule = callbacks.ReduceLROnPlateau(monitor='val_root_mean_squared_error', factor=0.1, patience=5, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0.0001)
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
         print(f"--------- It took {time.time() - self.start} second from start to training ---------")
@@ -76,14 +86,15 @@ class HumorTraining:
                         batch_size=batch_size,
                         epochs=epoch,
                         shuffle=True,
-                        callbacks=[tensorboard])
+                        callbacks=[lr_schedule, tensorboard])
 
         self.humor.save(self.SAVE_DIR+'final.hdf5')
 
     def test(self):
         # Test data
         features = self.test_data.GetFeatureVectors()
-        ins = {"feature_input": features}
+        ins = {"feature_input": features[:,:6]}
+        # ins["token_input"] = features[:,6:]
 
         text = self.test_data.GetEditSentences()
         ins["replaced_input"] = text
@@ -112,13 +123,13 @@ class HumorTraining:
             return float(res)
 
         def lr_scheduler_step_decay(epoch):
-            initial_lrate = 0.005
+            initial_lrate = 0.01
             drop = 0.5
-            epochs_drop = 5.0
+            epochs_drop = 10.0
             lrate = initial_lrate * math.pow(drop, math.floor((1+epoch)/epochs_drop))
             return lrate
         
-        learning_rate_scheduler = tf.keras.callbacks.LearningRateScheduler(lr_scheduler_exp_decay, verbose=1)
+        learning_rate_scheduler = tf.keras.callbacks.LearningRateScheduler(lr_scheduler_step_decay, verbose=1)
 
         return learning_rate_scheduler
     

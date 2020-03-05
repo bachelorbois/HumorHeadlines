@@ -40,12 +40,12 @@ class EmbeddingContainer():
         if not os.path.isfile(cls.EMBED_FILE):
             cls.download_ft()
 
-        print("Building embedding index...")
+        # print("Building embedding index...")
         cls.FT = {}
         with open(cls.EMBED_FILE, "r") as fd:
             next(fd)
 
-            for i, l in tqdm(enumerate(fd)):
+            for i, l in tqdm(enumerate(fd), total=999994, unit="embedding(s)", desc="Building embedding index"):
                 cls.FT[str.split(l, maxsplit=1)[0]] = i
 
     @classmethod

@@ -83,11 +83,8 @@ class Headline:
     def GetFeatureVector(self) -> np.ndarray:
         res = []
         for feature in self.features:
-            res.extend(
-                feature.compute_feature(self)
-            )
-
-        return np.array(res)
+            res.extend(feature.compute_feature(self))
+        return res
 
     def GetTokenized(self) -> List[str]:
         return self.sentence
@@ -186,9 +183,10 @@ class HeadlineCollection:
 
     def GetFeatureVectors(self) -> np.ndarray:
         features = []
-        for e in tqdm(self.collection):
+        for e in tqdm(self.collection, unit='headline(s)', desc="Computing features"):
             features.append(e.GetFeatureVector())
-        return np.asarray(features)
+        
+        return np.asarray(features, dtype='float32')
 
     def GetIDs(self) -> np.ndarray:
         return np.array(
