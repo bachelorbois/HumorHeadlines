@@ -828,3 +828,4 @@ concept:wineproducedbywinery
 concept:countrystates
 concept:stateorprovinceoforganizationheadquarters
 concept:agriculturalproductcutintogeometricshape
+concept:isa
