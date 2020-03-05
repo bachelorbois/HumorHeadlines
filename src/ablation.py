@@ -9,7 +9,7 @@ from tensorflow.keras.callbacks import CSVLogger
 import lib
 
 features = [
-    lib.features.ClusterFeature,
+    # lib.features.ClusterFeature,
     lib.features.DistanceFeature,
     lib.features.PhoneticFeature,
     lib.features.PositionFeature,
@@ -46,7 +46,7 @@ def train(l, i):
     dev_ins["repacement_input"] = data_dev.GetEdits()
 
 
-    humor = lib.models.create_HUMOR_model(feat_len, 0)
+    humor = lib.models.create_HUMOR_model(feat_len)
 
     logger = CSVLogger(
         f"test-{i}.csv", separator=',', append=False
