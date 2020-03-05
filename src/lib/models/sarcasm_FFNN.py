@@ -36,6 +36,9 @@ class SarcasmClassifier():
         cls.merge_datasets(DATA_FILE, DATA_FILE_v2)
         cls.load_embeddings()
 
+        if not os.path.exists('../data/sarcasm_utils/'):
+            os.makedirs('../data/sarcasm_utils/')
+
         proc_data, labels = cls.process_dataset()
 
         cls.X_train, cls.X_test, cls.y_train, cls.y_test = train_test_split(proc_data, labels, test_size=0.2)
@@ -61,16 +64,11 @@ class SarcasmClassifier():
         tokens_set = set(tokens_set)
         tokens_set.add('UNK')
         cls.tok_to_id = {}
-        cls.id_to_tok = {}
         for i, tok in enumerate(tokens_set):
             cls.tok_to_id[tok] = i+1
-            cls.id_to_tok[i+1] = tok
 
         with open('../data/sarcasm_utils/sarcasm_tokens_to_id.txt', 'w') as outfile:
             outfile.write(json.dumps(cls.tok_to_id))
-        
-        with open('../data/sarcasm_utils/sarcasm_id_to_tokens.txt', 'w') as outfile:
-            outfile.write(json.dumps(cls.id_to_tok))
 
         proc_data = []
         for sentence in tokenized_sentences:
@@ -111,14 +109,12 @@ class SarcasmClassifier():
         cls.model.fit(cls.X_train, cls.y_train, nb_epoch=15, validation_split=0.2)
         cls.model.evaluate(cls.X_test, cls.y_test)
 
-        with open("lib/models/pre-trained/sarcasm_model_config.json", "w") as json_file:
-            json_file.write(cls.model.to_json())
-
         cls.model.save("lib/models/pre-trained/sarcasm_model.h5")
 
     @classmethod
     def load_model(cls, PATH):
-        cls.model = load_model(PATH)
+        if not cls.model:
+            cls.model = load_model(PATH)
 
 
     @classmethod
@@ -152,43 +148,22 @@ class SarcasmClassifier():
     def process_sentence(cls, sentence):
         if not cls.vocab:
             cls.run_preproc()
-            """
-            TOKENS_TO_ID_FILE = '../data/sarcasm_utils/sarcasm_tokens_to_id.txt'
-            ID_TO_TOKENS_FILE = '../data/sarcasm_utils/sarcasm_id_to_tokens.txt'
-            if os.path.isfile(TOKENS_TO_ID_FILE) or os.path.isfile(ID_TO_TOKENS_FILE):
-                with open(TOKENS_TO_ID_FILE) as infile:
-                    tok_to_id = json.load(infile)
-                with open(ID_TO_TOKENS_FILE) as infile:
-                    id_to_tok = json.load(infile)
-            """
 
-        #proc_sentence = []
-        proc_sentence = np.zeros((300))
+        proc_sentence = []
         for w in sentence:
             try:
-                proc_sentence = np.add(proc_sentence, cls.vocab[w])
-                #proc_sentence.append(cls.vocab[w])
+                proc_sentence.append(cls.tok_to_id[w])
             except KeyError:
-                proc_sentence = np.add(proc_sentence, cls.vocab['UNK'])
-                #proc_sentence.append(cls.vocab['UNK'])
-        #proc_sentence = np.array(proc_sentence)
-        proc_sentence = proc_sentence/len(sentence)
+                proc_sentence.append(cls.tok_to_id['UNK'])
+
         proc_sentence = [proc_sentence]
         proc_sentence = np.array(proc_sentence)
-        #proc_sentence = pad_sequences(proc_sentence, maxlen=cls.max_length, padding='post')
 
+        proc_sentence = pad_sequences(proc_sentence, maxlen=cls.max_length, padding='post')
         return proc_sentence
+
 
     @classmethod
     def predict_sarcasm(cls, sentence):
         return cls.model.predict(sentence)
     
-"""
-def run():
-    classifier = SarcasmClassifier()
-    classifier.run_preproc()
-    classifier.run_model()
-
-if __name__ == "__main__":
-   run()
-"""
