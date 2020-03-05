@@ -6,15 +6,9 @@ import os
 from lib.models.module.functionmodule import sigmoid_3
 from lib.models.layers.elmo import ElmoEmbeddingLayer
 
-def create_HUMOR_model(feature_len : int, token_len : int) -> Model:
+def create_HUMOR_model(feature_len : int) -> Model:
     ###### Feature Part
     input_features = layers.Input(shape=(feature_len,), dtype='float32', name="feature_input")
-    # input_tokens = layers.Input(shape=(token_len,), dtype='int32', name="token_input")
-
-    # sarcasm = models.load_model("lib/models/pre-trained/sarcasm_model.h5")
-    # sarcasm.trainable = False
-
-    # concat = layers.Concatenate()([input_features, sarcasm(input_tokens)])
 
     feature_dense = layers.Dense(16, activation='relu', name="FeatureDense1")(input_features)
     feature_dense = layers.Dropout(0.50)(feature_dense)
