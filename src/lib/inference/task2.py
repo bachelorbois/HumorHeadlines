@@ -18,10 +18,10 @@ class Task2Inference:
         self.humor = models.load_model(model_path, custom_objects={'KerasLayer': hub.KerasLayer, 'sigmoid_3': sigmoid_3})
         print("Loading candidate collection...")
         self.data = self.load_data(test_data)
-        print("Loading fastText Embedings...")
-        self.fastTextEmbeds = self.load_embeddings()
+        # print("Loading fastText Embedings...")
+        # self.fastTextEmbeds = self.load_embeddings()
 
-        features = [PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature]
+        features = [PhoneticFeature, PositionFeature, DistanceFeature, SentLenFeature]
 
         self.data.AddFeatures(features)
 
@@ -31,18 +31,25 @@ class Task2Inference:
         HL1Features = features[:, 0]
         HL2Features = features[:, 1]
 
-        token = self.data.GetTokenizedWEdit()
-        HL1Tokens = self.process_sentences([row[0] for row in token], self.fastTextEmbeds)
-        HL2Tokens = self.process_sentences([row[0] for row in token], self.fastTextEmbeds)
+        # token = self.data.GetTokenizedWEdit()
+        # HL1Tokens = self.process_sentences([row[0] for row in token], self.fastTextEmbeds)
+        # HL2Tokens = self.process_sentences([row[0] for row in token], self.fastTextEmbeds)
 
-        sentences = self.data.GetEditedSentences()
-        HL1Sentences = sentences[:, 0]
-        HL2Sentences = sentences[:, 1]
+        HL1Tokens = np.array([c.HL1.edit for c in self.data])
+        HL2Tokens = np.array([c.HL2.edit for c in self.data])
+
+
+        # sentences = self.data.GetEditedSentences()
+        # HL1Sentences = sentences[:, 0]
+        # HL2Sentences = sentences[:, 1]
+
+        HL1Sentences = np.array([h.HL1.sentence[h.HL1.word_index] for h in self.data])
+        HL2Sentences = np.array([h.HL2.sentence[h.HL2.word_index] for h in self.data])
 
         print("Predicting on HL1...")
-        HL1Preds = self.humor.predict({"feature_input": HL1Features, "token_input": HL1Tokens, "string_input": HL1Sentences}).flatten()
+        HL1Preds = self.humor.predict({"feature_input": HL1Features, "replaced_input": HL1Tokens, "repacement_input": HL1Sentences}).flatten()
         print("Predicting on HL2...")
-        HL2Preds = self.humor.predict({"feature_input": HL2Features, "token_input": HL2Tokens, "string_input": HL2Sentences}).flatten()
+        HL2Preds = self.humor.predict({"feature_input": HL2Features, "replaced_input": HL2Tokens, "repacement_input": HL2Sentences}).flatten()
 
 
         labels = (HL1Preds < HL2Preds).astype(int)
@@ -59,10 +66,10 @@ class Task2Inference:
             f.write('id,pred\n')
             for line in out:
                 f.write(f'{line[0]},{line[1]}\n')
-    
+
     @staticmethod
     def process_sentences(tokenized_sentences, dictionary):
-        proc_sentences = [] 
+        proc_sentences = []
         for sentence in tokenized_sentences:
             agg = np.zeros((300))
             for token in sentence:
@@ -74,7 +81,7 @@ class Task2Inference:
 
         return np.array(proc_sentences)
 
-    
+
     def load_embeddings(self):
         dictionary = {}
         if not os.path.isfile(self.EMBED_FILE + '.p'):
@@ -92,7 +99,7 @@ class Task2Inference:
         else:
             with open(self.EMBED_FILE + '.p', 'rb') as f:
                 dictionary = pickle.load(f)
-        
+
         return dictionary
 
 

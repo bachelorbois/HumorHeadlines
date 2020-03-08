@@ -52,7 +52,7 @@ class HumorTraining:
     def train(self, epoch, batch_size, validation_split=0.2):
         # Train data
         features, y_train = self.train_data.GetFeatureVectors(), self.train_data.GetGrades()
-        ins = {"feature_input": features[:,:6]}
+        ins = {"feature_input": features}
         # ins["token_input"] = features[:,6:]
 
         text = self.train_data.GetReplaced()
@@ -63,7 +63,7 @@ class HumorTraining:
 
         # Dev data
         dev_features, y_dev = self.dev_data.GetFeatureVectors(), self.dev_data.GetGrades()
-        dev_ins = {"feature_input": dev_features[:,:6]}
+        dev_ins = {"feature_input": dev_features}
         # dev_ins["token_input"] = dev_features[:,6:]
 
         text = self.dev_data.GetReplaced()
@@ -74,9 +74,9 @@ class HumorTraining:
 
         # Create callbacks
         tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR, write_graph=True, write_images=True)
-        lr_schedule = self.create_learning_rate_scheduler(max_learn_rate=1e-2,
+        lr_schedule = self.create_learning_rate_scheduler(max_learn_rate=1e-1,
                                                         end_learn_rate=1e-6,
-                                                        warmup_epoch_count=20,
+                                                        warmup_epoch_count=15,
                                                         total_epoch_count=epoch)
         # lr_schedule = callbacks.ReduceLROnPlateau(monitor='val_root_mean_squared_error', factor=0.1, patience=5, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0.0001)
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
@@ -104,7 +104,7 @@ class HumorTraining:
         # Predict on the data
         preds = self.humor.predict(ins)
         ids = self.test_data.GetIDs()
-        
+
         out = np.stack((ids, preds.flatten()), axis=-1)
         # Save the predictions to file
         np.savetxt(self.PRED_FILE, out, fmt="%d,%1.8f")
@@ -128,11 +128,11 @@ class HumorTraining:
             epochs_drop = 10.0
             lrate = initial_lrate * math.pow(drop, math.floor((1+epoch)/epochs_drop))
             return lrate
-        
+
         learning_rate_scheduler = tf.keras.callbacks.LearningRateScheduler(lr_scheduler_step_decay, verbose=1)
 
         return learning_rate_scheduler
-    
+
     @staticmethod
     def load_data(paths):
         hc = None
@@ -140,6 +140,6 @@ class HumorTraining:
             with open(path, 'rb') as fd:
                 if not hc:
                     hc = read_task1_pb(fd)
-                else: 
+                else:
                     hc.extend(read_task1_pb(fd))
         return hc

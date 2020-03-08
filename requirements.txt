@@ -7,4 +7,5 @@ sklearn
 matplotlib
 sentencepiece
 bidict
+tensorflow_hub
 keras-tuner
