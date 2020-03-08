@@ -43,7 +43,7 @@ class HumorTraining:
         self.dev_data = self.load_data(dev_path)
         self.test_data = self.load_data(test_path)
 
-        features = [PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature, SarcasmFeature]
+        features = [PhoneticFeature, PositionFeature, DistanceFeature, SentLenFeature]
 
         self.train_data.AddFeatures(features)
         self.dev_data.AddFeatures(features)
@@ -59,7 +59,7 @@ class HumorTraining:
         ins["replaced_input"] = text
 
         text = self.train_data.GetEdits()
-        ins["repacement_input"] = text
+        ins["replacement_input"] = text
 
         # Dev data
         dev_features, y_dev = self.dev_data.GetFeatureVectors(), self.dev_data.GetGrades()
@@ -70,7 +70,7 @@ class HumorTraining:
         dev_ins["replaced_input"] = text
 
         text = self.dev_data.GetEdits()
-        dev_ins["repacement_input"] = text
+        dev_ins["replacement_input"] = text
 
         # Create callbacks
         tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR, write_graph=True, write_images=True)
@@ -99,7 +99,7 @@ class HumorTraining:
         text = self.test_data.GetReplaced()
         ins["replaced_input"] = text
         text = self.test_data.GetEdits()
-        ins["repacement_input"] = text
+        ins["replacement_input"] = text
 
         # Predict on the data
         preds = self.humor.predict(ins)
@@ -123,7 +123,7 @@ class HumorTraining:
             return float(res)
 
         def lr_scheduler_step_decay(epoch):
-            initial_lrate = 0.01
+            initial_lrate = 0.005
             drop = 0.5
             epochs_drop = 10.0
             lrate = initial_lrate * math.pow(drop, math.floor((1+epoch)/epochs_drop))

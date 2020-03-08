@@ -12,7 +12,7 @@ class NellKbFeature(Feature):
     punct.add('—‘’$“”')
     punct = list(punct)
     punct.extend(['’s', "'s", "'m", "...", 'n’t', "`"])
-    word2int, int2word = generate_vocab_dict("../data/NELL/NELLWordNetVocab.txt")
+    word2int, int2word = generate_vocab_dict("../data/NELL/NELLWordNetVocab_proc.txt")
 
     @classmethod
     def preprocess(cls, HL):

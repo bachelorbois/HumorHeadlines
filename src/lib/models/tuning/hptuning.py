@@ -52,7 +52,7 @@ class HumorTuner(HyperModel):
 
         ###### Sentence Part
         input_replaced = layers.Input(shape=(), dtype=tf.string, name="replaced_input")
-        input_replacement = layers.Input(shape=(), dtype=tf.string, name="repacement_input")
+        input_replacement = layers.Input(shape=(), dtype=tf.string, name="replacement_input")
         
         sentence_in = layers.Input(shape=(), dtype=tf.string, name="sentence_in")
         embed = hub.KerasLayer(self.nnlm_path)(sentence_in)    # Expects a tf.string input tensor.

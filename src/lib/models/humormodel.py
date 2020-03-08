@@ -18,7 +18,7 @@ def create_HUMOR_model(feature_len : int) -> Model:
 
     ###### Sentence Part
     input_replaced = layers.Input(shape=(), dtype=tf.string, name="replaced_input")
-    input_replacement = layers.Input(shape=(), dtype=tf.string, name="repacement_input")
+    input_replacement = layers.Input(shape=(), dtype=tf.string, name="replacement_input")
     
     sentence_in = layers.Input(shape=(), dtype=tf.string, name="sentence_in")
     embed = hub.KerasLayer('https://tfhub.dev/google/tf2-preview/nnlm-en-dim128/1')(sentence_in)    # Expects a tf.string input tensor.
@@ -36,13 +36,13 @@ def create_HUMOR_model(feature_len : int) -> Model:
 
     ###### Common Part
     concat = layers.Concatenate()([feature_dense, concat_sentence])
-    # output = layers.Dense(16, activation='relu', name="OutoutDense1")(feature_dense)
-    output = layers.Dense(1, name="Outout")(concat)
+    # output = layers.Dense(16, activation='relu', name="OutputDense1")(feature_dense)
+    output = layers.Dense(1, name="Output")(concat)
     #  input_tokens, 
-    HUMOR = Model(inputs=[input_features, input_replaced, input_replacement], outputs=output)
+    HUMOR = Model(inputs=[input_features, input_replaced, input_replacement], outputs=output, name="HumanHumor")
 
     # opt = optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
-    opt = optimizers.Adam(lr=0.01)
+    opt = optimizers.Adam(lr=0.005)
     # opt = optimizers.Nadam(clipnorm=1., clipvalue=0.5)
 
     HUMOR.compile(optimizer=opt,

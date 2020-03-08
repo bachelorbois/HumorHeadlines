@@ -16,15 +16,15 @@ def create_NAM_model(L : int, no_entities : int, no_relations : int) -> Model:
     size = 64
     for l in range(L):
         x = layers.Dense(size, activation="relu")(x)
-        x = layers.Dropout(0.2)(x)
+        x = layers.Dropout(0.5)(x)
 
     out = layers.Dot(-1)([x, tail_embed])
     out = layers.Flatten()(out)
     out = activations.sigmoid(out)
 
-    model = Model(inputs=[input_head, input_relation, input_tail], outputs=out)
+    model = Model(inputs=[input_head, input_relation, input_tail], outputs=out, name="NeuralAssociationModel")
 
-    opt = optimizers.Nadam(clipnorm=1., clipvalue=0.5)
+    opt = optimizers.Nadam(lr=0.001)
     model.compile(optimizer=opt, loss="binary_crossentropy", metrics=["accuracy"])
 
     model.summary()
