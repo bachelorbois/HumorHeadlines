@@ -22,6 +22,7 @@ with open("../data/task-1/preproc/2_concat_train.bin", "rb") as fd:
 with open("../data/task-1/preproc/2_concat_dev.bin", "rb") as fd:
     data_dev = lib.read_task1_pb(fd)
 
+
 def train(l, i):
     data.ClearFeatures()
     data.AddFeatures(l)
