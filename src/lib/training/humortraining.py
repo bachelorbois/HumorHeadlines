@@ -10,7 +10,7 @@ import time
 
 from lib.models import create_HUMOR_model
 from lib.parsing.parser import read_task1_pb
-from lib.features import PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature, SarcasmFeature
+from lib.features import PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature, SarcasmFeature, NellKbFeature
 from lib.features.embeddingContainer import EmbeddingContainer
 from lib.models.sarcasm_FFNN import SarcasmClassifier
 
@@ -43,7 +43,7 @@ class HumorTraining:
         self.dev_data = self.load_data(dev_path)
         self.test_data = self.load_data(test_path)
 
-        features = [PhoneticFeature, PositionFeature, DistanceFeature, SentLenFeature]
+        features = [PhoneticFeature, PositionFeature, DistanceFeature, SentLenFeature, NellKbFeature]
 
         self.train_data.AddFeatures(features)
         self.dev_data.AddFeatures(features)
@@ -52,25 +52,25 @@ class HumorTraining:
     def train(self, epoch, batch_size, validation_split=0.2):
         # Train data
         features, y_train = self.train_data.GetFeatureVectors(), self.train_data.GetGrades()
-        ins = {"feature_input": features}
-        # ins["token_input"] = features[:,6:]
+        ins = {"FeatureInput": features[:,:4]}
+        ins["EntityInput"] = features[:,4:]
 
         text = self.train_data.GetReplaced()
-        ins["replaced_input"] = text
+        ins["ReplacedInput"] = text
 
         text = self.train_data.GetEdits()
-        ins["replacement_input"] = text
+        ins["ReplacementInput"] = text
 
         # Dev data
         dev_features, y_dev = self.dev_data.GetFeatureVectors(), self.dev_data.GetGrades()
-        dev_ins = {"feature_input": dev_features}
-        # dev_ins["token_input"] = dev_features[:,6:]
+        devIns = {"FeatureInput": dev_features[:,:4]}
+        devIns["EntityInput"] = dev_features[:,4:]
 
         text = self.dev_data.GetReplaced()
-        dev_ins["replaced_input"] = text
+        devIns["ReplacedInput"] = text
 
         text = self.dev_data.GetEdits()
-        dev_ins["replacement_input"] = text
+        devIns["ReplacementInput"] = text
 
         # Create callbacks
         tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR, write_graph=True, write_images=True)
@@ -82,7 +82,7 @@ class HumorTraining:
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
         print(f"--------- It took {time.time() - self.start} second from start to training ---------")
         self.humor.fit(x=ins, y=y_train,
-                        validation_data=(dev_ins, y_dev),
+                        validation_data=(devIns, y_dev),
                         batch_size=batch_size,
                         epochs=epoch,
                         shuffle=True,
@@ -93,13 +93,13 @@ class HumorTraining:
     def test(self):
         # Test data
         features = self.test_data.GetFeatureVectors()
-        ins = {"feature_input": features[:,:6]}
-        # ins["token_input"] = features[:,6:]
+        ins = {"FeatureInput": features[:,:4]}
+        ins["EntityInput"] = features[:,4:]
 
         text = self.test_data.GetReplaced()
-        ins["replaced_input"] = text
+        ins["ReplacedInput"] = text
         text = self.test_data.GetEdits()
-        ins["replacement_input"] = text
+        ins["ReplacementInput"] = text
 
         # Predict on the data
         preds = self.humor.predict(ins)

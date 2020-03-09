@@ -6,6 +6,7 @@ from lib.features.wordclusterfeature import ClusterFeature
 from lib.features.distancefeature import DistanceFeature
 from lib.features.positionfeature import PositionFeature
 from lib.features.phoneticfeature import PhoneticFeature
+from lib.features.nellkbfeature import NellKbFeature
 from lib.parsing.parser import read_task2_pb, CandidateCollection
 from lib.models.module.functionmodule import sigmoid_3
 import pickle
@@ -21,15 +22,18 @@ class Task2Inference:
         # print("Loading fastText Embedings...")
         # self.fastTextEmbeds = self.load_embeddings()
 
-        features = [PhoneticFeature, PositionFeature, DistanceFeature, SentLenFeature]
+        features = [PhoneticFeature, PositionFeature, DistanceFeature, SentLenFeature, NellKbFeature]
 
         self.data.AddFeatures(features)
 
 
     def predict(self, path):
         features = self.data.GetFeatureVectors()
-        HL1Features = features[:, 0]
-        HL2Features = features[:, 1]
+        HL1Features = features[:, 0, :4]
+        HL2Features = features[:, 1, :4]
+
+        HL1Entities = features[:, 0, 4:]
+        HL2Entities = features[:, 1, 4:]
 
         # token = self.data.GetTokenizedWEdit()
         # HL1Tokens = self.process_sentences([row[0] for row in token], self.fastTextEmbeds)
@@ -47,9 +51,9 @@ class Task2Inference:
         HL2Sentences = np.array([h.HL2.sentence[h.HL2.word_index] for h in self.data])
 
         print("Predicting on HL1...")
-        HL1Preds = self.humor.predict({"feature_input": HL1Features, "replaced_input": HL1Tokens, "repacement_input": HL1Sentences}).flatten()
+        HL1Preds = self.humor.predict({"FeatureInput": HL1Features, "ReplacedInput": HL1Tokens, "ReplacementInput": HL1Sentences, "EntityInput": HL1Entities}).flatten()
         print("Predicting on HL2...")
-        HL2Preds = self.humor.predict({"feature_input": HL2Features, "replaced_input": HL2Tokens, "repacement_input": HL2Sentences}).flatten()
+        HL2Preds = self.humor.predict({"FeatureInput": HL2Features, "ReplacedInput": HL2Tokens, "ReplacementInput": HL2Sentences, "EntityInput": HL2Entities}).flatten()
 
 
         labels = (HL1Preds < HL2Preds).astype(int)
