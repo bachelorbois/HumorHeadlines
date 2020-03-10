@@ -13,7 +13,7 @@ import numpy as np
 from lib.models.module.functionmodule import sigmoid_3
 from lib.models.layers.elmo import ElmoEmbeddingLayer
 
-def create_HUMOR_model(feature_len : int, kb_len) -> Model:
+def create_HUMOR_model(feature_len : int, kb_len, **kwargs) -> Model:
     ###### Feature Part
     input_features = layers.Input(shape=(feature_len,), dtype='float32', name="FeatureInput")
     input_entities = layers.Input(shape=(kb_len,), dtype='int32', name="EntityInput")

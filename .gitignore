@@ -5,6 +5,7 @@ data/embeddings/
 data/KnowledgeBase/
 data/sarcasm_utils/
 **/headline_regression/
+**/headline_prediction/
 **/entity_representation/
 **/*.ckpt*
 ssh_notes.txt

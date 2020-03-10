@@ -358,6 +358,11 @@ class CandidateCollection:
             [c.GetFeatureVectors() for c in self.collection]
         )
 
+    def GetLabels(self) -> np.ndarray:
+        return np.array(
+            [c.label for c in self.collection]
+        )
+
     def GetTokenizedWEdit(self) -> List:
         return [c.GetTokenizedWEdit() for c in self.collection]
 

@@ -51,9 +51,9 @@ class Task2Inference:
         HL2Sentences = np.array([h.HL2.sentence[h.HL2.word_index] for h in self.data])
 
         print("Predicting on HL1...")
-        HL1Preds = self.humor.predict({"FeatureInput": HL1Features, "ReplacedInput": HL1Tokens, "ReplacementInput": HL1Sentences, "EntityInput": HL1Entities}).flatten()
+        HL1Preds = self.humor.predict({"FeatureInput": HL1Features, "ReplacedInput": HL1Sentences, "ReplacementInput": HL1Tokens, "EntityInput": HL1Entities}).flatten()
         print("Predicting on HL2...")
-        HL2Preds = self.humor.predict({"FeatureInput": HL2Features, "ReplacedInput": HL2Tokens, "ReplacementInput": HL2Sentences, "EntityInput": HL2Entities}).flatten()
+        HL2Preds = self.humor.predict({"FeatureInput": HL2Features, "ReplacedInput": HL2Sentences, "ReplacementInput": HL2Tokens, "EntityInput": HL2Entities}).flatten()
 
 
         labels = (HL1Preds < HL2Preds).astype(int)

@@ -81,6 +81,7 @@ class HumorTraining:
         # lr_schedule = callbacks.ReduceLROnPlateau(monitor='val_root_mean_squared_error', factor=0.1, patience=5, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0.0001)
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
         print(f"--------- It took {time.time() - self.start} second from start to training ---------")
+        
         self.humor.fit(x=ins, y=y_train,
                         validation_data=(devIns, y_dev),
                         batch_size=batch_size,

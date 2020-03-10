@@ -1,16 +1,19 @@
 from kerastuner import HyperModel
-from tensorflow.keras import layers, Model, optimizers, metrics
+from tensorflow.keras import layers, Model, optimizers, metrics, initializers, backend
 import tensorflow_hub as hub
 import tensorflow as tf
+import numpy as np
 
 class HumorTuner(HyperModel):
-    def __init__(self, feature_len):
+    def __init__(self, feature_len, kb_len):
         self.feature_len = feature_len
+        self.kb_len = kb_len
         self.nnlm_path = 'https://tfhub.dev/google/tf2-preview/nnlm-en-dim128/1'
 
     def build(self, hp):
         ###### Feature Part
         input_features = layers.Input(shape=(self.feature_len,), dtype='float32', name="feature_input")
+        input_entities = layers.Input(shape=(self.kb_len,), dtype='int32', name="entity_input")
 
         feature_dense = layers.Dense(units=hp.Int(
                                         'feature_units1',
@@ -48,6 +51,46 @@ class HumorTuner(HyperModel):
                                                 default=0.25,
                                                 step=0.05,
                                             ))(feature_dense)
+
+        embeddings = np.load('../data/NELL/embeddings/entity.npy')
+        entity_embedding = layers.Embedding(181544, 64, embeddings_initializer=initializers.Constant(embeddings), trainable=False, name="EntityEmbeddings")(input_entities)
+        sum_layer = layers.Lambda(lambda x: backend.sum(x, axis=1, keepdims=False))(entity_embedding)
+        entity_dense = layers.Dense(units=hp.Int(
+                                        'entity_units1',
+                                        min_value=8,
+                                        max_value=128,
+                                        step=16,
+                                        default=24
+                                    ), activation=hp.Choice(
+                                        'entity_dense_activation1',
+                                        values=['relu', 'tanh', 'sigmoid'],
+                                        default='relu'
+                                    ),  name="EntityDense1")(sum_layer)
+        entity_dense = layers.Dropout(rate=hp.Float(
+                                                'entity_dropout_1',
+                                                min_value=0.0,
+                                                max_value=0.5,
+                                                default=0.25,
+                                                step=0.05,
+                                            ))(entity_dense)
+        entity_dense = layers.Dense(units=hp.Int(
+                                        'entity_units2',
+                                        min_value=8,
+                                        max_value=128,
+                                        step=16,
+                                        default=24
+                                    ), activation=hp.Choice(
+                                        'entity_dense_activation2',
+                                        values=['relu', 'tanh', 'sigmoid'],
+                                        default='relu'
+                                    ), name="EntityDense2")(entity_dense)
+        entity_dense = layers.Dropout(rate=hp.Float(
+                                                'entity_dropout_2',
+                                                min_value=0.0,
+                                                max_value=0.5,
+                                                default=0.25,
+                                                step=0.05,
+                                            ))(entity_dense)
         ####################
 
         ###### Sentence Part
@@ -117,11 +160,11 @@ class HumorTuner(HyperModel):
         #####################
 
         ###### Common Part
-        concat = layers.Concatenate()([feature_dense, concat_sentence])
+        concat = layers.Concatenate()([feature_dense, concat_sentence, entity_dense])
         # output = layers.Dense(16, activation='relu', name="OutoutDense1")(feature_dense)
         output = layers.Dense(1, name="Output")(concat)
         #  input_tokens, 
-        HUMOR = Model(inputs=[input_features, input_replaced, input_replacement], outputs=output)
+        HUMOR = Model(inputs=[input_features, input_replaced, input_replacement, input_entities], outputs=output)
 
         # opt = optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
         opt = optimizers.Adam(lr=hp.Float(
