@@ -1,0 +1,323 @@
+[Results summary]
+ |-Results in tuning_hyperband/HumorHumor
+ |-Showing 10 best trials
+ |-Objective(name='val_root_mean_squared_error', direction='min')
+[Trial summary]
+ |-Trial ID: a7b8600859948369d1655e3727ab014d
+ |-Score: 0.5387459993362427
+ |-Best step: 0
+ > Hyperparameters:
+ |-entity_dense_activation1: relu
+ |-entity_dense_activation2: relu
+ |-entity_dropout_1: 0.2
+ |-entity_dropout_2: 0.1
+ |-entity_units1: 56
+ |-entity_units2: 72
+ |-feature_dense_activation1: tanh
+ |-feature_dense_activation2: tanh
+ |-feature_dropout_1: 0.45
+ |-feature_dropout_2: 0.5
+ |-feature_units1: 120
+ |-feature_units2: 56
+ |-learning_rate: 0.0011746622383033863
+ |-sentence_dense_activation1: tanh
+ |-sentence_dense_activation2: relu
+ |-sentence_dense_activation3: sigmoid
+ |-sentence_dropout_1: 0.5
+ |-sentence_dropout_2: 0.05
+ |-sentence_dropout_3: 0.1
+ |-sentence_units1: 384
+ |-sentence_units2: 480
+ |-sentence_units3: 56
+ |-tuner/bracket: 2
+ |-tuner/epochs: 50
+ |-tuner/initial_epoch: 17
+ |-tuner/round: 2
+ |-tuner/trial_id: 4f7e355db244ba232065deb993dd0df5
+[Trial summary]
+ |-Trial ID: e417cf4ae03bc8242eff4b8d5bcc8dee
+ |-Score: 0.5400088429450989
+ |-Best step: 0
+ > Hyperparameters:
+ |-entity_dense_activation1: sigmoid
+ |-entity_dense_activation2: sigmoid
+ |-entity_dropout_1: 0.25
+ |-entity_dropout_2: 0.4
+ |-entity_units1: 56
+ |-entity_units2: 120
+ |-feature_dense_activation1: relu
+ |-feature_dense_activation2: sigmoid
+ |-feature_dropout_1: 0.35000000000000003
+ |-feature_dropout_2: 0.05
+ |-feature_units1: 104
+ |-feature_units2: 120
+ |-learning_rate: 0.0016317596835669587
+ |-sentence_dense_activation1: tanh
+ |-sentence_dense_activation2: relu
+ |-sentence_dense_activation3: sigmoid
+ |-sentence_dropout_1: 0.15000000000000002
+ |-sentence_dropout_2: 0.0
+ |-sentence_dropout_3: 0.25
+ |-sentence_units1: 480
+ |-sentence_units2: 32
+ |-sentence_units3: 128
+ |-tuner/bracket: 3
+ |-tuner/epochs: 17
+ |-tuner/initial_epoch: 6
+ |-tuner/round: 2
+ |-tuner/trial_id: 10b97a2829d42ea6ad01ea57deaa0cdd
+[Trial summary]
+ |-Trial ID: 4dd538ec75520b14ded69049c686132a
+ |-Score: 0.5403200387954712
+ |-Best step: 0
+ > Hyperparameters:
+ |-entity_dense_activation1: sigmoid
+ |-entity_dense_activation2: sigmoid
+ |-entity_dropout_1: 0.25
+ |-entity_dropout_2: 0.4
+ |-entity_units1: 56
+ |-entity_units2: 120
+ |-feature_dense_activation1: relu
+ |-feature_dense_activation2: sigmoid
+ |-feature_dropout_1: 0.35000000000000003
+ |-feature_dropout_2: 0.05
+ |-feature_units1: 104
+ |-feature_units2: 120
+ |-learning_rate: 0.0016317596835669587
+ |-sentence_dense_activation1: tanh
+ |-sentence_dense_activation2: relu
+ |-sentence_dense_activation3: sigmoid
+ |-sentence_dropout_1: 0.15000000000000002
+ |-sentence_dropout_2: 0.0
+ |-sentence_dropout_3: 0.25
+ |-sentence_units1: 480
+ |-sentence_units2: 32
+ |-sentence_units3: 128
+ |-tuner/bracket: 3
+ |-tuner/epochs: 50
+ |-tuner/initial_epoch: 17
+ |-tuner/round: 3
+ |-tuner/trial_id: e417cf4ae03bc8242eff4b8d5bcc8dee
+[Trial summary]
+ |-Trial ID: 700f87eb5d8783437dd0459808b40b0f
+ |-Score: 0.5403289198875427
+ |-Best step: 0
+ > Hyperparameters:
+ |-entity_dense_activation1: sigmoid
+ |-entity_dense_activation2: sigmoid
+ |-entity_dropout_1: 0.05
+ |-entity_dropout_2: 0.30000000000000004
+ |-entity_units1: 120
+ |-entity_units2: 56
+ |-feature_dense_activation1: tanh
+ |-feature_dense_activation2: tanh
+ |-feature_dropout_1: 0.2
+ |-feature_dropout_2: 0.15000000000000002
+ |-feature_units1: 120
+ |-feature_units2: 24
+ |-learning_rate: 0.0019779114995330666
+ |-sentence_dense_activation1: tanh
+ |-sentence_dense_activation2: tanh
+ |-sentence_dense_activation3: tanh
+ |-sentence_dropout_1: 0.45
+ |-sentence_dropout_2: 0.45
+ |-sentence_dropout_3: 0.2
+ |-sentence_units1: 160
+ |-sentence_units2: 432
+ |-sentence_units3: 88
+ |-tuner/bracket: 1
+ |-tuner/epochs: 17
+ |-tuner/initial_epoch: 0
+ |-tuner/round: 0
+[Trial summary]
+ |-Trial ID: 4f7e355db244ba232065deb993dd0df5
+ |-Score: 0.5404274463653564
+ |-Best step: 0
+ > Hyperparameters:
+ |-entity_dense_activation1: relu
+ |-entity_dense_activation2: relu
+ |-entity_dropout_1: 0.2
+ |-entity_dropout_2: 0.1
+ |-entity_units1: 56
+ |-entity_units2: 72
+ |-feature_dense_activation1: tanh
+ |-feature_dense_activation2: tanh
+ |-feature_dropout_1: 0.45
+ |-feature_dropout_2: 0.5
+ |-feature_units1: 120
+ |-feature_units2: 56
+ |-learning_rate: 0.0011746622383033863
+ |-sentence_dense_activation1: tanh
+ |-sentence_dense_activation2: relu
+ |-sentence_dense_activation3: sigmoid
+ |-sentence_dropout_1: 0.5
+ |-sentence_dropout_2: 0.05
+ |-sentence_dropout_3: 0.1
+ |-sentence_units1: 384
+ |-sentence_units2: 480
+ |-sentence_units3: 56
+ |-tuner/bracket: 2
+ |-tuner/epochs: 17
+ |-tuner/initial_epoch: 6
+ |-tuner/round: 1
+ |-tuner/trial_id: 999bdf65b49b35846fddb8031d161b46
+[Trial summary]
+ |-Trial ID: eb7097e38abaf67fe221990df924e5cc
+ |-Score: 0.5404490828514099
+ |-Best step: 0
+ > Hyperparameters:
+ |-entity_dense_activation1: sigmoid
+ |-entity_dense_activation2: sigmoid
+ |-entity_dropout_1: 0.05
+ |-entity_dropout_2: 0.30000000000000004
+ |-entity_units1: 120
+ |-entity_units2: 56
+ |-feature_dense_activation1: tanh
+ |-feature_dense_activation2: tanh
+ |-feature_dropout_1: 0.2
+ |-feature_dropout_2: 0.15000000000000002
+ |-feature_units1: 120
+ |-feature_units2: 24
+ |-learning_rate: 0.0019779114995330666
+ |-sentence_dense_activation1: tanh
+ |-sentence_dense_activation2: tanh
+ |-sentence_dense_activation3: tanh
+ |-sentence_dropout_1: 0.45
+ |-sentence_dropout_2: 0.45
+ |-sentence_dropout_3: 0.2
+ |-sentence_units1: 160
+ |-sentence_units2: 432
+ |-sentence_units3: 88
+ |-tuner/bracket: 1
+ |-tuner/epochs: 50
+ |-tuner/initial_epoch: 17
+ |-tuner/round: 1
+ |-tuner/trial_id: 700f87eb5d8783437dd0459808b40b0f
+[Trial summary]
+ |-Trial ID: 90d3c20310714c6d0aedc8797bc84069
+ |-Score: 0.5409775972366333
+ |-Best step: 0
+ > Hyperparameters:
+ |-entity_dense_activation1: relu
+ |-entity_dense_activation2: tanh
+ |-entity_dropout_1: 0.35000000000000003
+ |-entity_dropout_2: 0.1
+ |-entity_units1: 24
+ |-entity_units2: 120
+ |-feature_dense_activation1: tanh
+ |-feature_dense_activation2: relu
+ |-feature_dropout_1: 0.2
+ |-feature_dropout_2: 0.2
+ |-feature_units1: 72
+ |-feature_units2: 56
+ |-learning_rate: 0.006595235106587389
+ |-sentence_dense_activation1: tanh
+ |-sentence_dense_activation2: tanh
+ |-sentence_dense_activation3: tanh
+ |-sentence_dropout_1: 0.35000000000000003
+ |-sentence_dropout_2: 0.15000000000000002
+ |-sentence_dropout_3: 0.15000000000000002
+ |-sentence_units1: 320
+ |-sentence_units2: 160
+ |-sentence_units3: 48
+ |-tuner/bracket: 3
+ |-tuner/epochs: 50
+ |-tuner/initial_epoch: 17
+ |-tuner/round: 3
+ |-tuner/trial_id: 46f8e66c33dfdcebef34bf4f339f3286
+[Trial summary]
+ |-Trial ID: 46f8e66c33dfdcebef34bf4f339f3286
+ |-Score: 0.5409824252128601
+ |-Best step: 0
+ > Hyperparameters:
+ |-entity_dense_activation1: relu
+ |-entity_dense_activation2: tanh
+ |-entity_dropout_1: 0.35000000000000003
+ |-entity_dropout_2: 0.1
+ |-entity_units1: 24
+ |-entity_units2: 120
+ |-feature_dense_activation1: tanh
+ |-feature_dense_activation2: relu
+ |-feature_dropout_1: 0.2
+ |-feature_dropout_2: 0.2
+ |-feature_units1: 72
+ |-feature_units2: 56
+ |-learning_rate: 0.006595235106587389
+ |-sentence_dense_activation1: tanh
+ |-sentence_dense_activation2: tanh
+ |-sentence_dense_activation3: tanh
+ |-sentence_dropout_1: 0.35000000000000003
+ |-sentence_dropout_2: 0.15000000000000002
+ |-sentence_dropout_3: 0.15000000000000002
+ |-sentence_units1: 320
+ |-sentence_units2: 160
+ |-sentence_units3: 48
+ |-tuner/bracket: 3
+ |-tuner/epochs: 17
+ |-tuner/initial_epoch: 6
+ |-tuner/round: 2
+ |-tuner/trial_id: d163967f0c261482aecc9b42b536c2c6
+[Trial summary]
+ |-Trial ID: 9eadffe227632ffd9632b6359eeacc05
+ |-Score: 0.5412322282791138
+ |-Best step: 0
+ > Hyperparameters:
+ |-entity_dense_activation1: relu
+ |-entity_dense_activation2: sigmoid
+ |-entity_dropout_1: 0.25
+ |-entity_dropout_2: 0.30000000000000004
+ |-entity_units1: 56
+ |-entity_units2: 104
+ |-feature_dense_activation1: tanh
+ |-feature_dense_activation2: relu
+ |-feature_dropout_1: 0.25
+ |-feature_dropout_2: 0.5
+ |-feature_units1: 72
+ |-feature_units2: 88
+ |-learning_rate: 0.0014488019145065725
+ |-sentence_dense_activation1: tanh
+ |-sentence_dense_activation2: sigmoid
+ |-sentence_dense_activation3: relu
+ |-sentence_dropout_1: 0.1
+ |-sentence_dropout_2: 0.4
+ |-sentence_dropout_3: 0.05
+ |-sentence_units1: 128
+ |-sentence_units2: 432
+ |-sentence_units3: 120
+ |-tuner/bracket: 3
+ |-tuner/epochs: 17
+ |-tuner/initial_epoch: 6
+ |-tuner/round: 2
+ |-tuner/trial_id: 4d68a9c1e6c6191dc0b94c396f38612b
+[Trial summary]
+ |-Trial ID: 76c2f0c648800ce18ed2cbe9663aa728
+ |-Score: 0.5421283841133118
+ |-Best step: 0
+ > Hyperparameters:
+ |-entity_dense_activation1: sigmoid
+ |-entity_dense_activation2: tanh
+ |-entity_dropout_1: 0.30000000000000004
+ |-entity_dropout_2: 0.4
+ |-entity_units1: 8
+ |-entity_units2: 120
+ |-feature_dense_activation1: relu
+ |-feature_dense_activation2: tanh
+ |-feature_dropout_1: 0.2
+ |-feature_dropout_2: 0.25
+ |-feature_units1: 104
+ |-feature_units2: 104
+ |-learning_rate: 0.004170444862047094
+ |-sentence_dense_activation1: sigmoid
+ |-sentence_dense_activation2: tanh
+ |-sentence_dense_activation3: sigmoid
+ |-sentence_dropout_1: 0.25
+ |-sentence_dropout_2: 0.0
+ |-sentence_dropout_3: 0.4
+ |-sentence_units1: 192
+ |-sentence_units2: 240
+ |-sentence_units3: 16
+ |-tuner/bracket: 1
+ |-tuner/epochs: 50
+ |-tuner/initial_epoch: 17
+ |-tuner/round: 1
+ |-tuner/trial_id: 7e8a3a1c5b3704fb6cef6181da82ed9c

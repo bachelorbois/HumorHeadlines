@@ -1,0 +1,120 @@
+[Search space summary]
+ |-Default search space size: 22
+ > feature_units1 (Int)
+ |-default: 24
+ |-max_value: 128
+ |-min_value: 8
+ |-sampling: None
+ |-step: 16
+ > feature_dense_activation1 (Choice)
+ |-default: relu
+ |-ordered: False
+ |-values: ['relu', 'tanh', 'sigmoid']
+ > feature_dropout_1 (Float)
+ |-default: 0.25
+ |-max_value: 0.5
+ |-min_value: 0.0
+ |-sampling: None
+ |-step: 0.05
+ > feature_units2 (Int)
+ |-default: 24
+ |-max_value: 128
+ |-min_value: 8
+ |-sampling: None
+ |-step: 16
+ > feature_dense_activation2 (Choice)
+ |-default: relu
+ |-ordered: False
+ |-values: ['relu', 'tanh', 'sigmoid']
+ > feature_dropout_2 (Float)
+ |-default: 0.25
+ |-max_value: 0.5
+ |-min_value: 0.0
+ |-sampling: None
+ |-step: 0.05
+ > entity_units1 (Int)
+ |-default: 24
+ |-max_value: 128
+ |-min_value: 8
+ |-sampling: None
+ |-step: 16
+ > entity_dense_activation1 (Choice)
+ |-default: relu
+ |-ordered: False
+ |-values: ['relu', 'tanh', 'sigmoid']
+ > entity_dropout_1 (Float)
+ |-default: 0.25
+ |-max_value: 0.5
+ |-min_value: 0.0
+ |-sampling: None
+ |-step: 0.05
+ > entity_units2 (Int)
+ |-default: 24
+ |-max_value: 128
+ |-min_value: 8
+ |-sampling: None
+ |-step: 16
+ > entity_dense_activation2 (Choice)
+ |-default: relu
+ |-ordered: False
+ |-values: ['relu', 'tanh', 'sigmoid']
+ > entity_dropout_2 (Float)
+ |-default: 0.25
+ |-max_value: 0.5
+ |-min_value: 0.0
+ |-sampling: None
+ |-step: 0.05
+ > sentence_units1 (Int)
+ |-default: 64
+ |-max_value: 512
+ |-min_value: 32
+ |-sampling: None
+ |-step: 32
+ > sentence_dense_activation1 (Choice)
+ |-default: relu
+ |-ordered: False
+ |-values: ['relu', 'tanh', 'sigmoid']
+ > sentence_dropout_1 (Float)
+ |-default: 0.25
+ |-max_value: 0.5
+ |-min_value: 0.0
+ |-sampling: None
+ |-step: 0.05
+ > sentence_units2 (Int)
+ |-default: 32
+ |-max_value: 512
+ |-min_value: 32
+ |-sampling: None
+ |-step: 16
+ > sentence_dense_activation2 (Choice)
+ |-default: relu
+ |-ordered: False
+ |-values: ['relu', 'tanh', 'sigmoid']
+ > sentence_dropout_2 (Float)
+ |-default: 0.25
+ |-max_value: 0.5
+ |-min_value: 0.0
+ |-sampling: None
+ |-step: 0.05
+ > sentence_units3 (Int)
+ |-default: 128
+ |-max_value: 128
+ |-min_value: 8
+ |-sampling: None
+ |-step: 8
+ > sentence_dense_activation3 (Choice)
+ |-default: relu
+ |-ordered: False
+ |-values: ['relu', 'tanh', 'sigmoid']
+ > sentence_dropout_3 (Float)
+ |-default: 0.25
+ |-max_value: 0.5
+ |-min_value: 0.0
+ |-sampling: None
+ |-step: 0.05
+ > learning_rate (Float)
+ |-default: 0.01
+ |-max_value: 0.1
+ |-min_value: 1e-05
+ |-sampling: log
+ |-step: None
