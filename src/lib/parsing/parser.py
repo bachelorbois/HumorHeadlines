@@ -136,6 +136,11 @@ class Headline:
         sent = self.sentence
         sent[self.word_index] = self.edit
         return " ".join(sent)
+    
+    def GetSentWithoutEdit(self) -> str:
+        sent = self.sentence
+        sent = sent[0:self.word_index] + sent[self.word_index+1:]
+        return " ".join(sent)
 
     def ToPB(self, HL : Headline_pb2.HeadlineCollection.Headline) -> None:
         HL.id = self.id
