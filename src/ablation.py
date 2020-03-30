@@ -148,6 +148,8 @@ with open("../data/task-1/preproc/2_concat_train.bin", "rb") as fd:
 with open("../data/task-1/preproc/2_concat_dev.bin", "rb") as fd:
     dev = lib.read_task1_pb(fd)
 
+os.mkdir("./ablation")
+
 for i in range(no_runs):
     for w, c in enumerate(configs):
         # Clear for run
@@ -200,7 +202,6 @@ for i in range(no_runs):
             c[2]
         )
 
-        os.mkdir("./ablation")
         logger = CSVLogger(f"ablation/test-{w}-{i}.csv", separator=",", append=False)
         lr = LearningRateScheduler(lr_scheduler_step_decay, verbose=1)
 
@@ -212,3 +213,5 @@ for i in range(no_runs):
             shuffle=True,
             callbacks=[logger, lr]
         )
+
+        del humor
