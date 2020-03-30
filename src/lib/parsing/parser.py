@@ -7,6 +7,7 @@ from enum import Enum
 from bidict import bidict
 import numpy as np
 from tqdm import tqdm
+import json
 
 import lib.parsing.Headline_pb2 as Headline_pb2
 import lib.parsing.Candidates_pb2 as Candidates_pb2
@@ -201,11 +202,23 @@ class HeadlineCollection:
         return np.asarray(features, dtype='float32')
 
     def GetEdits(self) -> np.ndarray:
-        edits = [h.edit for h in self.collection]
+        # tok_to_id = json.load(open("../data/sarcasm_utils/sarcasm_tokens_to_id.txt", "r"))
+        edits = []
+        for h in self.collection:
+            try:
+                edits.append(h.edit)
+            except:
+                edits.append(0)
         return np.array(edits)
 
     def GetReplaced(self) -> np.ndarray:
-        replaced = [h.sentence[h.word_index] for h in self.collection]
+        # tok_to_id = json.load(open("../data/sarcasm_utils/sarcasm_tokens_to_id.txt", "r"))
+        replaced = []
+        for h in self.collection:
+            try:    
+                replaced.append(h.sentence[h.word_index])
+            except:
+                replaced.append(0)
         return np.array(replaced)
 
     def GetIDs(self) -> np.ndarray:

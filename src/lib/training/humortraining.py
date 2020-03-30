@@ -57,17 +57,15 @@ class HumorTraining:
         # Train data
         features, y_train = self.train_data.GetFeatureVectors(), self.train_data.GetGrades()
         ins = {"FeatureInput": features[:,:4]}
+        i = 4
+        ins["EntityInput"] = features[:,i:i+20]
         if self.albert:
-            i = 4
-            ins["EntityInput"] = features[:,i:i+20]
             i += 20
             ins["input_word_ids"] = features[:,i:i+128]
             i += 128
             ins["segment_ids"] = features[:,i:i+128]
             i += 128
             ins["input_mask"] = features[:,i:i+128]
-        else:
-            ins["EntityInput"] = features[:,4:]
 
         text = self.train_data.GetReplaced()
         ins["ReplacedInput"] = text
@@ -78,17 +76,15 @@ class HumorTraining:
         # Dev data
         dev_features, y_dev = self.dev_data.GetFeatureVectors(), self.dev_data.GetGrades()
         devIns = {"FeatureInput": dev_features[:,:4]}
+        i = 4
+        devIns["EntityInput"] = dev_features[:,i:i+20]
         if self.albert:
-            i = 4
-            devIns["EntityInput"] = dev_features[:,i:i+20]
             i += 20
             devIns["input_word_ids"] = dev_features[:,i:i+128]
             i += 128
             devIns["segment_ids"] = dev_features[:,i:i+128]
             i += 128
             devIns["input_mask"] = dev_features[:,i:i+128]
-        else:
-            devIns["EntityInput"] = dev_features[:,4:]
 
         text = self.dev_data.GetReplaced()
         devIns["ReplacedInput"] = text
@@ -102,7 +98,7 @@ class HumorTraining:
                                                         end_learn_rate=1e-6,
                                                         warmup_epoch_count=15,
                                                         total_epoch_count=epoch)
-        early = tf.keras.callbacks.EarlyStopping(monitor='val_root_mean_squared_error', min_delta=0.0005, patience=5, mode='min', restore_best_weights=True)
+        early = tf.keras.callbacks.EarlyStopping(monitor='val_root_mean_squared_error', min_delta=0.0001, patience=10, mode='min', restore_best_weights=True)
         # lr_schedule = callbacks.ReduceLROnPlateau(monitor='val_root_mean_squared_error', factor=0.1, patience=5, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0.0001)
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
         print(f"--------- It took {time.time() - self.start} second from start to training ---------")
@@ -120,17 +116,15 @@ class HumorTraining:
         # Test data
         features = self.test_data.GetFeatureVectors()
         ins = {"FeatureInput": features[:,:4]}
+        i = 4
+        ins["EntityInput"] = features[:,i:i+20]
         if self.albert:
-            i = 4
-            ins["EntityInput"] = features[:,i:i+20]
             i += 20
             ins["input_word_ids"] = features[:,i:i+128]
             i += 128
             ins["segment_ids"] = features[:,i:i+128]
             i += 128
             ins["input_mask"] = features[:,i:i+128]
-        else:
-            ins["EntityInput"] = features[:,4:]
 
         text = self.test_data.GetReplaced()
         ins["ReplacedInput"] = text
