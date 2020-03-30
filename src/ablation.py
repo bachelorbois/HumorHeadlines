@@ -11,6 +11,7 @@ import tensorflow_hub as hub
 import os
 import numpy as np
 import lib
+import math
 
 def create_HUMOR_model(feature_len : int, kb_len : int, kb_part : bool, word_encoder : bool, replaced : bool, replacement : bool) -> Model:
     """Create a humor model.
@@ -110,7 +111,7 @@ def create_HUMOR_model(feature_len : int, kb_len : int, kb_part : bool, word_enc
 
     return HUMOR
 
-def lr_scheduler_step_decay():
+def lr_scheduler_step_decay(epoch):
     initial_lrate = 0.005
     drop = 0.5
     epochs_drop = 10.0
@@ -199,7 +200,8 @@ for i in range(no_runs):
             c[2]
         )
 
-        logger = CSVLogger(f"test-{w}-{i}.csv", separator=",", append=False)
+        os.mkdir("./ablation")
+        logger = CSVLogger(f"ablation/test-{w}-{i}.csv", separator=",", append=False)
         lr = LearningRateScheduler(lr_scheduler_step_decay, verbose=1)
 
         humor.fit(
