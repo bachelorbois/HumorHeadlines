@@ -1,7 +1,7 @@
 import csv
 import numpy as np
 
-N_configs = 11
+N_configs = 13
 N_runs = 10
 
 all_runs_tl = [None]*N_configs

@@ -42,7 +42,7 @@ entire$Group = as.factor(entire$Group)
 
 entire$Set = factor(entire$Set, levels=c("Train", "Dev"), labels=c("Training Set", "Development Set"), ordered=T)
 
-  codes = c("F", "EW", "OW", "WE", "KB", "WD", "WP", "SL", "PD", "FE", "KF")
+  codes = c("F", "EW", "OW", "WE", "KB", "WD", "WP", "SL", "PD", "FE", "KF", "KW", "FW")
 labels = c(
   "F - Full model",
   "EW - Edited Word",
@@ -54,9 +54,24 @@ labels = c(
   "SL - Sentence Length",
   "PD - Phonetic Difference",
   "FE - Feature Encoder",
-  "KF - Knowledge and Feature" 
+  "KF - Knowledge and Feature",
+  "KW - Knowledge and Word",
+  "FW - Feature and Word"
 )
 
+
+# Summary
+entire%>%
+  filter(Kind=="RMSE") %>%
+  filter(Set=="Training Set") %>%
+  group_by(Group)%>% 
+  summarise(Median=median(Value), Mean=mean(Value), Std=sd(Value))
+
+entire%>%
+  filter(Kind=="RMSE") %>%
+  filter(Set=="Development Set") %>%
+  group_by(Group)%>% 
+  summarise(Median=median(Value), Mean=mean(Value), Std=sd(Value))
 
 # Boxplots
 
@@ -67,7 +82,7 @@ ggplot(aes(x=Group, y=Value, color=Group)) +
     labels=codes
   ) +
   scale_y_continuous() +
-  scale_color_manual(values=rep("black",11), labels=labels) +
+  scale_color_manual(values=rep("black",13), labels=labels) +
   theme_Publication() +
   facet_grid(cols=vars(Set), scales="free") +
   guides(color=guide_legend(override.aes = c(size=0))) +
