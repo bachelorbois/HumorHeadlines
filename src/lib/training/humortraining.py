@@ -7,6 +7,7 @@ import os
 import pickle
 from typing import List
 import time
+import matplotlib.pyplot as plt
 
 from lib.models import create_HUMOR_model
 from lib.parsing.parser import read_task1_pb
@@ -33,12 +34,13 @@ class HumorTraining:
         os.makedirs(self.SAVE_DIR)
         os.makedirs(self.PRED_DIR)
         os.makedirs(self.VIZ_DIR)
-        os.mknod(self.PRED_FILE)
+        f = open(self.PRED_FILE, "w")
+        f.close()
 
-        tf.keras.utils.plot_model(
-            self.humor, to_file=f'{self.VIZ_DIR}model.png', show_shapes=True, show_layer_names=True,
-            rankdir='TB', expand_nested=True, dpi=96
-        )
+        #tf.keras.utils.plot_model(
+        #    self.humor, to_file=f'{self.VIZ_DIR}model.png', show_shapes=True, show_layer_names=True,
+        #    rankdir='TB', expand_nested=True, dpi=96
+        #)
 
         self.train_data = self.load_data(train_paths)
         self.dev_data = self.load_data(dev_path)
@@ -67,10 +69,10 @@ class HumorTraining:
             i += 128
             ins["input_mask"] = features[:,i:i+128]
 
-        text = self.train_data.GetReplaced()
+        text = np.load('../data/task-1/train_replaced.npy', allow_pickle=True)# self.train_data.GetReplaced()
         ins["ReplacedInput"] = text
 
-        text = self.train_data.GetEdits()
+        text = np.load('../data/task-1/train_edit.npy', allow_pickle=True)# self.train_data.GetEdits()
         ins["ReplacementInput"] = text
 
         # Dev data
@@ -86,19 +88,19 @@ class HumorTraining:
             i += 128
             devIns["input_mask"] = dev_features[:,i:i+128]
 
-        text = self.dev_data.GetReplaced()
+        text = np.load('../data/task-1/dev_replaced.npy', allow_pickle=True)# self.dev_data.GetReplaced()
         devIns["ReplacedInput"] = text
 
-        text = self.dev_data.GetEdits()
+        text = np.load('../data/task-1/dev_edit.npy', allow_pickle=True)# self.dev_data.GetEdits()
         devIns["ReplacementInput"] = text
 
         # Create callbacks
-        tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR, write_graph=True, write_images=True)
+        # tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR, write_graph=True, write_images=True)
         lr_schedule = self.create_learning_rate_scheduler(max_learn_rate=1e-1,
                                                         end_learn_rate=1e-6,
                                                         warmup_epoch_count=15,
                                                         total_epoch_count=epoch)
-        early = tf.keras.callbacks.EarlyStopping(monitor='val_root_mean_squared_error', min_delta=0.0001, patience=10, mode='min', restore_best_weights=True)
+        early = tf.keras.callbacks.EarlyStopping(monitor='val_root_mean_squared_error', min_delta=0.0001, patience=5, mode='min', restore_best_weights=True)
         # lr_schedule = callbacks.ReduceLROnPlateau(monitor='val_root_mean_squared_error', factor=0.1, patience=5, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0.0001)
         print("Follow the training using Tensorboard at " + self.LOG_DIR)
         print(f"--------- It took {time.time() - self.start} second from start to training ---------")
@@ -108,9 +110,22 @@ class HumorTraining:
                         batch_size=batch_size,
                         epochs=epoch,
                         shuffle=True,
-                        callbacks=[tensorboard, early])
+                        callbacks=[early])
 
-        self.humor.save(self.SAVE_DIR+'final.hdf5')
+        # preds = self.humor.predict(devIns)
+        # ids = self.dev_data.GetIDs()
+        # out = np.stack((ids, preds.flatten()), axis=-1)
+        # Save the predictions to file
+        # np.savetxt(f'../plots/context.csv', out, header='id,pred', fmt="%d,%1.8f")
+
+        # print(f'Mean of preds: {preds.mean()}, STD of preds: {preds.std()}, Mean of true: {y_dev.mean()}, STD of true: {y_dev.std()}')
+        # bins = np.linspace(0, 3, 50)
+        # plt.hist(preds, bins=bins, alpha=0.5, label="preds")
+        # plt.hist(y_dev, bins=bins, alpha=0.5, label="true")
+        # plt.legend(loc='upper right')
+        # plt.show()
+
+        # self.humor.save(self.SAVE_DIR + 'final.h5', save_format='h5')
 
     def test(self):
         # Test data
@@ -126,9 +141,9 @@ class HumorTraining:
             i += 128
             ins["input_mask"] = features[:,i:i+128]
 
-        text = self.test_data.GetReplaced()
+        text = np.load('../data/task-1/test_replaced.npy', allow_pickle=True)# self.test_data.GetReplaced()
         ins["ReplacedInput"] = text
-        text = self.test_data.GetEdits()
+        text = np.load('../data/task-1/test_edit.npy', allow_pickle=True)# self.test_data.GetEdits()
         ins["ReplacementInput"] = text
 
         # Predict on the data

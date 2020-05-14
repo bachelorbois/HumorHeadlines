@@ -4,6 +4,8 @@ import numpy as np
 from lib.parsing.parser import read_task2_pb
 from lib.features import PhoneticFeature, PositionFeature, DistanceFeature, ClusterFeature, SentLenFeature, SarcasmFeature, NellKbFeature
 from lib.features.embeddingContainer import EmbeddingContainer
+import datetime
+import os
 
 
 class Task2Training:
@@ -23,7 +25,8 @@ class Task2Training:
         os.makedirs(self.SAVE_DIR)
         os.makedirs(self.PRED_DIR)
         os.makedirs(self.VIZ_DIR)
-        os.mknod(self.PRED_FILE)
+        f = open(self.PRED_FILE, "w")
+        f.close()
 
         tf.keras.utils.plot_model(
             self.humor, to_file=f'{self.VIZ_DIR}model.png', show_shapes=True, show_layer_names=True,
