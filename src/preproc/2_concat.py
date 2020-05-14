@@ -3,24 +3,18 @@ sys.path.append("..")
 import lib.parsing
 
 ins = [
-    "../../data/task-1/preproc/1_original_dev.bin",
     "../../data/task-1/preproc/1_original_test.bin",
-    # "../../data/task-2/preproc/1_original_dev.bin",
-    # "../../data/task-2/preproc/1_original_test.bin"
+    "../../data/task-2/preproc/1_original_test.bin"
 ]
 
 read_funcs = [
-    lib.parsing.read_task1_pb,
-    lib.parsing.read_task1_pb,
-    # lib.read_task2_pb,
-    # lib.read_task2_pb
+    lib.read_task1_pb,
+    lib.read_task2_pb
 ]
 
 outs = [
-    "../../data/task-1/preproc/2_concat_dev.bin",
     "../../data/task-1/preproc/2_concat_test.bin",
-    # "../../data/task-2/preproc/2_concat_dev.bin",
-    # "../../data/task-2/preproc/2_concat_test.bin"
+    "../../data/task-2/preproc/2_concat_test.bin"
 ]
 
 def proc(i, o, f):

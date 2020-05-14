@@ -26,10 +26,6 @@
         "context_units1": 128,
         "context_units2": 160,
         "learning_rate": 0.0023223306621254695,
-        "tuner/epochs": 50,
-        "tuner/initial_epoch": 17,
-        "tuner/bracket": 1,
-        "tuner/round": 1,
-        "tuner/trial_id": "5fe1cc8fcb5cb3e224e326f0b3faeade"
+        "tuner/epochs": 25
     }
 }

@@ -8,3 +8,4 @@ sentencepiece
 bidict
 tensorflow_hub
 keras-tuner
+tensorflow

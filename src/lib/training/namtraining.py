@@ -35,27 +35,28 @@ class NAMTraining:
         np.save(self.DATAX, self.data_x)
         np.save(self.DATAY, self.data_y)
 
-        print(self.data_x.shape)
-        print(self.data_y.shape)
+        # print(self.data_x.shape)
+        # print(self.data_y.shape)
 
         self.train_x, self.test_x, self.train_y, self.test_y = train_test_split(self.data_x, self.data_y, test_size=0.2, random_state=42)
-        print(f'Train X : {self.train_x.shape} \n')
-        print(f'Train Y : {self.train_y.shape} \n')
-        print(f'Test X : {self.test_x.shape} \n')
-        print(f'Test Y : {self.test_y.shape} \n')
+        #print(f'Train X : {self.train_x.shape} \n')
+        #print(f'Train Y : {self.train_y.shape} \n')
+        #print(f'Test X : {self.test_x.shape} \n')
+        #print(f'Test Y : {self.test_y.shape} \n')
 
     def train(self, epoch, batch_size):
         print("Training the model...")
 
-        tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR)
-        reduceLR = callbacks.ReduceLROnPlateau(monitor='val_accuracy', factor=0.1, patience=10, verbose=0, mode='auto', min_delta=0.001, cooldown=0, min_lr=0.0001)
+        # tensorboard = callbacks.TensorBoard(log_dir=self.LOG_DIR)
+        reduceLR = callbacks.ReduceLROnPlateau(monitor='val_accuracy', factor=0.1, patience=3, verbose=1, mode='auto', min_delta=0.0001, cooldown=0, min_lr=0.000001)
+        early = callbacks.EarlyStopping(monitor='val_accuracy', min_delta=0.0001, patience=5, mode='auto', restore_best_weights=True)
 
         self.model.fit([self.train_x[:, 0], self.train_x[:, 1], self.train_x[:, 2]], self.train_y, 
                         epochs=epoch, 
                         batch_size=batch_size, 
                         validation_split=.2,
                         shuffle=True,
-                        callbacks=[tensorboard, reduceLR])
+                        callbacks=[reduceLR, early])
 
         self.model.save(self.SAVE_DIR+'final.hdf5')
 

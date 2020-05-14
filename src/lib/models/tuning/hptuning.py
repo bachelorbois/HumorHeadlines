@@ -12,24 +12,25 @@ class HumorTuner(HyperModel):
 
     def build(self, hp):
         ###### Feature Part
-        input_features = layers.Input(shape=(self.feature_len,), dtype='float32', name="feature_input")
-        input_entities = layers.Input(shape=(self.kb_len,), dtype='int32', name="entity_input")
-        feature_dense = input_features
-        for i in range(hp.Int('feature_layers', 1, 4)):
-            feature_dense = layers.Dense(units=hp.Int(
-                                            f'feature_units{i}',
-                                            min_value=8,
-                                            max_value=128,
-                                            step=16,
-                                            default=24
-                                        ), activation='relu',  name=f"FeatureDense{i}")(feature_dense)
-            feature_dense = layers.Dropout(rate=hp.Float(
-                                                    f'feature_dropout_{i}',
-                                                    min_value=0.0,
-                                                    max_value=0.5,
-                                                    default=0.20,
-                                                    step=0.1,
-                                                ))(feature_dense)
+        input_features = layers.Input(shape=(self.feature_len,), dtype='float32', name="FeatureInput")
+        input_entities = layers.Input(shape=(self.kb_len,), dtype='int32', name="EntityInput")
+
+        feature_dense = layers.Dense(units=hp.Int(
+                                        'feature_units1',
+                                        min_value=8,
+                                        max_value=128,
+                                        step=16,
+                                        default=24
+                                    ), activation='relu',  name="FeatureDense1")(input_features)
+        feature_dense = layers.Dropout(rate=0.5)(feature_dense)
+        feature_dense = layers.Dense(units=hp.Int(
+                                        'feature_units2',
+                                        min_value=8,
+                                        max_value=128,
+                                        step=16,
+                                        default=24
+                                    ), activation='relu', name="FeatureDense2")(feature_dense)
+        feature_dense = layers.Dropout(rate=0.5)(feature_dense)
 
         embeddings = np.load('../data/NELL/embeddings/entity.npy')
         entity_embedding = layers.Embedding(181544, 64, embeddings_initializer=initializers.Constant(embeddings), trainable=False, name="EntityEmbeddings")(input_entities)
@@ -53,8 +54,8 @@ class HumorTuner(HyperModel):
         ####################
 
         ###### Sentence Part
-        input_replaced = layers.Input(shape=(), dtype=tf.string, name="replaced_input")
-        input_replacement = layers.Input(shape=(), dtype=tf.string, name="replacement_input")
+        input_replaced = layers.Input(shape=(), dtype=tf.string, name="ReplacedInput")
+        input_replacement = layers.Input(shape=(), dtype=tf.string, name="ReplacementInput")
         
         sentence_in = layers.Input(shape=(), dtype=tf.string, name="sentence_in")
         sentence_dense = hub.KerasLayer(self.nnlm_path)(sentence_in)    # Expects a tf.string input tensor.

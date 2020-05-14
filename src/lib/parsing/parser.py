@@ -137,6 +137,9 @@ class Headline:
         sent = self.sentence
         sent[self.word_index] = self.edit
         return " ".join(sent)
+
+    def GetSentence(self) -> str:
+        return " ".join(self.sentence)
     
     def GetSentWithoutEdit(self) -> str:
         sent = self.sentence
@@ -221,6 +224,11 @@ class HeadlineCollection:
                 replaced.append(0)
         return np.array(replaced)
 
+    def GetIndexes(self) -> np.ndarray:
+        return np.array(
+            [h.word_index for h in self.collection]
+        )
+
     def GetIDs(self) -> np.ndarray:
         return np.array(
             [h.id for h in self.collection]
@@ -249,6 +257,11 @@ class HeadlineCollection:
     def GetTokenizedWEdit(self) -> np.ndarray:
         return np.array(
             [h.GetTokenizedWEdit() for h in self.collection]
+        )
+
+    def GetTokenized(self) -> np.ndarray:
+        return np.array(
+            [h.GetTokenized() for h in self.collection]
         )
 
     def ToPB(self) -> Headline_pb2.HeadlineCollection:
@@ -491,7 +504,7 @@ def build_candidates_pb(pb : Candidates_pb2.CandidateCollection.Candidates) -> C
 
 def read_task1_csv(fd : TextIO, grades = True) -> HeadlineCollection:
     res = HeadlineCollection()
-    csv_reader = csv.reader(fd, delimiter=',', quotechar='"', )
+    csv_reader = csv.reader(fd, delimiter=',', quotechar='"')
     next(csv_reader)
     for row in csv_reader:
         res.append(build_headline(row, grades))

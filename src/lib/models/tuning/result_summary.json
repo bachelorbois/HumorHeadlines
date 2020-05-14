@@ -1,44 +1,44 @@
-{
-    "Results summary": [
+{ 
+    "top_10": [
         {
-            "TrialID": "f3f2736c5866ac87457e421f66d1e8cf",
-            "Score": 0.5376405119895935
+            "TrialID": "a7b8600859948369d1655e3727ab014d",
+            "Score": "0.5387459993362427"
         },
         {
-            "TrialID": "9127375b61c3e29366f2206417204540",
-            "Score": 0.5379559397697449
+            "TrialID": "e417cf4ae03bc8242eff4b8d5bcc8dee",
+            "Score": 0.5400088429450989
         },
         {
-            "TrialID": "bbb084327492c966f23725a4cb8b2f14",
-            "Score": 0.5381727814674377
+            "TrialID": "4dd538ec75520b14ded69049c686132a",
+            "Score": 0.5403200387954712
         },
         {
-            "TrialID": "55a3b18a0a8aa0818a40117f020ea77e",
-            "Score": 0.5385735034942627
+            "TrialID": "700f87eb5d8783437dd0459808b40b0f",
+            "Score": 0.5403289198875427
         },
         {
-            "TrialID": "fd01b05249607ce3c7e7a5fc4b3f93b9",
-            "Score": 0.5386233329772949
+            "TrialID": "4f7e355db244ba232065deb993dd0df5",
+            "Score": 0.5404274463653564
         },
         {
-            "TrialID": "55f6de5b617aadbcbca1e6d4a7bab25f",
-            "Score": 0.5387483239173889
+            "TrialID": "eb7097e38abaf67fe221990df924e5cc",
+            "Score": 0.5404490828514099
         },
         {
-            "TrialID": "612a7b15a9ad96b0655ea9b0a5df5898",
-            "Score": 0.5387705564498901
+            "TrialID": "90d3c20310714c6d0aedc8797bc84069",
+            "Score": 0.5409775972366333
         },
         {
-            "TrialID": "bd2c0d471a29f2670d36e2e3a7c8661d",
-            "Score": 0.5388361811637878
+            "TrialID": "46f8e66c33dfdcebef34bf4f339f3286",
+            "Score": 0.5409824252128601
         },
         {
-            "TrialID": "2312d3af8e09ec0b1988885f51f7b314",
-            "Score": 0.5388484597206116
+            "TrialID": "9eadffe227632ffd9632b6359eeacc05",
+            "Score": 0.5412322282791138
         },
         {
-            "TrialID": "1be711e1b9bb91e5d32f5cebf3a5430f",
-            "Score": 0.5388531684875488
+            "TrialID": "76c2f0c648800ce18ed2cbe9663aa728",
+            "Score": 0.5421283841133118
         }
     ]
 }

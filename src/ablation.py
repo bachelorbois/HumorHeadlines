@@ -8,11 +8,13 @@ from tensorflow.keras import (Model,
                             backend)
 from tensorflow.keras.callbacks import CSVLogger, LearningRateScheduler
 import tensorflow_hub as hub
+import tensorflow.keras.backend as K
 import os
 import numpy as np
 import lib
 import math
 import glob
+import gc
 
 def create_HUMOR_model(feature_len : int, kb_len : int, kb_part : bool, word_encoder : bool, replaced : bool, replacement : bool, feature : bool) -> Model:
     """Create a humor model.
@@ -233,4 +235,8 @@ for i in range(no_runs):
             callbacks=[logger, lr]
         )
 
+        K.clear_session()
         del humor
+        gc.collect()
+        # break
+    # break 

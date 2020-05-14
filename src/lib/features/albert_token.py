@@ -20,7 +20,7 @@ class AlbertTokenizer(Feature):
             np.ndarray: The computed feature vector
         """
         TokenizerContainer.init()
-        tokens, input_ids = cls.get_ids(HL.GetSentWithoutEdit())
+        tokens, input_ids = cls.get_ids(f'[CLS] {HL.GetSentWithoutEdit()} [SEP]')
         segments = cls.get_segments(tokens)
         masks = cls.get_masks(tokens)
         input_ids.extend(segments)
