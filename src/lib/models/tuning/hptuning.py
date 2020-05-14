@@ -12,8 +12,8 @@ class HumorTuner(HyperModel):
 
     def build(self, hp):
         ###### Feature Part
-        input_features = layers.Input(shape=(self.feature_len,), dtype='float32', name="feature_input")
-        input_entities = layers.Input(shape=(self.kb_len,), dtype='int32', name="entity_input")
+        input_features = layers.Input(shape=(self.feature_len,), dtype='float32', name="FeatureInput")
+        input_entities = layers.Input(shape=(self.kb_len,), dtype='int32', name="EntityInput")
 
         feature_dense = layers.Dense(units=hp.Int(
                                         'feature_units1',
@@ -54,8 +54,8 @@ class HumorTuner(HyperModel):
         ####################
 
         ###### Sentence Part
-        input_replaced = layers.Input(shape=(), dtype=tf.string, name="replaced_input")
-        input_replacement = layers.Input(shape=(), dtype=tf.string, name="replacement_input")
+        input_replaced = layers.Input(shape=(), dtype=tf.string, name="ReplacedInput")
+        input_replacement = layers.Input(shape=(), dtype=tf.string, name="ReplacementInput")
         
         sentence_in = layers.Input(shape=(), dtype=tf.string, name="sentence_in")
         embed = hub.KerasLayer(self.nnlm_path)(sentence_in)    # Expects a tf.string input tensor.
