@@ -42,7 +42,7 @@ class EmbeddingContainer():
 
         # print("Building embedding index...")
         cls.FT = {}
-        with open(cls.EMBED_FILE, "r") as fd:
+        with open(cls.EMBED_FILE, "r", encoding="utf8") as fd:
             next(fd)
 
             for i, l in tqdm(enumerate(fd), total=999994, unit="embedding(s)", desc="Building embedding index"):
