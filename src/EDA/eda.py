@@ -15,7 +15,7 @@ def task_1():
 
     header_types = {'id': str, 'original': str, 'edit': str, 'grades': str, 'meanGrade':np.float64}
 
-    data = pd.read_csv("data/task-1/train.csv", delimiter=",", dtype=header_types).values
+    data = pd.read_csv("data/task-1/dev.csv", delimiter=",", dtype=header_types).values
 
     grades = data[:,-1]
     print("Mean grade task 1: ", round(np.mean(grades),2))
@@ -23,8 +23,8 @@ def task_1():
 
     plt.figure(0)
     plt.bar(grades.keys(), grades.values(), width=0.1)
-    plt.title("Task 1 - train - Grades disribution")
-    plt.savefig("plots/task-1-train - grades distrib.png")
+    plt.title("Task 1 - dev - Grades disribution")
+    plt.show()
 
     edits = data[:,2]
     edit_freq = Counter(edits).most_common(20)
@@ -33,16 +33,22 @@ def task_1():
         keys.append(word[0])
         values.append(word[1])
 
+    f = open("./plots/task-1-dev-common-edit-words.png", "w")
+    f.close()
+
     plt.figure(1)
-    plt.title("Task 1 - train - Most common edits words")
+    plt.title("Task 1 - dev - Most common edits words")
     plt.bar(keys, values, width=0.6)
     plt.xticks(rotation=90)
-    plt.savefig("plots/task-1-train - common edit words.png")
+    plt.savefig("./plots/task-1-dev-common-edit-words.png")
 
     entity = []
     tags = nltk.pos_tag(edits)
     for tag in tags:
         entity.append(tag[1])
+
+    f = open("./plots/task-1-dev-common-replacements.png", "w")
+    f.close()
 
     entity = Counter(entity, sorted=True).most_common(20)
     keys, values = [], []
@@ -50,10 +56,10 @@ def task_1():
         keys.append(pos_tag[0])
         values.append(pos_tag[1])
     plt.figure(5)
-    plt.title("Task 1 - train - Most common edits POS")
+    plt.title("Task 1 - dev - Most common edits POS")
     plt.bar(keys, values, width=0.4)
     plt.xticks(rotation=90)
-    plt.savefig("plots/task-1-train - common replacements.png")
+    plt.savefig("./plots/task-1-dev-common-replacements.png")
 
     
 
@@ -134,10 +140,10 @@ def check_multi_token_entity_task_2(file):
 if __name__ == "__main__":
 
     task_1()
-    task_2()
-    check_multi_token_entity_task_1("data/task-1/train.csv")
-    check_multi_token_entity_task_1("data/task-1/dev.csv")
-    check_multi_token_entity_task_2("data/task-2/train.csv")
-    check_multi_token_entity_task_2("data/task-2/dev.csv")
+    #task_2()
+    #check_multi_token_entity_task_1("data/task-1/train.csv")
+    #check_multi_token_entity_task_1("data/task-1/dev.csv")
+    #check_multi_token_entity_task_2("data/task-2/train.csv")
+    #check_multi_token_entity_task_2("data/task-2/dev.csv")
     
 
