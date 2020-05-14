@@ -1,78 +1,35 @@
 {
     "hyperparameters": {
-        "feature_units1": 120,
-        "feature_dense_activation1": "tanh",
-        "feature_dropout_1": 0.45,
-        "feature_units2": 56,
-        "feature_dense_activation2": "tanh",
-        "feature_dropout_2": 0.5,
-        "entity_units1": 56,
-        "entity_dense_activation1": "relu",
-        "entity_dropout_1": 0.2,
-        "entity_units2": 72,
-        "entity_dense_activation2": "relu",
-        "entity_dropout_2": 0.1,
-        "sentence_units1": 384,
-        "sentence_dense_activation1": "tanh",
-        "sentence_dropout_1": 0.5,
-        "sentence_units2": 480,
+        "feature_units1": 104,
+        "feature_dense_activation1": "relu",
+        "feature_dropout_1": 0.4,
+        "feature_units2": 8,
+        "feature_dense_activation2": "relu",
+        "feature_dropout_2": 0.30000000000000004,
+        "entity_units1": 120,
+        "entity_dense_activation1": "sigmoid",
+        "entity_dropout_1": 0.05,
+        "entity_units2": 104,
+        "entity_dense_activation2": "sigmoid",
+        "entity_dropout_2": 0.2,
+        "sentence_units1": 480,
+        "sentence_dense_activation1": "relu",
+        "sentence_dropout_1": 0.15000000000000002,
+        "sentence_units2": 144,
         "sentence_dense_activation2": "relu",
-        "sentence_dropout_2": 0.05,
-        "sentence_units3": 56,
-        "sentence_dense_activation3": "sigmoid",
-        "sentence_dropout_3": 0.1,
-        "learning_rate": 0.0011746622383033863,
-        "epochs": 50
-    },
-    "metrics": {
-        "metrics": {
-            "loss": {
-                "direction": "min",
-                "observations": [
-                    {
-                        "value": [
-                            0.3128415987716885
-                        ],
-                        "step": 0
-                    }
-                ]
-            },
-            "root_mean_squared_error": {
-                "direction": "min",
-                "observations": [
-                    {
-                        "value": [
-                            0.5593160390853882
-                        ],
-                        "step": 0
-                    }
-                ]
-            },
-            "val_loss": {
-                "direction": "min",
-                "observations": [
-                    {
-                        "value": [
-                            0.290248180054199
-                        ],
-                        "step": 0
-                    }
-                ]
-            },
-            "val_root_mean_squared_error": {
-                "direction": "min",
-                "observations": [
-                    {
-                        "value": [
-                            0.5387459993362427
-                        ],
-                        "step": 0
-                    }
-                ]
-            }
-        }
-    },
-    "score": 0.5387459993362427,
-    "best_step": 0,
-    "status": "COMPLETED"
+        "sentence_dropout_2": 0.5,
+        "sentence_units3": 8,
+        "sentence_dense_activation3": "tanh",
+        "sentence_dropout_3": 0.2,
+        "context_activation1": "sigmoid",
+        "context_activation2": "relu",
+        "context_units1": 128,
+        "context_units2": 160,
+        "learning_rate": 0.0023223306621254695,
+        "tuner/epochs": 50,
+        "tuner/initial_epoch": 17,
+        "tuner/bracket": 1,
+        "tuner/round": 1,
+        "tuner/trial_id": "5fe1cc8fcb5cb3e224e326f0b3faeade"
+    }
 }

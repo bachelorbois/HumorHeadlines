@@ -1,26 +1,26 @@
 import sys
 sys.path.append("..")
-import lib
+import lib.parsing
 
 ins = [
     "../../data/task-1/preproc/1_original_dev.bin",
     "../../data/task-1/preproc/1_original_test.bin",
-    "../../data/task-2/preproc/1_original_dev.bin",
-    "../../data/task-2/preproc/1_original_test.bin"
+    # "../../data/task-2/preproc/1_original_dev.bin",
+    # "../../data/task-2/preproc/1_original_test.bin"
 ]
 
 read_funcs = [
-    lib.read_task1_pb,
-    lib.read_task1_pb,
-    lib.read_task2_pb,
-    lib.read_task2_pb
+    lib.parsing.read_task1_pb,
+    lib.parsing.read_task1_pb,
+    # lib.read_task2_pb,
+    # lib.read_task2_pb
 ]
 
 outs = [
     "../../data/task-1/preproc/2_concat_dev.bin",
     "../../data/task-1/preproc/2_concat_test.bin",
-    "../../data/task-2/preproc/2_concat_dev.bin",
-    "../../data/task-2/preproc/2_concat_test.bin"
+    # "../../data/task-2/preproc/2_concat_dev.bin",
+    # "../../data/task-2/preproc/2_concat_test.bin"
 ]
 
 def proc(i, o, f):
@@ -65,14 +65,14 @@ for i in range(len(ins)):
     proc(ins[i], outs[i], read_funcs[i])
 
 # FunLines
-proc(
-    "../../data/FunLines/task-1/preproc/1_original_train.bin",
-    "../../data/FunLines/task-1/preproc/2_concat_train.bin",
-    lib.read_task1_pb
-)
+# proc(
+#     "../../data/FunLines/task-1/preproc/1_original_train.bin",
+#     "../../data/FunLines/task-1/preproc/2_concat_train.bin",
+#     lib.read_task1_pb
+# )
 
-proc(
-    "../../data/FunLines/task-2/preproc/1_origial_train.bin",
-    "../../data/FunLines/task-2/preproc/2_concat_train.bin",
-    lib.read_task2_pb
-)
+# proc(
+#     "../../data/FunLines/task-2/preproc/1_origial_train.bin",
+#     "../../data/FunLines/task-2/preproc/2_concat_train.bin",
+#     lib.read_task2_pb
+# )

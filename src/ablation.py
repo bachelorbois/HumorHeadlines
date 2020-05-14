@@ -12,8 +12,9 @@ import os
 import numpy as np
 import lib
 import math
+import glob
 
-def create_HUMOR_model(feature_len : int, kb_len : int, kb_part : bool, word_encoder : bool, replaced : bool, replacement : bool) -> Model:
+def create_HUMOR_model(feature_len : int, kb_len : int, kb_part : bool, word_encoder : bool, replaced : bool, replacement : bool, feature : bool) -> Model:
     """Create a humor model.
 ​
     Feature length and KB length is for defining input sizes.
@@ -33,17 +34,21 @@ def create_HUMOR_model(feature_len : int, kb_len : int, kb_part : bool, word_enc
     Returns:
         Model -- The compiled keras model.
     """
+    outputs = []
+    inputs = []
+
     ###### Feature Part
-    input_features = layers.Input(shape=(feature_len,), dtype='float32', name="FeatureInput")
+    if feature:
+        input_features = layers.Input(shape=(feature_len,), dtype='float32', name="FeatureInput")
 
-    feature_dense = layers.Dense(16, activation='relu', name="FeatureDense1")(input_features)
-    feature_dense = layers.Dropout(0.5)(feature_dense)
-    feature_dense = layers.Dense(16, activation='relu', name="FeatureDense2")(feature_dense)
-    feature_dense = layers.Dropout(0.5)(feature_dense)
+        feature_dense = layers.Dense(16, activation='relu', name="FeatureDense1")(input_features)
+        feature_dense = layers.Dropout(0.5)(feature_dense)
+        feature_dense = layers.Dense(16, activation='relu', name="FeatureDense2")(feature_dense)
+        feature_dense = layers.Dropout(0.5)(feature_dense)
 
-    outputs = [feature_dense]
-    inputs = [input_features]
-        ####################
+        outputs.append(feature_dense)
+        inputs.append(input_features)
+    ####################
 
     ###### Knowledge Part
     if kb_part:
@@ -120,24 +125,28 @@ def lr_scheduler_step_decay(epoch):
 
 
 feats = [
-    lib.features.NellKbFeature,
     lib.features.DistanceFeature,
     lib.features.PositionFeature,
     lib.features.SentLenFeature,
-    lib.features.PhoneticFeature
+    lib.features.PhoneticFeature,
+    lib.features.NellKbFeature
 ]
 
 configs = [
-    # (kb, we, replace, replaced, f1, f2, f3, f4)
-    (True,  True,  True,  True,  True,  True,  True,  True), # Baseline
-    (True,  True,  True,  False, True,  True,  True,  True), # No replaced
-    (True,  True,  False, True,  True,  True,  True,  True), # No replacement
-    (True,  False, False, False, True,  True,  True,  True), # No word encoder
-    (False, True,  True,  True,  True,  True,  True,  True), # No Nell
-    (True,  True,  True,  True,  False, True,  True,  True), # No Distance
-    (True,  True,  True,  True,  True,  False, True,  True), # No Position
-    (True,  True,  True,  True,  True,  True,  False, True), # No Sentence length
-    (True,  True,  True,  True,  True,  True,  True,  False), # No Phonetics
+    # (kb, we, replace, replaced, f1, f2, f3, f4, feature)
+    (True,  True,  True,  True,  True,  True,  True,  True, True), # Baseline
+    (True,  True,  True,  False, True,  True,  True,  True, True), # No replaced
+    (True,  True,  False, True,  True,  True,  True,  True, True), # No replacement
+    (True,  False, False, False, True,  True,  True,  True, True), # No word encoder
+    (False, True,  True,  True,  True,  True,  True,  True, True), # No Nell
+    (True,  True,  True,  True,  False, True,  True,  True, True), # No Distance
+    (True,  True,  True,  True,  True,  False, True,  True, True), # No Position
+    (True,  True,  True,  True,  True,  True,  False, True, True), # No Sentence length
+    (True,  True,  True,  True,  True,  True,  True,  False, True), # No Phonetics
+    (True,  True,  True,  True,  False, False, False, False, False), # No features
+    (False, True,  True,  True,  False, False, False, False, False), # No features or KB
+    (False, False, False, False, True,  True,  True,  True, True), # No word encoder or KB
+    (True,  False, False, False, False, False, False, False, False), # No features or word encoder
 ]
 
 no_runs = 10
@@ -148,17 +157,26 @@ with open("../data/task-1/preproc/2_concat_train.bin", "rb") as fd:
 with open("../data/task-1/preproc/2_concat_dev.bin", "rb") as fd:
     dev = lib.read_task1_pb(fd)
 
-os.mkdir("./ablation")
+# Check if previous progress have been made
+fs = glob.glob("./ablation/*.csv")
+
+if len(fs) == 0:
+    os.mkdir("./ablation")
 
 for i in range(no_runs):
     for w, c in enumerate(configs):
+        if f'./ablation/test-{w}-{i}.csv' in fs:
+            continue
         # Clear for run
         train.ClearFeatures()
         dev.ClearFeatures()
 
         # Add the required features
+        if c[0]:
+            train.AddFeature(feats[-1])
+            dev.AddFeature(feats[-1])
         for j in range(4):
-            if configs[j-4]:
+            if c[j+4]:
                 train.AddFeature(feats[j])
                 dev.AddFeature(feats[j])
 
@@ -199,7 +217,8 @@ for i in range(no_runs):
             c[0],
             c[1],
             c[3],
-            c[2]
+            c[2],
+            c[-1]
         )
 
         logger = CSVLogger(f"ablation/test-{w}-{i}.csv", separator=",", append=False)
