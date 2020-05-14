@@ -13,10 +13,11 @@ from lib import parsing
 import pandas as pd
 from matplotlib import pyplot as plt
 import seaborn as sn
+import csv
 
 class Probing():
     model = None
-    triples, labels, entity_emb = None, None, None
+    triples, labels, entity_emb, rel_vocab = None, None, None, None
     X, y = None, None
     X_train, X_test, y_train, y_test = None, None, None, None
 
@@ -33,13 +34,12 @@ class Probing():
             for line in infile:
                 vocab.append(line.strip().split(":")[1])
         vocab = np.array(vocab)
-        
-        rel_vocab = []
+        """
+        self.rel_vocab = []
         with open("../data/NELL/NELLRelVocab.txt") as infile:
             for line in infile:
-                rel_vocab.append(line.strip().split(":")[1])
-        rel_vocab = np.array(rel_vocab)
-        """
+                self.rel_vocab.append(line.strip().split(":")[1])
+        self.rel_vocab = np.array(self.rel_vocab)
 
     def filter_relations(self):
         counter = Counter(self.triples[:,1])
@@ -53,14 +53,24 @@ class Probing():
                 selected_relations_type.append(elem)
                 rel_new_idx[elem] = idx
                 idx += 1
+
+        rel_analyzed = []
+        for key in rel_new_idx:
+            new_id = int(rel_new_idx[key])
+            rel_name = self.rel_vocab[key]
+            rel_analyzed.append([new_id, rel_name])
+
+        with open("lib/probing/classes_id_confmat.csv", "w") as f:
+            writer = csv.writer(f)
+            writer.writerows(rel_analyzed)
         
         self.X, self.y = [], []
-        for idx, triple in enumerate(self.triples):
-            if triple[1] in selected_relations_type and self.labels[idx] == 1:
-                emb_e1 = self.entity_emb[triple[0]]
-                emb_e2 = self.entity_emb[triple[2]]
+        for idx, self.triple in enumerate(self.triples):
+            if self.triple[1] in selected_relations_type and self.labels[idx] == 1:
+                emb_e1 = self.entity_emb[self.triple[0]]
+                emb_e2 = self.entity_emb[self.triple[2]]
                 self.X.append([emb_e1, emb_e2])
-                self.y.append(rel_new_idx[triple[1]])
+                self.y.append(rel_new_idx[self.triple[1]])
 
 
     def train_test(self):
@@ -75,6 +85,7 @@ class Probing():
         self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, stratify=self.y, test_size=0.20)
 
     def run_model(self):
+        np.random.seed(1337)
         input_layer = Input(shape=(self.X.shape[1],))
         hidden1 = Dense(256, activation='relu')(input_layer)
         hidden2 = Dense(128, activation='relu')(hidden1)
@@ -86,7 +97,7 @@ class Probing():
 
         self.model.compile('adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-        self.model.fit(self.X_train, self.y_train, batch_size=32, epochs=10, validation_split=0.10)
+        self.model.fit(self.X_train, self.y_train, batch_size=32, epochs=10, validation_split=0.15)
 
         self.model.evaluate(self.X_test, self.y_test)
 
@@ -111,6 +122,9 @@ class Probing():
         plt.title("Confusion Matrix of Relation Classifier")
 
         plt.savefig("lib/probing/entity_cm.png")
+
+        np.savetxt("lib/probing/preds.csv", preds, delimiter=',', fmt='%2.0f')
+        np.savetxt("lib/probing/true.csv", np.argmax(self.y_test, axis=1), delimiter=',', fmt='%2.0f')
 
     def execute(self):
         self.load_data()
