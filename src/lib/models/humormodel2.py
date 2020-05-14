@@ -21,7 +21,7 @@ def create_HUMOR2_model(feature_len : int, kb_len : int, max_seq_length : int, p
     feature_dense = layers.Dropout(parameters["feature_dropout_2"])(feature_dense)
 
     embeddings = np.load('../data/NELL/embeddings/entity.npy')
-    entity_embedding = layers.Embedding(181544, 64, embeddings_initializer=initializers.Constant(embeddings), trainable=False, name="EntityEmbeddings")(input_entities)
+    entity_embedding = layers.Embedding(len(embeddings), embeddings.shape[1], embeddings_initializer=initializers.Constant(embeddings), trainable=False, name="EntityEmbeddings")(input_entities)
     sum_layer = layers.Lambda(lambda x: backend.sum(x, axis=1, keepdims=False))(entity_embedding)
     entity_dense = layers.Dense(parameters["entity_units1"], activation=parameters["entity_dense_activation1"], name="EntityDense1")(sum_layer)
     entity_dense = layers.Dropout(parameters["entity_dropout_1"])(entity_dense)
@@ -30,17 +30,11 @@ def create_HUMOR2_model(feature_len : int, kb_len : int, max_seq_length : int, p
     ####################
 
     ###### Sentence Part
-    input_replaced = layers.Input(shape=(), dtype=tf.string, name="ReplacedInput")
-    input_replacement = layers.Input(shape=(), dtype=tf.string, name="ReplacementInput")
+    input_replaced = layers.Input(shape=(), dtype=tf.string, name="ReplacedInput") # layers.Input(shape=(768,), dtype=tf.float32, name="ReplacedInput") # 
+    input_replacement = layers.Input(shape=(), dtype=tf.string, name="ReplacementInput") # layers.Input(shape=(768,), dtype=tf.float32, name="ReplacementInput") # 
     
-    # sentence_in = layers.Input(shape=(1,), dtype=tf.int32, name="sentence_in")
-    # embedding_matrix = np.loadtxt("../data/sarcasm_utils/sarcasm_embedding_matrix.txt")
-    # word_embed = layers.Embedding(embedding_matrix.shape[0],300,embeddings_initializer=initializers.Constant(embedding_matrix),
-    #                             input_length=1,
-    #                             trainable=False)(sentence_in)
-    # word_embed = layers.Flatten()(word_embed)
-    sentence_in = layers.Input(shape=(), dtype=tf.string, name="sentence_in")
-    word_embed = hub.KerasLayer('https://tfhub.dev/google/tf2-preview/nnlm-en-dim128/1')(sentence_in)
+    sentence_in = layers.Input(shape=(), dtype=tf.string, name="sentence_in") # layers.Input(shape=(768,), dtype=tf.float32, name="sentence_in") 
+    word_embed = hub.KerasLayer('https://tfhub.dev/google/nnlm-en-dim128/2')(sentence_in)
     sentence_dense = layers.Dense(parameters["sentence_units1"], activation=parameters["sentence_dense_activation1"], name="SentenceDense1")(word_embed)
     sentence_dense = layers.Dropout(parameters["sentence_dropout_1"])(sentence_dense)
     sentence_dense = layers.Dense(parameters["sentence_units2"], activation=parameters["sentence_dense_activation2"], name="SentenceDense2")(sentence_dense)
@@ -57,22 +51,22 @@ def create_HUMOR2_model(feature_len : int, kb_len : int, max_seq_length : int, p
     input_word_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype=tf.int32, name="input_word_ids")
     input_mask = tf.keras.layers.Input(shape=(max_seq_length,), dtype=tf.int32, name="input_mask")
     segment_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype=tf.int32, name="segment_ids")
-    albert_layer = hub.KerasLayer("https://tfhub.dev/tensorflow/albert_en_base/1",
-                                trainable=False)
+    albert_layer = hub.KerasLayer("https://tfhub.dev/tensorflow/albert_en_base/1", trainable=False)
     pooled_output, sequence_output = albert_layer([input_word_ids, input_mask, segment_ids])
 
-    context_dense = layers.Dense(parameters["sentence_units1"], activation=parameters["sentence_dense_activation1"], name="ContextDense1")(pooled_output)
-    context_dense = layers.Dropout(parameters["sentence_dropout_1"])(context_dense)
-    context_dense = layers.Dense(parameters["sentence_units2"], activation=parameters["sentence_dense_activation2"], name="ContextDense2")(context_dense)
-    context_dense = layers.Dropout(parameters["sentence_dropout_2"])(context_dense)
+    context_dense = layers.Dense(parameters["context_units1"], activation=parameters["context_activation1"], name="ContextDense1")(pooled_output)
+    context_dense = layers.Dropout(0.5)(context_dense)
+    context_dense = layers.Dense(parameters["context_units2"], activation=parameters["context_activation2"], name="ContextDense2")(context_dense)
+    context_dense = layers.Dropout(0.5)(context_dense)
 
     ###### Common Part
     concat = layers.Concatenate()([feature_dense, concat_sentence, entity_dense, context_dense])
+    # concat = layers.Concatenate()([feature_dense, concat_sentence, entity_dense])
     # output = layers.Dense(16, activation='relu', name="OutputDense1")(concat)
     # output = layers.Dropout(0.50)(output)
     output = layers.Dense(1, name="Output")(concat)
-    #  input_tokens, 
     HUMOR = Model(inputs=[input_features, input_entities, input_replaced, input_replacement, input_word_ids, input_mask, segment_ids], outputs=output, name="KBHumor")
+    # HUMOR = Model(inputs=[input_features, input_entities, input_replaced, input_replacement], outputs=output, name="KBHumor")
 
     # opt = optimizers.RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0)
     opt = optimizers.Adam(lr=parameters["learning_rate"])
