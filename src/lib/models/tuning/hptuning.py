@@ -35,22 +35,22 @@ class HumorTuner(HyperModel):
         embeddings = np.load('../data/NELL/embeddings/entity.npy')
         entity_embedding = layers.Embedding(181544, 64, embeddings_initializer=initializers.Constant(embeddings), trainable=False, name="EntityEmbeddings")(input_entities)
         sum_layer = layers.Lambda(lambda x: backend.sum(x, axis=1, keepdims=False))(entity_embedding)
-        entity_dense = layers.Dense(units=hp.Int(
-                                        'entity_units1',
-                                        min_value=8,
-                                        max_value=128,
-                                        step=16,
-                                        default=24
-                                    ), activation='relu', name="EntityDense1")(sum_layer)
-        entity_dense = layers.Dropout(rate=0.5)(entity_dense)
-        entity_dense = layers.Dense(units=hp.Int(
-                                        'entity_units2',
-                                        min_value=8,
-                                        max_value=128,
-                                        step=16,
-                                        default=24
-                                    ), activation='relu', name="EntityDense2")(entity_dense)
-        entity_dense = layers.Dropout(rate=0.5)(entity_dense)
+        entity_dense = sum_layer
+        for i in range(hp.Int('entity_layers', 1, 4)):
+            entity_dense = layers.Dense(units=hp.Int(
+                                            f'entity_units{i}',
+                                            min_value=8,
+                                            max_value=128,
+                                            step=16,
+                                            default=24
+                                        ), activation='relu', name=f"EntityDense{i}")(entity_dense)
+            entity_dense = layers.Dropout(rate=hp.Float(
+                                                    f'entity_dropout_{i}',
+                                                    min_value=0.0,
+                                                    max_value=0.5,
+                                                    default=0.20,
+                                                    step=0.1,
+                                                ))(entity_dense)
         ####################
 
         ###### Sentence Part
@@ -58,31 +58,22 @@ class HumorTuner(HyperModel):
         input_replacement = layers.Input(shape=(), dtype=tf.string, name="ReplacementInput")
         
         sentence_in = layers.Input(shape=(), dtype=tf.string, name="sentence_in")
-        embed = hub.KerasLayer(self.nnlm_path)(sentence_in)    # Expects a tf.string input tensor.
-        sentence_dense = layers.Dense(units=hp.Int(
-                                        'sentence_units1',
-                                        min_value=32,
-                                        max_value=512,
-                                        step=32,
-                                        default=64
-                                    ), activation='relu', name="SentenceDense1")(embed)
-        sentence_dense = layers.Dropout(rate=0.5)(sentence_dense)
-        sentence_dense = layers.Dense(units=hp.Int(
-                                        'sentence_units2',
-                                        min_value=32,
-                                        max_value=512,
-                                        step=16,
-                                        default=32
-                                    ), activation='relu', name="SentenceDense2")(sentence_dense)
-        sentence_dense = layers.Dropout(rate=0.5)(sentence_dense)
-        sentence_dense = layers.Dense(units=hp.Int(
-                                        'sentence_units3',
-                                        min_value=8,
-                                        max_value=128,
-                                        step=8,
-                                        default=128
-                                    ), activation='relu', name="SentenceDense3")(sentence_dense)
-        sentence_dense = layers.Dropout(rate=0.5)(sentence_dense)
+        sentence_dense = hub.KerasLayer(self.nnlm_path)(sentence_in)    # Expects a tf.string input tensor.
+        for i in range(hp.Int('sentence_layers', 1, 4)):
+            sentence_dense = layers.Dense(units=hp.Int(
+                                            f'sentence_units{i}',
+                                            min_value=64,
+                                            max_value=512,
+                                            step=64,
+                                            default=128
+                                        ), activation='relu', name=f"SentenceDense{i}")(sentence_dense)
+            sentence_dense = layers.Dropout(rate=hp.Float(
+                                                    f'sentence_dropout_{i}',
+                                                    min_value=0.0,
+                                                    max_value=0.5,
+                                                    default=0.20,
+                                                    step=0.1,
+                                                ))(sentence_dense)
 
         sentence_model = Model(sentence_in, sentence_dense, name="SentenceModel")
 

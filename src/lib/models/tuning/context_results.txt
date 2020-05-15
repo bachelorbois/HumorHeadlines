@@ -1,0 +1,138 @@
+[Results summary]
+|-Results in tuning_hyperband/ContextHumor
+|-Showing 10 best trials
+|-Objective(name='val_root_mean_squared_error', direction='min')
+[Trial summary]
+|-Trial ID: b34a9bfbea79680f233f2a57bee11232
+|-Score: 0.5366635918617249
+|-Best step: 0
+> Hyperparameters:
+|-activation1: sigmoid
+|-activation2: relu
+|-contextUnits1: 128
+|-contextUnits2: 160
+|-tuner/bracket: 2
+|-tuner/epochs: 6
+|-tuner/initial_epoch: 0
+|-tuner/round: 0
+[Trial summary]
+|-Trial ID: 925d9764b422884a29dd3343e2c68e78
+|-Score: 0.5367410778999329
+|-Best step: 0
+> Hyperparameters:
+|-activation1: relu
+|-activation2: relu
+|-contextUnits1: 256
+|-contextUnits2: 384
+|-tuner/bracket: 2
+|-tuner/epochs: 6
+|-tuner/initial_epoch: 0
+|-tuner/round: 0
+[Trial summary]
+|-Trial ID: 49d2b104fd7991f7f96d0f2bd08e495b
+|-Score: 0.5368779301643372
+|-Best step: 0
+> Hyperparameters:
+|-activation1: tanh
+|-activation2: relu
+|-contextUnits1: 288
+|-contextUnits2: 96
+|-tuner/bracket: 2
+|-tuner/epochs: 6
+|-tuner/initial_epoch: 0
+|-tuner/round: 0
+[Trial summary]
+|-Trial ID: 63ea994f3a5960a38ff8c377d5236331
+|-Score: 0.5371631979942322
+|-Best step: 0
+> Hyperparameters:
+|-activation1: relu
+|-activation2: sigmoid
+|-contextUnits1: 352
+|-contextUnits2: 256
+|-tuner/bracket: 2
+|-tuner/epochs: 6
+|-tuner/initial_epoch: 0
+|-tuner/round: 0
+[Trial summary]
+|-Trial ID: 14c8aec7724d916e267838c65c185821
+|-Score: 0.5371882915496826
+|-Best step: 0
+> Hyperparameters:
+|-activation1: tanh
+|-activation2: sigmoid
+|-contextUnits1: 448
+|-contextUnits2: 160
+|-tuner/bracket: 2
+|-tuner/epochs: 17
+|-tuner/initial_epoch: 6
+|-tuner/round: 1
+|-tuner/trial_id: c8d66f0e3713610bc8705c1ad492558d
+[Trial summary]
+|-Trial ID: cdb996469c8f89f4cdb2e150e9b835d6
+|-Score: 0.5372083187103271
+|-Best step: 0
+> Hyperparameters:
+|-activation1: sigmoid
+|-activation2: tanh
+|-contextUnits1: 128
+|-contextUnits2: 416
+|-tuner/bracket: 3
+|-tuner/epochs: 6
+|-tuner/initial_epoch: 2
+|-tuner/round: 1
+|-tuner/trial_id: d4f53b0396681de519076e026094e0fb
+[Trial summary]
+|-Trial ID: 8ff1db0980601053d4d08ca03e212f60
+|-Score: 0.5374337434768677
+|-Best step: 0
+> Hyperparameters:
+|-activation1: sigmoid
+|-activation2: tanh
+|-contextUnits1: 128
+|-contextUnits2: 448
+|-tuner/bracket: 3
+|-tuner/epochs: 17
+|-tuner/initial_epoch: 6
+|-tuner/round: 2
+|-tuner/trial_id: 17fbaba95fdb00557bb97e1d8227ebad
+[Trial summary]
+|-Trial ID: 1ab841278f900aaa6913157e5e11826c
+|-Score: 0.5374739766120911
+|-Best step: 0
+> Hyperparameters:
+|-activation1: relu
+|-activation2: relu
+|-contextUnits1: 256
+|-contextUnits2: 224
+|-tuner/bracket: 0
+|-tuner/epochs: 50
+|-tuner/initial_epoch: 0
+|-tuner/round: 0
+[Trial summary]
+|-Trial ID: 386c968483c70a1ab2f307e1114e1eb4
+|-Score: 0.537514328956604
+|-Best step: 0
+> Hyperparameters:
+|-activation1: sigmoid
+|-activation2: tanh
+|-contextUnits1: 448
+|-contextUnits2: 256
+|-tuner/bracket: 0
+|-tuner/epochs: 50
+|-tuner/initial_epoch: 0
+|-tuner/round: 0
+[Trial summary]
+|-Trial ID: 0d52cc860888e0c5df5b38ca389b5f4e
+|-Score: 0.5375975966453552
+|-Best step: 0
+> Hyperparameters:
+|-activation1: relu
+|-activation2: relu
+|-contextUnits1: 480
+|-contextUnits2: 128
+|-tuner/bracket: 1
+|-tuner/epochs: 50
+|-tuner/initial_epoch: 17
+|-tuner/round: 1
+|-tuner/trial_id: 5b0ce4161b1e0718119374b39408f51c

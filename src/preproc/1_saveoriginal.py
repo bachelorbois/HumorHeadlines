@@ -9,9 +9,9 @@ ins = [
 
 grades = [
     True,
-    False,
     True,
-    False
+    # True,
+    # True
 ]
 
 read_funcs = [
@@ -35,16 +35,16 @@ for i in range(len(ins)):
     proc(ins[i], outs[i], grades[i], read_funcs[i])
 
 # FunLines
-proc(
-    "../../data/FunLines/task-1/train_funlines.csv",
-    "../../data/FunLines/task-1/preproc/1_original_train.bin",
-    True,
-    lib.read_task1_csv
-)
+# proc(
+#     "../../data/FunLines/task-1/train_funlines.csv",
+#     "../../data/FunLines/task-1/preproc/1_original_train.bin",
+#     True,
+#     lib.read_task1_csv
+# )
 
-proc(
-    "../../data/FunLines/task-2/train_funlines.csv",
-    "../../data/FunLines/task-2/preproc/1_origial_train.bin",
-    True,
-    lib.read_task2_csv
-)
+# proc(
+#     "../../data/FunLines/task-2/train_funlines.csv",
+#     "../../data/FunLines/task-2/preproc/1_origial_train.bin",
+#     True,
+#     lib.read_task2_csv
+# )
