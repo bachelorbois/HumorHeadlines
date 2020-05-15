@@ -1,37 +1,31 @@
-from lib.models.module.bertmodule import get_bert_config, get_bert_layer, get_adapter_BERT_layer, freeze_bert_layers
-from lib.models.module.functionmodule import sigmoid_3
 import tensorflow as tf
 from tensorflow.keras import layers, Model, optimizers, metrics, losses
-from bert import load_stock_weights
+import tensorflow_hub as hub
 import os
 
-def create_BERT_model(max_seq_len, adapter_size=64):
-    pretrained_dir = f'{os.getcwd()}/lib/models/pre-trained'
-    input_token = layers.Input(shape=(max_seq_len,), dtype='int32', name="token_input")
-   
-    # BERT things
-    bert_layer = get_adapter_BERT_layer(pretrained_dir, adapter_size)
-    bert_representation = bert_layer(input_token)
-    bert_lambda = layers.Lambda(lambda seq : seq[:, 0, :])(bert_representation)
-    bert_dropout = layers.Dropout(0.5)(bert_lambda)
+from lib.models.layers.highway import Highway
 
-    # Output things
-    dense1 = layers.Dense(units=768, activation="tanh")(bert_dropout)
-    dense1 = layers.Dropout(0.5)(dense1)
-    output = layers.Dense(1, activation=sigmoid_3)(dense1)
+def create_BERT_model():
+    max_seq_length = 128
+    sentence_in = layers.Input(shape=(), dtype=tf.string, name="sentence_in")
+    embed = hub.KerasLayer("https://tfhub.dev/google/nnlm-en-dim128/2", trainable=False)(sentence_in)    # Expects a tf.string input tensor.
+    # input_word_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype=tf.int32, name="input_word_ids")
+    # input_mask = tf.keras.layers.Input(shape=(max_seq_length,), dtype=tf.int32, name="input_mask")
+    # segment_ids = tf.keras.layers.Input(shape=(max_seq_length,), dtype=tf.int32, name="segment_ids")
+    # albert_layer = hub.KerasLayer("https://tfhub.dev/tensorflow/albert_en_base/1", trainable=False)
+    # pooled_output, sequence_output = albert_layer([input_word_ids, input_mask, segment_ids])
 
-    bertie = Model(inputs=input_token, outputs=output)
 
-    bertie.build(input_shape=(None, max_seq_len))
+    x = layers.Dense(64, activation='relu')(embed)
+    x = layers.Dense(32, activation='relu')(x)
+    x = layers.Dense(16, activation='relu')(x)
+    x = layers.Dense(1)(x)
 
-    bertie.compile(optimizer=optimizers.Adam(clipnorm=1., clipvalue=0.5),
+    bertie = Model(inputs=[sentence_in], outputs=x)
+
+    bertie.compile(optimizer=optimizers.Adam(),
                    loss="mean_squared_error",
                    metrics=[metrics.RootMeanSquaredError()])
-
-    load_stock_weights(bert_layer, f'{pretrained_dir}/bert_model.ckpt')
-
-    if adapter_size != None:
-        freeze_bert_layers(bert_layer)
 
     bertie.summary()
 

@@ -1,0 +1,44 @@
+{ 
+    "top_10": [
+        {
+            "TrialID": "a7b8600859948369d1655e3727ab014d",
+            "Score": "0.5387459993362427"
+        },
+        {
+            "TrialID": "e417cf4ae03bc8242eff4b8d5bcc8dee",
+            "Score": 0.5400088429450989
+        },
+        {
+            "TrialID": "4dd538ec75520b14ded69049c686132a",
+            "Score": 0.5403200387954712
+        },
+        {
+            "TrialID": "700f87eb5d8783437dd0459808b40b0f",
+            "Score": 0.5403289198875427
+        },
+        {
+            "TrialID": "4f7e355db244ba232065deb993dd0df5",
+            "Score": 0.5404274463653564
+        },
+        {
+            "TrialID": "eb7097e38abaf67fe221990df924e5cc",
+            "Score": 0.5404490828514099
+        },
+        {
+            "TrialID": "90d3c20310714c6d0aedc8797bc84069",
+            "Score": 0.5409775972366333
+        },
+        {
+            "TrialID": "46f8e66c33dfdcebef34bf4f339f3286",
+            "Score": 0.5409824252128601
+        },
+        {
+            "TrialID": "9eadffe227632ffd9632b6359eeacc05",
+            "Score": 0.5412322282791138
+        },
+        {
+            "TrialID": "76c2f0c648800ce18ed2cbe9663aa728",
+            "Score": 0.5421283841133118
+        }
+    ]
+}

@@ -6,7 +6,7 @@ from lib.features import Feature
 from lib.features.NELLWordnetVocab import generate_vocab_dict
 
 class NellKbFeature(Feature):
-    max_len = 20
+    max_len = 25
     lemmatizer = WordNetLemmatizer()
     punct = set(string.punctuation)
     punct.add('—‘’$“”')

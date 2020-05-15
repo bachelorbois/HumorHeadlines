@@ -46,7 +46,7 @@ def create_HUMOR_model(feature_len : int, kb_len : int, kb_part : bool, word_enc
     if kb_part:
         input_entities = layers.Input(shape=(kb_len,), dtype='int32', name="EntityInput")
         embeddings = np.load('../data/NELL/embeddings/entity.npy')
-        entity_embedding = layers.Embedding(181544, 64, embeddings_initializer=initializers.Constant(embeddings), trainable=False, name="EntityEmbeddings")(input_entities)
+        entity_embedding = layers.Embedding(len(embeddings), embeddings.shape[1], embeddings_initializer=initializers.Constant(embeddings), trainable=False, name="EntityEmbeddings")(input_entities)
         sum_layer = layers.Lambda(lambda x: backend.sum(x, axis=1, keepdims=False))(entity_embedding)
         entity_dense = layers.Dense(32, activation='relu', name="EntityDense1")(sum_layer)
         entity_dense = layers.Dropout(0.5)(entity_dense)
@@ -60,7 +60,7 @@ def create_HUMOR_model(feature_len : int, kb_len : int, kb_part : bool, word_enc
     if word_encoder:
         
         sentence_in = layers.Input(shape=(), dtype=tf.string, name="sentence_in")
-        embed = hub.KerasLayer('https://tfhub.dev/google/tf2-preview/nnlm-en-dim128/1')(sentence_in)    # Expects a tf.string input tensor.
+        embed = hub.KerasLayer('https://tfhub.dev/google/nnlm-en-dim128/2')(sentence_in)    # Expects a tf.string input tensor.
         sentence_dense = layers.Dense(64, activation='relu', name="SentenceDense1")(embed)
         sentence_dense = layers.Dropout(0.5)(sentence_dense)
         sentence_dense = layers.Dense(32, activation='relu', name="SentenceDense2")(sentence_dense)
